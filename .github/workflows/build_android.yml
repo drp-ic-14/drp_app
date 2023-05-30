@@ -27,11 +27,11 @@ jobs:
 
       - name: Run NPM Install
         run: npm i
-        
+
       - name: Build application
         run: |
              cd ./android
-             ./gradlew assembleDebug 
+             ./gradlew bundleRelease 
 
       - name: Upload application
         uses: actions/upload-artifact@v2
