@@ -10,11 +10,11 @@ type TaskItemProps = {
 
 const TaskItem = (props: TaskItemProps): React.ReactElement => {
 
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(props.checked);
 
   const renderCheckBox = (): React.ReactElement => (
     <CheckBox
-      checked={props.checked}
+      checked={checked}
       onChange={nextChecked => setChecked(nextChecked)}
     />
   );
