@@ -14,7 +14,7 @@ const TaskItem = (props: TaskItemProps): React.ReactElement => {
 
   const renderCheckBox = (): React.ReactElement => (
     <CheckBox
-      checked={checked}
+      checked={props.checked}
       onChange={nextChecked => setChecked(nextChecked)}
     />
   );
