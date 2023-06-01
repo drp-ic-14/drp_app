@@ -76,6 +76,7 @@ const HomeScreen = (props) => {
     setName('');
     setLocation('');
     setVisible(false);
+    onNotify();
   };
 
   const styles = StyleSheet.create({
@@ -116,7 +117,6 @@ const HomeScreen = (props) => {
           className='grow'
         />
 
-        <Button onPress={() => {onNotify()}}>Notify</Button>
         <Button onPress={update_list}>
           Refresh
         </Button>
