@@ -4,6 +4,7 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, List, Button, Modal, Card, Input } from '@ui-kitten/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styled } from "nativewind";
+import notifee from '@notifee/react-native';
 
 import TaskItem from './components/TaskItem';
 
@@ -86,6 +87,24 @@ const HomeScreen = (props) => {
     },
   });
 
+  async function onNotify() {
+    await notifee.requestPermission()
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    })
+
+    await notifee.displayNotification({
+      title: 'Get pencils - Rymans (10m)',
+      android: {
+        channelId,
+        pressAction: {
+          id: 'default'
+        }
+      }
+    })
+  }
+
   return (
     <Layout>
       <View className='p-3 flex flex-col h-full'>
@@ -97,6 +116,7 @@ const HomeScreen = (props) => {
           className='grow'
         />
 
+        <Button onPress={() => {onNotify()}}>Notify</Button>
         <Button onPress={update_list}>
           Refresh
         </Button>
