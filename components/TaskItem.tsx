@@ -6,16 +6,34 @@ type TaskItemProps = {
     name: string,
     location: string,
     checked: boolean,
+    uuid: string,
 }
 
-const TaskItem = (props: TaskItemProps): React.ReactElement => {
+const TaskItem = (props): React.ReactElement => {
 
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(props.checked);
+
+  const onCheckedChange = async (nextChecked) => {
+    setChecked(nextChecked);
+    
+    await fetch('https://drp-14-server.herokuapp.com/api/delete_task', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: props.uuid,
+        task_id: props.id,
+      }),
+    });
+    props.update_list();
+  };
 
   const renderCheckBox = (): React.ReactElement => (
     <CheckBox
-      checked={props.checked}
-      onChange={nextChecked => setChecked(nextChecked)}
+      checked={checked}
+      onChange={onCheckedChange}
     />
   );
 
