@@ -9,10 +9,6 @@ import TaskItem from './components/TaskItem';
 
 const StyledList = styled(List);
 
-const renderItem = ({ item, index }): React.ReactElement => (
-  <TaskItem name={item.name} location={item.location} checked={item.checked} />
-);
-
 const storeData = async (value) => {
   try {
     await AsyncStorage.setItem('@uuid', value)
@@ -39,6 +35,10 @@ const HomeScreen = (props) => {
     console.log(props.uuid);
     update_list();
   }, []);
+
+  const renderItem = ({ item, index }): React.ReactElement => (
+    <TaskItem id={item.id} name={item.name} location={item.location} checked={item.checked} uuid={props.uuid} update_list={update_list} />
+  );
 
   const update_list = async () => {
     const response = await fetch('https://drp-14-server.herokuapp.com/api/get_tasks', {
