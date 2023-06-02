@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { Text, View, StyleSheet, Image } from 'react-native';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, List, Button, Modal, Card, Input } from '@ui-kitten/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styled } from "nativewind";
 import notifee from '@notifee/react-native';
+import { debounce } from "debounce";
 
 import TaskItem from './components/TaskItem';
 
 const StyledList = styled(List);
+const StyledInput = styled(Input);
+const StyledButton = styled(Button);
 
 const storeData = async (value) => {
   try {
@@ -31,6 +34,8 @@ const HomeScreen = (props) => {
   const [name, setName] = React.useState('');
   const [location, setLocation] = React.useState('');
   const [data, setData] = React.useState([]);
+  const [map, setMap] = React.useState(false);
+
 
   useEffect(() => {
     console.log(props.uuid);
@@ -108,11 +113,22 @@ const HomeScreen = (props) => {
     },
   });
 
+  const map_update = useMemo(() => {
+    return debounce(() => {
+      setMap(true);
+    }, 1000);
+  }, []);
+
+  const location_change = (v) => {
+    setLocation(v);
+    setMap(false);
+    map_update();
+  };
+
   return (
     <Layout>
       <View className='p-3 flex flex-col h-full'>
         <Text className='text-3xl text-slate-900'>Today</Text>
-
         <StyledList 
           data={data}
           renderItem={renderItem}
@@ -134,22 +150,31 @@ const HomeScreen = (props) => {
           onBackdropPress={() => setVisible(false)}
         >
           <Card disabled={true}>
-            <Text>
-              New Reminder
-            </Text>
-            <Input
-              placeholder='Name'
-              value={name}
-              onChangeText={v => setName(v)}
-            />
-            <Input
-              placeholder='Location'
-              value={location}
-              onChangeText={v => setLocation(v)}
-            />
-            <Button onPress={add_task}>
-              SUBMIT
-            </Button>
+            <View className='p-1 w-56'>
+              <Text className='text-lg text-slate-900'>
+                New Reminder
+              </Text>
+              <StyledInput
+                className='my-2'
+                placeholder='Name'
+                value={name}
+                onChangeText={v => setName(v)}
+              />
+              <StyledInput
+                className='my-2'
+                placeholder='Location'
+                value={location}
+                onChangeText={location_change}
+              />
+              { map ? <Image style={{
+            resizeMode: 'cover',
+            height: 100,
+            width: 210,
+          }} source={require('./assets/map.png')} /> : <></> }
+              <Button onPress={add_task}>
+                SUBMIT
+              </Button>
+            </View>
           </Card>
         </Modal>
 
