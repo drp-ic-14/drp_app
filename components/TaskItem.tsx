@@ -14,8 +14,8 @@ const TaskItem = (props): React.ReactElement => {
   const [checked, setChecked] = React.useState(props.checked);
 
   const onCheckedChange = async (nextChecked) => {
-    setChecked(nextChecked);
-    
+    setChecked(true);
+
     await fetch('https://drp-14-server.herokuapp.com/api/delete_task', {
       method: 'POST',
       headers: {
@@ -28,6 +28,8 @@ const TaskItem = (props): React.ReactElement => {
       }),
     });
     props.update_list();
+    setChecked(false);
+
   };
 
   const renderCheckBox = (): React.ReactElement => (

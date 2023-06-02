@@ -38,8 +38,27 @@ const HomeScreen = (props) => {
   }, []);
 
   const renderItem = ({ item, index }): React.ReactElement => (
-    <TaskItem id={item.id} name={item.name} location={item.location} checked={item.checked} uuid={props.uuid} update_list={update_list} />
+    <TaskItem id={item.id} name={item.name} location={item.location} checked={item.completed} uuid={props.uuid} update_list={update_list} />
   );
+  
+  async function notify(name: string, location: string) {
+    setTimeout(async () => {
+      const channelId = await notifee.createChannel({
+        id: 'default',
+        name: 'Default Channel',
+      })
+  
+      await notifee.displayNotification({
+        title: `${name} - ${location} (10m)`,
+        android: {
+          channelId,
+          pressAction: {
+            id: 'default'
+          }
+        }
+      })
+    }, 8000);
+  }
 
   const update_list = async () => {
     const response = await fetch('https://drp-14-server.herokuapp.com/api/get_tasks', {
@@ -53,6 +72,7 @@ const HomeScreen = (props) => {
       }),
     });
     const list = await response.json();
+    console.log(list)
     setData(list);
   };
 
@@ -73,10 +93,10 @@ const HomeScreen = (props) => {
     });
     const new_task = await response.json();
     setData([...data, new_task]);
+    notify(name, location);
     setName('');
     setLocation('');
     setVisible(false);
-    onNotify();
   };
 
   const styles = StyleSheet.create({
@@ -87,24 +107,6 @@ const HomeScreen = (props) => {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
   });
-
-  async function onNotify() {
-    await notifee.requestPermission()
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
-    })
-
-    await notifee.displayNotification({
-      title: 'Get pencils - Rymans (10m)',
-      android: {
-        channelId,
-        pressAction: {
-          id: 'default'
-        }
-      }
-    })
-  }
 
   return (
     <Layout>
@@ -117,9 +119,9 @@ const HomeScreen = (props) => {
           className='grow'
         />
 
-        <Button onPress={update_list}>
+        {/* <Button onPress={update_list}>
           Refresh
-        </Button>
+        </Button> */}
         <Button onPress={() => setVisible(true)}>
           +
         </Button>
@@ -162,6 +164,7 @@ export default () => {
 
   useEffect(() => {
     const check = async () => {
+      await notifee.requestPermission();
       const curr_id = await getData();
       if (curr_id === null || curr_id === undefined) {
         setRequest(true);
