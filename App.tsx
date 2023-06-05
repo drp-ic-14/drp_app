@@ -1,5 +1,13 @@
 import React, {useEffect, useMemo} from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import {
+  Platform,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  PermissionsAndroid,
+} from 'react-native';
+import MapView, {Marker} from 'react-native-maps';
 import * as eva from '@eva-design/eva';
 import {
   ApplicationProvider,
@@ -16,6 +24,7 @@ import notifee from '@notifee/react-native';
 import {debounce} from 'debounce';
 
 import TaskItem from './components/TaskItem';
+import Geolocation from '@react-native-community/geolocation';
 
 const StyledList = styled(List);
 const StyledInput = styled(Input);
@@ -40,14 +49,90 @@ const getData = async () => {
 const HomeScreen = props => {
   const [visible, setVisible] = React.useState(false);
   const [name, setName] = React.useState('');
-  const [location, setLocation] = React.useState('');
+  const [location, setLocation] = React.useState({
+    latitude: 10,
+    longitude: 10,
+  });
+  const [locationName, setLocationName] = React.useState('');
   const [data, setData] = React.useState([]);
   const [map, setMap] = React.useState(false);
 
   useEffect(() => {
     console.log(props.uuid);
     update_list();
+
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'ios') {
+        getOneTimeLocation();
+        subscribeLocationLocation();
+      } else {
+        try {
+          // Request foreground location permissions
+          const foregroundGranted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Location Access Required',
+              message: 'This App needs to Access your location',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            },
+          );
+          // Request background location permissions
+          const backgroundGranted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+            {
+              title: 'Background Location Access Required',
+              message: 'This App needs to Access your background location',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            },
+          );
+          if (foregroundGranted === PermissionsAndroid.RESULTS.GRANTED && backgroundGranted === PermissionsAndroid.RESULTS.GRANTED) {
+            //To Check, If Permission is granted
+            getOneTimeLocation();
+            subscribeLocationLocation();
+          } else {
+            console.warn('Location permission(s) Denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    };
+
+    requestLocationPermission();
+    return () => {
+      Geolocation.clearWatch(watchID);
+    };
   }, []);
+
+  const getOneTimeLocation = () => {
+    Geolocation.getCurrentPosition(
+      //Will give you the current location
+      position => setLocation(position.coords),
+      error => {
+        console.warn(error.message);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 1000,
+      },
+    );
+  };
+
+  const subscribeLocationLocation = () => {
+    watchID = Geolocation.watchPosition(
+      position => setLocation(position.coords),
+      error => {
+        console.warn(error.message);
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 1000,
+      },
+    );
+  };
 
   const renderItem = ({item}): React.ReactElement => (
     <TaskItem
@@ -118,9 +203,9 @@ const HomeScreen = props => {
     );
     const new_task = await response.json();
     setData([...data, new_task]);
-    notify(name, location);
+    notify(name, locationName);
     setName('');
-    setLocation('');
+    setLocationName('');
     setVisible(false);
   };
 
@@ -130,6 +215,18 @@ const HomeScreen = props => {
     },
     backdrop: {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    boldText: {
+      fontSize: 25,
+      color: 'red',
+      marginVertical: 16,
+      textAlign: 'center',
+    },
+    map: {
+      height: 400,
+      width: 400,
+      justifyContent: "flex-end",
+      alignItems: "center",
     },
   });
 
@@ -149,6 +246,43 @@ const HomeScreen = props => {
     <Layout>
       <View className="p-3 flex flex-col h-full">
         <Text className="text-3xl text-slate-900">Today</Text>
+        <Text
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 16,
+          }}>
+          Longitude: {location.longitude}
+        </Text>
+        <Text
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 16,
+          }}>
+          Latitude: {location.latitude}
+        </Text>
+    <MapView
+      style={styles.map}
+      initialRegion={{
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+      }}
+      showsUserLocation={true}
+      showsMyLocationButton={false}
+      followsUserLocation={true}
+      showsCompass={true}
+      scrollEnabled={true}
+      zoomEnabled={true}
+      pitchEnabled={true}
+      rotateEnabled={true}>
+       </MapView>
+        <View style={{marginTop: 20}}>
+          <Button onPress={getOneTimeLocation}>Get location</Button>
+        </View>
+
         <StyledList data={data} renderItem={renderItem} className="grow" />
 
         {/* <Button onPress={update_list}>
@@ -164,7 +298,7 @@ const HomeScreen = props => {
         onBackdropPress={() => setVisible(false)}>
         <Card disabled={true}>
           <View className="p-1 w-56">
-            <Text className="text-lg text-slate-900">New Reminder</Text>
+            {/* <Text className="text-lg text-slate-900">New Reminder</Text> */}
             <StyledInput
               className="my-2"
               placeholder="Name"
@@ -174,7 +308,7 @@ const HomeScreen = props => {
             <StyledInput
               className="my-2"
               placeholder="Location"
-              value={location}
+              value={locationName}
               onChangeText={location_change}
             />
             {map ? (
@@ -189,7 +323,7 @@ const HomeScreen = props => {
             ) : (
               <></>
             )}
-            <Button onPress={add_task}>SUBMIT</Button>
+            <Button onPress={add_task}>Add</Button>
           </View>
         </Card>
       </Modal>
