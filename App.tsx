@@ -148,7 +148,7 @@ const HomeScreen = props => {
   return (
     <Layout>
       <View className="p-3 flex flex-col h-full">
-        <Text className="text-3xl text-slate-900">I changed this</Text>
+        <Text className="text-3xl text-slate-900">Today</Text>
         <StyledList data={data} renderItem={renderItem} className="grow" />
 
         {/* <Button onPress={update_list}>
