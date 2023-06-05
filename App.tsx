@@ -7,7 +7,7 @@ import {
   Image,
   PermissionsAndroid,
 } from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import MapView from 'react-native-maps';
 import * as eva from '@eva-design/eva';
 import {
   ApplicationProvider,
@@ -87,7 +87,10 @@ const HomeScreen = props => {
               buttonPositive: 'OK',
             },
           );
-          if (foregroundGranted === PermissionsAndroid.RESULTS.GRANTED && backgroundGranted === PermissionsAndroid.RESULTS.GRANTED) {
+          if (
+            foregroundGranted === PermissionsAndroid.RESULTS.GRANTED &&
+            backgroundGranted === PermissionsAndroid.RESULTS.GRANTED
+          ) {
             //To Check, If Permission is granted
             getOneTimeLocation();
             subscribeLocationLocation();
@@ -225,8 +228,8 @@ const HomeScreen = props => {
     map: {
       height: 400,
       width: 400,
-      justifyContent: "flex-end",
-      alignItems: "center",
+      justifyContent: 'flex-end',
+      alignItems: 'center',
     },
   });
 
@@ -262,23 +265,22 @@ const HomeScreen = props => {
           }}>
           Latitude: {location.latitude}
         </Text>
-    <MapView
-      style={styles.map}
-      initialRegion={{
-        latitude: location.latitude,
-        longitude: location.longitude,
-        latitudeDelta: 0.001,
-        longitudeDelta: 0.001,
-      }}
-      showsUserLocation={true}
-      showsMyLocationButton={false}
-      followsUserLocation={true}
-      showsCompass={true}
-      scrollEnabled={true}
-      zoomEnabled={true}
-      pitchEnabled={true}
-      rotateEnabled={true}>
-       </MapView>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001,
+          }}
+          showsUserLocation={true}
+          showsMyLocationButton={false}
+          followsUserLocation={true}
+          showsCompass={true}
+          scrollEnabled={true}
+          zoomEnabled={true}
+          pitchEnabled={true}
+          rotateEnabled={true}></MapView>
         <View style={{marginTop: 20}}>
           <Button onPress={getOneTimeLocation}>Get location</Button>
         </View>
