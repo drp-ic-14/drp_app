@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
+import { Button } from '@ui-kitten/components';
 
 // Import the GroupItem component
 import GroupItem from './GroupItem';
@@ -20,10 +21,7 @@ const GroupPage = ({ navigation }) => {
 
   return (
     <View>
-      <TouchableOpacity onPress={toggleExpand}>
-        <Text>Groups</Text>
-      </TouchableOpacity>
-      
+      <Button onPress={toggleExpand}>Groups</Button>
       {isExpanded && (
         <View>
           {groups.map((group) => (
