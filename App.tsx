@@ -16,6 +16,7 @@ import notifee from '@notifee/react-native';
 import {debounce} from 'debounce';
 
 import TaskItem from './components/TaskItem';
+import GroupPage from './components/GroupPage';
 
 const StyledList = styled(List);
 const StyledInput = styled(Input);
@@ -43,6 +44,7 @@ const HomeScreen = props => {
   const [location, setLocation] = React.useState('');
   const [data, setData] = React.useState([]);
   const [map, setMap] = React.useState(false);
+  const [groupPage, setGroupPage] = React.useState(false);
 
   useEffect(() => {
     console.log(props.uuid);
@@ -155,6 +157,8 @@ const HomeScreen = props => {
           Refresh
         </Button> */}
         <Button onPress={() => setVisible(true)}>+</Button>
+        <Button onPress={() => setGroupPage(true)}>Groups</Button>
+        {groupPage && <GroupPage navigation={props.navigation} />}
         {/* <Text className=''>UUID: {uuid}</Text> */}
       </View>
 
