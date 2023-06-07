@@ -70,19 +70,29 @@ const HomeScreen = props => {
   });
   const [locationName, setLocationName] = React.useState('');
 
-  const searchForNearbyTasks = async () => {
+  const searchForNearbyTasks = () => {
+    data.forEach(task => {
+      const time = Date.now()
+      const dist = distance(task.latitude, task.longitude, currentLocation.latitude, currentLocation.longitude)
+      if (dist < 100) {
+        const timeSinceNotified = time - (task.lastNotified || 0);
+        // default time is 300000ms aka 5mins
+        if (timeSinceNotified > 300000) {
+          notify(task, Math.round(dist));
+          task.lastNotified = time;
+        }
+      }
+    });
+  }
+
+  const backgroundService = async () => {
 
     const sleep = (time: any) => new Promise<void>((resolve) => setTimeout(() => resolve(), time));
     
     await new Promise(async () => {
       while (true) {
-        data.forEach(task => {
-          const dist = distance(task.latitude, task.longitude, currentLocation.latitude, currentLocation.longitude)
-          if (dist < 50) {
-            notify(task, Math.round(dist));
-          }
-        });
-        await sleep(1000);
+        searchForNearbyTasks();
+        await sleep(10000);
       }
     })
   }
@@ -194,6 +204,7 @@ const HomeScreen = props => {
   );
 
   async function notify(task: Task, distance: number) {
+    console.log(`Notifying user about task \'${task.name}\'`)
     setTimeout(async () => {
       const channelId = await notifee.createChannel({
         id: 'default',
@@ -209,7 +220,7 @@ const HomeScreen = props => {
           },
         },
       });
-    }, 8000);
+    }, 1000);
   }
 
   const update_list = async () => {
@@ -303,7 +314,7 @@ const HomeScreen = props => {
     } else {
       try {
         console.log("Starting background service.")
-        await BackgroundService.start(searchForNearbyTasks, backgroundServiceOptions);
+        await BackgroundService.start(backgroundService, backgroundServiceOptions);
         console.log("Successfully started background service.");
       } catch (e) {
         console.log("Unable to start background service", e);
@@ -323,7 +334,8 @@ const HomeScreen = props => {
         </Button> */}
         <Button onPress={() => setVisible(true)}>+</Button>
         <Button onPress={toggleBackgroundService}>Toggle Background Service</Button>
-        {/* <Text className=''>UUID: {props.uuid}</Text> */}
+        <Button onPress={searchForNearbyTasks}>Check nearby</Button>
+        <Text className=''>UUID: {props.uuid}</Text>
       </View>
 
       <Modal
