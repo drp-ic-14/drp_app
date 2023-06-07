@@ -171,44 +171,38 @@ const HomeScreen = props => {
   }
 
   const update_list = async () => {
-    const response = await fetch(
-      `${backEndUrl}/api/get_tasks`,
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: props.uuid,
-        }),
+    const response = await fetch(`${backEndUrl}/api/get_tasks`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        user_id: props.uuid,
+      }),
+    });
     const list = await response.json();
     console.log(list);
     setData(list);
   };
 
   const add_task = async () => {
-    const response = await fetch(
-      `${backEndUrl}/api/add_task`,
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: props.uuid,
-          task: {
-            name,
-            location: locationName,
-            latitude: locationCoords.lat,
-            longitude: locationCoords.lng
-          },
-        }),
+    const response = await fetch(`${backEndUrl}/api/add_task`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        user_id: props.uuid,
+        task: {
+          name,
+          location: locationName,
+          latitude: locationCoords.lat,
+          longitude: locationCoords.lng,
+        },
+      }),
+    });
     const new_task = await response.json();
     setData([...data, new_task]);
     notify(name, location);
@@ -239,7 +233,7 @@ const HomeScreen = props => {
       setLocationCoords(query.geometry.location);
       setLocationName(query.name);
     } catch (err) {
-      console.warn(`Query for \'${keyword}\' rejected.`)
+      console.warn(`Query for \'${keyword}\' rejected.`);
     }
   };
 
@@ -339,9 +333,7 @@ export default () => {
         setRequest(true);
         setSplash(false);
 
-        const response = await fetch(
-          `${backEndUrl}/api/generate_id`,
-        );
+        const response = await fetch(`${backEndUrl}/api/generate_id`);
         const data = await response.json();
         console.log(data);
 
