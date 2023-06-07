@@ -49,12 +49,16 @@ const getData = async () => {
 const HomeScreen = props => {
   const [visible, setVisible] = React.useState(false);
   const [name, setName] = React.useState('');
-  const [location, setLocation] = React.useState({
+  const [currentLocation, setCurrentLocation] = React.useState({
     latitude: 10,
     longitude: 10,
   });
-  const [locationName, setLocationName] = React.useState('');
+  const [location, setLocation] = React.useState('');
   const [data, setData] = React.useState([]);
+  const [locationCoords, setLocationCoords] = React.useState({
+    lat: 10,
+    lng: 10,
+  })
 
   useEffect(() => {
     console.log(props.uuid);
@@ -111,7 +115,7 @@ const HomeScreen = props => {
   const getOneTimeLocation = () => {
     Geolocation.getCurrentPosition(
       //Will give you the current location
-      position => setLocation(position.coords),
+      position => setCurrentLocation(position.coords),
       error => {
         console.warn(error.message);
       },
@@ -125,7 +129,7 @@ const HomeScreen = props => {
 
   const subscribeLocationLocation = () => {
     watchID = Geolocation.watchPosition(
-      position => setLocation(position.coords),
+      position => setCurrentLocation(position.coords),
       error => {
         console.warn(error.message);
       },
@@ -198,17 +202,18 @@ const HomeScreen = props => {
           user_id: props.uuid,
           task: {
             name,
-            location,
+            location: location,
           },
         }),
       },
     );
     const new_task = await response.json();
     setData([...data, new_task]);
-    notify(name, locationName);
+    notify(name, location);
     setName('');
-    setLocationName('');
+    setLocation('');
     setVisible(false);
+    // console.log(locationCoords)
   };
 
   const styles = StyleSheet.create({
@@ -226,17 +231,26 @@ const HomeScreen = props => {
     },
   });
 
-  const map_update = useMemo(() => {
-    return debounce(() => {
-      setMap(true);
-    }, 1000);
-  }, []);
+  const map_update = async (keyword: String) => {
+    const query = await searchLocation(keyword);
+    setLocationCoords(query[0].geometry.location)
+  };
 
   const location_change = v => {
     setLocation(v);
-    setMap(false);
-    map_update();
+    map_update(v);
   };
+
+  const searchLocation = async (keyword: String): Promise<Array<any>> => {
+    try {
+      const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=${keyword}&location=${currentLocation.latitude}%2C${currentLocation.longitude}&radius=1000&key=AIzaSyCe4_m0Axs6LanGk8u8ZQzX19yiM9ITyDM`);
+      const json = await response.json();
+      return json.results;
+    } catch (error) {
+      console.warn(error);
+      return Promise.resolve([]);
+    }
+  }
 
   return (
     <Layout>
@@ -268,14 +282,14 @@ const HomeScreen = props => {
             <StyledInput
               className="my-2"
               placeholder="Location"
-              value={locationName}
+              value={location}
               onChangeText={location_change}
             />
         <MapView
           style={styles.map}
           initialRegion={{
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
             latitudeDelta: 0.001,
             longitudeDelta: 0.001,
           }}
