@@ -274,7 +274,7 @@ const HomeScreen = props => {
             longitudeDelta: 0.001,
           }}
           showsUserLocation={true}
-          showsMyLocationButton={false}
+          showsMyLocationButton={true}
           followsUserLocation={true}
           showsCompass={true}
           scrollEnabled={true}
