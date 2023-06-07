@@ -25,7 +25,7 @@ import notifee from '@notifee/react-native';
 import TaskItem from './components/TaskItem';
 import Geolocation from '@react-native-community/geolocation';
 import BackgroundService from 'react-native-background-actions';
-import { distance } from './Utils';
+import {distance} from './Utils';
 
 const StyledList = styled(List);
 const StyledInput = styled(Input);
@@ -63,7 +63,7 @@ const HomeScreen = props => {
     longitude: 10,
   });
   const [location, setLocation] = React.useState('');
-  const [data, setData] = React.useState(new Array<Task>);
+  const [data, setData] = React.useState(new Array<Task>());
   const [locationCoords, setLocationCoords] = React.useState({
     lat: 10,
     lng: 10,
@@ -72,8 +72,13 @@ const HomeScreen = props => {
 
   const searchForNearbyTasks = () => {
     data.forEach(task => {
-      const time = Date.now()
-      const dist = distance(task.latitude, task.longitude, currentLocation.latitude, currentLocation.longitude)
+      const time = Date.now();
+      const dist = distance(
+        task.latitude,
+        task.longitude,
+        currentLocation.latitude,
+        currentLocation.longitude,
+      );
       if (dist < 100) {
         const timeSinceNotified = time - (task.lastNotified || 0);
         // default time is 300000ms aka 5mins
@@ -83,20 +88,20 @@ const HomeScreen = props => {
         }
       }
     });
-  }
+  };
 
   const backgroundService = async () => {
+    const sleep = (time: any) =>
+      new Promise<void>(resolve => setTimeout(() => resolve(), time));
 
-    const sleep = (time: any) => new Promise<void>((resolve) => setTimeout(() => resolve(), time));
-    
     await new Promise(async () => {
       while (true) {
         searchForNearbyTasks();
         await sleep(10000);
       }
-    })
-  }
-  
+    });
+  };
+
   const backgroundServiceOptions = {
     taskName: 'DRP_APP',
     taskTitle: 'Searching for nearby tasks...',
@@ -105,7 +110,7 @@ const HomeScreen = props => {
       name: 'ic_launcher',
       type: 'mipmap',
     },
-  }
+  };
 
   useEffect(() => {
     console.log(props.uuid);
@@ -204,7 +209,7 @@ const HomeScreen = props => {
   );
 
   async function notify(task: Task, distance: number) {
-    console.log(`Notifying user about task \'${task.name}\'`)
+    console.log(`Notifying user about task '${task.name}'`);
     setTimeout(async () => {
       const channelId = await notifee.createChannel({
         id: 'default',
@@ -284,7 +289,7 @@ const HomeScreen = props => {
       setLocationCoords(query.geometry.location);
       setLocationName(query.name);
     } catch (err) {
-      console.warn(`Query for \'${keyword}\' rejected.`);
+      console.warn(`Query for '${keyword}' rejected.`);
     }
   };
 
@@ -308,19 +313,22 @@ const HomeScreen = props => {
 
   const toggleBackgroundService = async () => {
     if (BackgroundService.isRunning()) {
-      console.log("Stopping background service.");
+      console.log('Stopping background service.');
       await BackgroundService.stop();
-      console.log("Stopped background service")
+      console.log('Stopped background service');
     } else {
       try {
-        console.log("Starting background service.")
-        await BackgroundService.start(backgroundService, backgroundServiceOptions);
-        console.log("Successfully started background service.");
+        console.log('Starting background service.');
+        await BackgroundService.start(
+          backgroundService,
+          backgroundServiceOptions,
+        );
+        console.log('Successfully started background service.');
       } catch (e) {
-        console.log("Unable to start background service", e);
+        console.log('Unable to start background service', e);
       }
     }
-  }
+  };
 
   return (
     <Layout>
@@ -333,9 +341,11 @@ const HomeScreen = props => {
           Refresh
         </Button> */}
         <Button onPress={() => setVisible(true)}>+</Button>
-        <Button onPress={toggleBackgroundService}>Toggle Background Service</Button>
+        <Button onPress={toggleBackgroundService}>
+          Toggle Background Service
+        </Button>
         <Button onPress={searchForNearbyTasks}>Check nearby</Button>
-        <Text className=''>UUID: {props.uuid}</Text>
+        <Text className="">UUID: {props.uuid}</Text>
       </View>
 
       <Modal
