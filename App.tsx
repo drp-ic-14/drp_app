@@ -42,7 +42,7 @@ const getData = async () => {
   }
 };
 
-const HomeScreen = ({ navigation, ...props }) => {
+const HomeScreen = ({ route, navigation }) => {
   const [visible, setVisible] = React.useState(false);
   const [name, setName] = React.useState('');
   const [location, setLocation] = React.useState('');
@@ -50,7 +50,7 @@ const HomeScreen = ({ navigation, ...props }) => {
   const [map, setMap] = React.useState(false);
 
   useEffect(() => {
-    console.log(props.uuid);
+    console.log(route.params.uuid);
     update_list();
   }, []);
 
@@ -60,7 +60,7 @@ const HomeScreen = ({ navigation, ...props }) => {
       name={item.name}
       location={item.location}
       checked={item.completed}
-      uuid={props.uuid}
+      uuid={route.params.uuid}
       update_list={update_list}
     />
   );
@@ -94,7 +94,7 @@ const HomeScreen = ({ navigation, ...props }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: props.uuid,
+          user_id: route.params.uuid,
         }),
       },
     );
@@ -113,7 +113,7 @@ const HomeScreen = ({ navigation, ...props }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: props.uuid,
+          user_id: route.params.uuid,
           task: {
             name,
             location,
@@ -245,7 +245,7 @@ export default () => {
           <Text>Creating user...</Text>
         ) : (
           <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} initialParams={{uuid:uuid}}/>
             <Stack.Screen name="GroupPage" component={GroupPage} />
           </Stack.Navigator>
         )}

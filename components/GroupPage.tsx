@@ -6,7 +6,6 @@ import { Button } from '@ui-kitten/components';
 import GroupItem from './GroupItem';
 
 const GroupPage = ({ navigation }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
 
   // Array of groups
   const groups = [
@@ -14,10 +13,6 @@ const GroupPage = ({ navigation }) => {
     { id: '2', name: 'Group 2' },
     { id: '3', name: 'Group 3' },
   ];
-
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
 
   return (
     <View>
