@@ -21,14 +21,9 @@ const GroupPage = ({ navigation }) => {
 
   return (
     <View>
-      <Button onPress={toggleExpand}>Groups</Button>
-      {isExpanded && (
-        <View>
-          {groups.map((group) => (
-            <GroupItem key={group.id} name={group.name} navigation={navigation}/>
-          ))}
-        </View>
-      )}
+      {groups.map((group) => (
+        <GroupItem name={group.name} />
+      ))}
     </View>
   );
 };

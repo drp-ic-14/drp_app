@@ -17,7 +17,8 @@ import {debounce} from 'debounce';
 
 import TaskItem from './components/TaskItem';
 import GroupPage from './components/GroupPage';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'; // install react-native-screens also
 
 // Rest of your code...
 
@@ -41,7 +42,7 @@ const getData = async () => {
   }
 };
 
-const HomeScreen = props => {
+const HomeScreen = ({ navigation, ...props }) => {
   const [visible, setVisible] = React.useState(false);
   const [name, setName] = React.useState('');
   const [location, setLocation] = React.useState('');
@@ -159,7 +160,7 @@ const HomeScreen = props => {
           Refresh
         </Button> */}
         <Button onPress={() => setVisible(true)}>+</Button>
-        <GroupPage navigation={props.navigation} />
+        <Button onPress={() => navigation.navigate('GroupPage')}>Groups</Button>
         {/* <Text className=''>UUID: {uuid}</Text> */}
       </View>
 
@@ -233,15 +234,22 @@ export default () => {
     check();
   }, []);
 
+  const Stack = createNativeStackNavigator();
+
   return (
-    <ApplicationProvider {...eva} theme={eva.light}>
-      {splash ? (
-        <></>
-      ) : request ? (
-        <Text>Creating user...</Text>
-      ) : (
-        <HomeScreen uuid={uuid} />
-      )}
-    </ApplicationProvider>
+    <NavigationContainer>
+      <ApplicationProvider {...eva} theme={eva.light}>
+        {splash ? (
+          <></>
+        ) : request ? (
+          <Text>Creating user...</Text>
+        ) : (
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="GroupPage" component={GroupPage} />
+          </Stack.Navigator>
+        )}
+      </ApplicationProvider>
+    </NavigationContainer>
   );
 };
