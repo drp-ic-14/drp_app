@@ -24,6 +24,8 @@ import notifee from '@notifee/react-native';
 
 import TaskItem from './components/TaskItem';
 import Geolocation from '@react-native-community/geolocation';
+import BackgroundService from 'react-native-background-actions';
+import { distance } from './Utils';
 
 const StyledList = styled(List);
 const StyledInput = styled(Input);
@@ -53,12 +55,39 @@ const HomeScreen = props => {
     longitude: 10,
   });
   const [location, setLocation] = React.useState('');
-  const [data, setData] = React.useState([]);
+  const [data, setData] = React.useState(new Array);
   const [locationCoords, setLocationCoords] = React.useState({
     lat: 10,
     lng: 10,
   });
   const [locationName, setLocationName] = React.useState('');
+
+  const searchForNearbyTasks = async () => {
+
+    const sleep = (time: any) => new Promise<void>((resolve) => setTimeout(() => resolve(), time));
+    
+    await new Promise(async () => {
+      while (true) {
+        data.forEach(task => {
+          const dist = distance(task.latitude, task.longitude, currentLocation.latitude, currentLocation.longitude)
+          if (dist < 50) {
+            notify(task, Math.round(dist));
+          }
+        });
+        await sleep(1000);
+      }
+    })
+  }
+  
+  const backgroundServiceOptions = {
+    taskName: 'DRP_APP',
+    taskTitle: 'Searching for nearby tasks...',
+    taskDesc: '',
+    taskIcon: {
+      name: 'ic_launcher',
+      type: 'mipmap',
+    },
+  }
 
   useEffect(() => {
     console.log(props.uuid);
@@ -107,6 +136,7 @@ const HomeScreen = props => {
     };
 
     requestLocationPermission();
+    // toggleBackgroundService(); // TODO: add conditions to toggle
     return () => {
       Geolocation.clearWatch(watchID);
     };
@@ -145,13 +175,17 @@ const HomeScreen = props => {
       id={item.id}
       name={item.name}
       location={item.location}
+      longitude={item.longitude}
+      latitude={item.latitude}
       checked={item.completed}
       uuid={props.uuid}
       update_list={update_list}
+      current_lat={currentLocation.latitude}
+      current_long={currentLocation.longitude}
     />
   );
 
-  async function notify(name: string, location: string) {
+  async function notify(task, distance: number) {
     setTimeout(async () => {
       const channelId = await notifee.createChannel({
         id: 'default',
@@ -159,7 +193,7 @@ const HomeScreen = props => {
       });
 
       await notifee.displayNotification({
-        title: `${name} - ${location} (10m)`,
+        title: `${task.name} - ${task.location} (${distance}m)`,
         android: {
           channelId,
           pressAction: {
@@ -205,11 +239,9 @@ const HomeScreen = props => {
     });
     const new_task = await response.json();
     setData([...data, new_task]);
-    notify(name, location);
     setName('');
     setLocation('');
     setVisible(false);
-    // console.log(locationCoords)
   };
 
   const styles = StyleSheet.create({
@@ -237,7 +269,7 @@ const HomeScreen = props => {
     }
   };
 
-  const location_change = v => {
+  const location_change = (v: String) => {
     setLocation(v);
     map_update(v);
   };
@@ -255,6 +287,22 @@ const HomeScreen = props => {
     }
   };
 
+  const toggleBackgroundService = async () => {
+    if (BackgroundService.isRunning()) {
+      console.log("Stopping background service.");
+      await BackgroundService.stop();
+      console.log("Stopped background service")
+    } else {
+      try {
+        console.log("Starting background service.")
+        await BackgroundService.start(searchForNearbyTasks, backgroundServiceOptions);
+        console.log("Successfully started background service.");
+      } catch (e) {
+        console.log("Unable to start background service", e);
+      }
+    }
+  }
+
   return (
     <Layout>
       <View className="p-3 flex flex-col h-full">
@@ -266,7 +314,8 @@ const HomeScreen = props => {
           Refresh
         </Button> */}
         <Button onPress={() => setVisible(true)}>+</Button>
-        {/* <Text className=''>UUID: {uuid}</Text> */}
+        <Button onPress={toggleBackgroundService}>Toggle Background Service</Button>
+        {/* <Text className=''>UUID: {props.uuid}</Text> */}
       </View>
 
       <Modal
