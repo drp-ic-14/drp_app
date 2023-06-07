@@ -202,7 +202,9 @@ const HomeScreen = props => {
           user_id: props.uuid,
           task: {
             name,
-            location: location,
+            location: locationName,
+            latitude: locationCoords.lat,
+            longitude: locationCoords.lng
           },
         }),
       },
@@ -233,8 +235,12 @@ const HomeScreen = props => {
 
   const map_update = async (keyword: String) => {
     const query = (await searchLocation(keyword))[0];
-    setLocationCoords(query.geometry.location);
-    setLocationName(query.name);
+    try {
+      setLocationCoords(query.geometry.location);
+      setLocationName(query.name);
+    } catch (err) {
+      console.warn(`Query for \'${keyword}\' rejected.`)
+    }
   };
 
   const location_change = v => {
