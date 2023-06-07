@@ -12,11 +12,14 @@
     "@eva-design/eva": "^2.2.0",
     "@notifee/react-native": "^7.7.1",
     "@react-native-async-storage/async-storage": "^1.18.1",
+    "@react-native-community/geolocation": "^3.0.6",
     "@ui-kitten/components": "^5.3.1",
     "debounce": "^1.2.1",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "0.71.8",
+    "react-native-background-actions": "^3.0.0",
+    "react-native-maps": "^1.7.1",
     "react-native-svg": "^13.9.0"
   },
   "devDependencies": {
@@ -25,6 +28,7 @@
     "@babel/runtime": "^7.20.0",
     "@react-native-community/eslint-config": "^3.2.0",
     "@tsconfig/react-native": "^2.0.2",
+    "@types/debounce": "^1.2.1",
     "@types/jest": "^29.2.1",
     "@types/react": "^18.0.24",
     "@types/react-test-renderer": "^18.0.0",

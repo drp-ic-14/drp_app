@@ -1,6 +1,8 @@
 import React from 'react';
 import {CheckBox} from '@ui-kitten/components';
 import {Text, ListItem} from '@ui-kitten/components';
+import {backEndUrl} from '../Constants';
+import {distance} from '../Utils';
 
 // type TaskItemProps = {
 //   name: string;
@@ -15,7 +17,7 @@ const TaskItem = (props): React.ReactElement => {
   const onCheckedChange = async () => {
     setChecked(true);
 
-    await fetch('https://drp-14-server.herokuapp.com/api/delete_task', {
+    await fetch(`${backEndUrl}/api/delete_task`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -34,9 +36,19 @@ const TaskItem = (props): React.ReactElement => {
     <CheckBox checked={checked} onChange={onCheckedChange} />
   );
 
-  const renderLocation = (): React.ReactElement => (
-    <Text>{props.location}</Text>
-  );
+  const renderLocation = (): React.ReactElement => {
+    const dist = distance(
+      props.latitude,
+      props.longitude,
+      props.current_lat,
+      props.current_long,
+    );
+    if (dist < 100) {
+      return <Text>{`${props.location} (${Math.round(dist)}m)`}</Text>;
+    } else {
+      return <Text>{props.location}</Text>;
+    }
+  };
 
   return (
     <ListItem
