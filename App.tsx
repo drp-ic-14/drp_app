@@ -7,7 +7,7 @@ import {
   Image,
   PermissionsAndroid,
 } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import * as eva from '@eva-design/eva';
 import {
   ApplicationProvider,
@@ -58,7 +58,8 @@ const HomeScreen = props => {
   const [locationCoords, setLocationCoords] = React.useState({
     lat: 10,
     lng: 10,
-  })
+  });
+  const [locationName, setLocationName] = React.useState('');
 
   useEffect(() => {
     console.log(props.uuid);
@@ -232,8 +233,9 @@ const HomeScreen = props => {
   });
 
   const map_update = async (keyword: String) => {
-    const query = await searchLocation(keyword);
-    setLocationCoords(query[0].geometry.location)
+    const query = (await searchLocation(keyword))[0];
+    setLocationCoords(query.geometry.location);
+    setLocationName(query.name);
   };
 
   const location_change = v => {
@@ -300,7 +302,11 @@ const HomeScreen = props => {
           scrollEnabled={true}
           zoomEnabled={true}
           pitchEnabled={true}
-          rotateEnabled={true}></MapView>
+          rotateEnabled={true}>
+            <Marker 
+            coordinate={{latitude: locationCoords.lat, longitude: locationCoords.lng}}
+            title={locationName} />
+          </MapView>
             <Button onPress={add_task}>Add</Button>
           </View>
         </Card>
