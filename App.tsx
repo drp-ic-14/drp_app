@@ -55,7 +55,6 @@ const HomeScreen = props => {
   });
   const [locationName, setLocationName] = React.useState('');
   const [data, setData] = React.useState([]);
-  const [map, setMap] = React.useState(false);
 
   useEffect(() => {
     console.log(props.uuid);
@@ -219,15 +218,9 @@ const HomeScreen = props => {
     backdrop: {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
-    boldText: {
-      fontSize: 25,
-      color: 'red',
-      marginVertical: 16,
-      textAlign: 'center',
-    },
     map: {
-      height: 400,
-      width: 400,
+      height: 200,
+      width: 200,
       justifyContent: 'flex-end',
       alignItems: 'center',
     },
@@ -249,41 +242,6 @@ const HomeScreen = props => {
     <Layout>
       <View className="p-3 flex flex-col h-full">
         <Text className="text-3xl text-slate-900">Today</Text>
-        <Text
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 16,
-          }}>
-          Longitude: {location.longitude}
-        </Text>
-        <Text
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 16,
-          }}>
-          Latitude: {location.latitude}
-        </Text>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.001,
-            longitudeDelta: 0.001,
-          }}
-          showsUserLocation={true}
-          showsMyLocationButton={true}
-          followsUserLocation={true}
-          showsCompass={true}
-          scrollEnabled={true}
-          zoomEnabled={true}
-          pitchEnabled={true}
-          rotateEnabled={true}></MapView>
-        <View style={{marginTop: 20}}>
-          <Button onPress={getOneTimeLocation}>Get location</Button>
-        </View>
 
         <StyledList data={data} renderItem={renderItem} className="grow" />
 
@@ -313,18 +271,22 @@ const HomeScreen = props => {
               value={locationName}
               onChangeText={location_change}
             />
-            {map ? (
-              <Image
-                style={{
-                  resizeMode: 'cover',
-                  height: 100,
-                  width: 210,
-                }}
-                source={require('./assets/map.png')}
-              />
-            ) : (
-              <></>
-            )}
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001,
+          }}
+          showsUserLocation={true}
+          showsMyLocationButton={true}
+          followsUserLocation={true}
+          showsCompass={true}
+          scrollEnabled={true}
+          zoomEnabled={true}
+          pitchEnabled={true}
+          rotateEnabled={true}></MapView>
             <Button onPress={add_task}>Add</Button>
           </View>
         </Card>
