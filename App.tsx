@@ -1,13 +1,12 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect} from 'react';
 import {
   Platform,
   Text,
   View,
   StyleSheet,
-  Image,
   PermissionsAndroid,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import * as eva from '@eva-design/eva';
 import {
   ApplicationProvider,
@@ -21,7 +20,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {styled} from 'nativewind';
 import notifee from '@notifee/react-native';
-import {debounce} from 'debounce';
 
 import TaskItem from './components/TaskItem';
 import Geolocation from '@react-native-community/geolocation';
@@ -245,14 +243,16 @@ const HomeScreen = props => {
 
   const searchLocation = async (keyword: String): Promise<Array<any>> => {
     try {
-      const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=${keyword}&location=${currentLocation.latitude}%2C${currentLocation.longitude}&radius=1000&key=AIzaSyCe4_m0Axs6LanGk8u8ZQzX19yiM9ITyDM`);
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=${keyword}&location=${currentLocation.latitude}%2C${currentLocation.longitude}&radius=1000&key=AIzaSyCe4_m0Axs6LanGk8u8ZQzX19yiM9ITyDM`,
+      );
       const json = await response.json();
       return json.results;
     } catch (error) {
       console.warn(error);
       return Promise.resolve([]);
     }
-  }
+  };
 
   return (
     <Layout>
@@ -287,26 +287,30 @@ const HomeScreen = props => {
               value={location}
               onChangeText={location_change}
             />
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: currentLocation.latitude,
-            longitude: currentLocation.longitude,
-            latitudeDelta: 0.001,
-            longitudeDelta: 0.001,
-          }}
-          showsUserLocation={true}
-          showsMyLocationButton={true}
-          followsUserLocation={true}
-          showsCompass={true}
-          scrollEnabled={true}
-          zoomEnabled={true}
-          pitchEnabled={true}
-          rotateEnabled={true}>
-            <Marker 
-            coordinate={{latitude: locationCoords.lat, longitude: locationCoords.lng}}
-            title={locationName} />
-          </MapView>
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: currentLocation.latitude,
+                longitude: currentLocation.longitude,
+                latitudeDelta: 0.001,
+                longitudeDelta: 0.001,
+              }}
+              showsUserLocation={true}
+              showsMyLocationButton={true}
+              followsUserLocation={true}
+              showsCompass={true}
+              scrollEnabled={true}
+              zoomEnabled={true}
+              pitchEnabled={true}
+              rotateEnabled={true}>
+              <Marker
+                coordinate={{
+                  latitude: locationCoords.lat,
+                  longitude: locationCoords.lng,
+                }}
+                title={locationName}
+              />
+            </MapView>
             <Button onPress={add_task}>Add</Button>
           </View>
         </Card>
