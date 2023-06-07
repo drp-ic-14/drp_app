@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import {backEndUrl} from './Constants';
 import {
   Platform,
   Text,
@@ -171,7 +172,7 @@ const HomeScreen = props => {
 
   const update_list = async () => {
     const response = await fetch(
-      'https://drp-14-server.herokuapp.com/api/get_tasks',
+      `${backEndUrl}/api/get_tasks`,
       {
         method: 'POST',
         headers: {
@@ -190,7 +191,7 @@ const HomeScreen = props => {
 
   const add_task = async () => {
     const response = await fetch(
-      'https://drp-14-server.herokuapp.com/api/add_task',
+      `${backEndUrl}/api/add_task`,
       {
         method: 'POST',
         headers: {
@@ -333,7 +334,7 @@ export default () => {
         setSplash(false);
 
         const response = await fetch(
-          'https://drp-14-server.herokuapp.com/api/generate_id',
+          `${backEndUrl}/api/generate_id`,
         );
         const data = await response.json();
         console.log(data);
