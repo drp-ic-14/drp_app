@@ -31,6 +31,14 @@ const StyledList = styled(List);
 const StyledInput = styled(Input);
 // const StyledButton = styled(Button);
 
+interface Task {
+  name: string;
+  location: string;
+  latitude: number;
+  longitude: number;
+  lastNotified?: number;
+}
+
 const storeData = async value => {
   try {
     await AsyncStorage.setItem('@uuid', value);
@@ -55,7 +63,7 @@ const HomeScreen = props => {
     longitude: 10,
   });
   const [location, setLocation] = React.useState('');
-  const [data, setData] = React.useState(new Array);
+  const [data, setData] = React.useState(new Array<Task>);
   const [locationCoords, setLocationCoords] = React.useState({
     lat: 10,
     lng: 10,
@@ -185,7 +193,7 @@ const HomeScreen = props => {
     />
   );
 
-  async function notify(task, distance: number) {
+  async function notify(task: Task, distance: number) {
     setTimeout(async () => {
       const channelId = await notifee.createChannel({
         id: 'default',
