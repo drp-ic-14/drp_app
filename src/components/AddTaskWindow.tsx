@@ -1,13 +1,21 @@
 import React from 'react';
-import MapView, {Marker} from 'react-native-maps';
-import {Button, Modal, Card, Input} from '@ui-kitten/components';
-import {backEndUrl} from '../api/Constants';
-import {View, StyleSheet} from 'react-native';
-import {styled} from 'nativewind';
+import MapView, { Marker } from 'react-native-maps';
+import { Button, Modal, Card, Input } from '@ui-kitten/components';
+import { View, StyleSheet } from 'react-native';
+import { styled } from 'nativewind';
+import { backEndUrl } from '../api/Constants';
 
 const StyledInput = styled(Input);
 
-const AddTaskWindow = props => {
+const AddTaskWindow = ({
+  uuid,
+  currentLocation,
+  geolocater,
+  setData,
+  setVisible,
+  data,
+  visible,
+}) => {
   const [name, setName] = React.useState('');
   const [location, setLocation] = React.useState('');
   const [locationCoords, setLocationCoords] = React.useState({
@@ -16,8 +24,8 @@ const AddTaskWindow = props => {
   });
   const [locationName, setLocationName] = React.useState('');
 
-  const map_update = async (keyword: String) => {
-    const query = (await props.geolocater.searchLocation(keyword))[0];
+  const mapUpdate = async (keyword: string) => {
+    const query = (await geolocater.searchLocation(keyword))[0];
     try {
       setLocationCoords(query.geometry.location);
       setLocationName(query.name);
@@ -26,12 +34,12 @@ const AddTaskWindow = props => {
     }
   };
 
-  const location_change = (v: String) => {
+  const locationChange = (v: string) => {
     setLocation(v);
-    map_update(v);
+    mapUpdate(v);
   };
 
-  const add_task = async () => {
+  const addTask = async () => {
     const task = {
       name,
       location: locationName,
@@ -47,25 +55,26 @@ const AddTaskWindow = props => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        user_id: props.uuid,
-        task: task,
+        user_id: uuid,
+        task,
       }),
     });
     console.log(response);
-    const new_task = await response.json();
-    console.log(`task: ${new_task}`);
-    props.setData([...props.data, new_task]);
+    const newTask = await response.json();
+    console.log(`task: ${newTask}`);
+    setData([...data, newTask]);
     setName('');
     setLocation('');
-    props.setVisible(false);
+    setVisible(false);
   };
 
   return (
     <Modal
-      visible={props.visible}
+      visible={visible}
       backdropStyle={styles.backdrop}
-      onBackdropPress={() => props.setVisible(false)}>
-      <Card disabled={true}>
+      onBackdropPress={() => setVisible(false)}
+    >
+      <Card disabled>
         <View className="p-1 w-56">
           {/* <Text className="text-lg text-slate-900">New Reminder</Text> */}
           <StyledInput
@@ -78,24 +87,25 @@ const AddTaskWindow = props => {
             className="my-2"
             placeholder="Location"
             value={location}
-            onChangeText={location_change}
+            onChangeText={locationChange}
           />
           <MapView
             style={styles.map}
             initialRegion={{
-              latitude: props.currentLocation.latitude,
-              longitude: props.currentLocation.longitude,
+              latitude: currentLocation.latitude,
+              longitude: currentLocation.longitude,
               latitudeDelta: 0.001,
               longitudeDelta: 0.001,
             }}
-            showsUserLocation={true}
-            showsMyLocationButton={true}
-            followsUserLocation={true}
-            showsCompass={true}
-            scrollEnabled={true}
-            zoomEnabled={true}
-            pitchEnabled={true}
-            rotateEnabled={true}>
+            showsUserLocation
+            showsMyLocationButton
+            followsUserLocation
+            showsCompass
+            scrollEnabled
+            zoomEnabled
+            pitchEnabled
+            rotateEnabled
+          >
             <Marker
               coordinate={{
                 latitude: locationCoords.lat,
@@ -104,7 +114,7 @@ const AddTaskWindow = props => {
               title={locationName}
             />
           </MapView>
-          <Button onPress={add_task}>Add</Button>
+          <Button onPress={addTask}>Add</Button>
         </View>
       </Card>
     </Modal>

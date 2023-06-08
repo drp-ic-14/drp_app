@@ -1,15 +1,16 @@
 import BackgroundService from 'react-native-background-actions';
-import {distance} from '../utils/Utils';
-import {Task, Location} from '../utils/Interfaces';
-import {notify} from './Notifier';
+import { distance } from '../utils/Utils';
+import { Task, Location } from '../utils/Interfaces';
+import { notify } from './Notifier';
 
 class BgService {
   data: Array<Task>;
+
   currentLocation: Location;
 
   constructor(
     data: Array<Task>,
-    currentLocation: {latitude: number; longitude: number},
+    currentLocation: { latitude: number; longitude: number },
   ) {
     this.data = data;
     this.currentLocation = currentLocation;
@@ -30,7 +31,7 @@ class BgService {
     }
   };
 
-  stopBackgroundService = async () => {
+  static stopBackgroundService = async () => {
     if (BackgroundService.isRunning()) {
       console.log('Stopping background service.');
       await BackgroundService.stop();
@@ -52,6 +53,7 @@ class BgService {
         // default time is 300000ms aka 5mins
         if (timeSinceNotified > 300000) {
           notify(task, Math.round(dist));
+          /* eslint-disable no-param-reassign */ // TODO: do without reassignment
           task.lastNotified = time;
         }
       }
@@ -60,7 +62,9 @@ class BgService {
 
   backgroundService = async () => {
     const sleep = (time: any) =>
-      new Promise<void>(resolve => setTimeout(() => resolve(), time));
+      new Promise<void>(resolve => {
+        setTimeout(() => resolve(), time);
+      });
 
     await new Promise(async () => {
       while (true) {

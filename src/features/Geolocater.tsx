@@ -1,10 +1,12 @@
 import Geolocation from '@react-native-community/geolocation';
-import {Platform, PermissionsAndroid} from 'react-native';
-import {Location} from '../utils/Interfaces';
+import { Platform, PermissionsAndroid } from 'react-native';
+import { Location } from '../utils/Interfaces';
 
 class Geolocater {
   currentLocation: Location;
+
   setCurrentLocation;
+
   watchID: any;
 
   constructor(currentLocation: Location, setCurrentLocation: any) {
@@ -31,7 +33,7 @@ class Geolocater {
 
   getOneTimeLocation() {
     Geolocation.getCurrentPosition(
-      //Will give you the current location
+      // Will give you the current location
       position => this.setCurrentLocation(position.coords),
       error => {
         console.warn(error.message);
@@ -87,7 +89,7 @@ class Geolocater {
           foregroundGranted === PermissionsAndroid.RESULTS.GRANTED &&
           backgroundGranted === PermissionsAndroid.RESULTS.GRANTED
         ) {
-          //To Check, If Permission is granted
+          // To Check, If Permission is granted
           this.getOneTimeLocation();
           this.subscribeLocationLocation();
         } else {

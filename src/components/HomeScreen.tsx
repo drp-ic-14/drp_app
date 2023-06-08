@@ -1,21 +1,21 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {AppState, Text, View} from 'react-native';
+import { AppState, Text, View } from 'react-native';
 
-import {Layout, List, Button} from '@ui-kitten/components';
+import { Layout, List, Button } from '@ui-kitten/components';
 
-import {styled} from 'nativewind';
-import {backEndUrl} from '../api/Constants';
+import { styled } from 'nativewind';
+import { backEndUrl } from '../api/Constants';
 import TaskItem from './TaskItem';
 import Geolocater from '../features/Geolocater';
-import {Task} from '../utils/Interfaces';
+import { Task } from '../utils/Interfaces';
 import BgService from '../features/BackgroundService';
 import AddTaskWindow from './AddTaskWindow';
 
 const StyledList = styled(List);
 
 const HomeScreen = ({ route, navigation }) => {
-  const uuid = route.params.uuid;
+  const { uuid } = route.params;
   const [visible, setVisible] = React.useState(false);
   const [currentLocation, setCurrentLocation] = React.useState({
     latitude: 10,
@@ -33,7 +33,7 @@ const HomeScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     console.log(uuid);
-    update_list();
+    updateList();
 
     geolocater.requestLocationPermission();
 
@@ -60,22 +60,7 @@ const HomeScreen = ({ route, navigation }) => {
     };
   }, []);
 
-  const renderItem = ({item}): React.ReactElement => (
-    <TaskItem
-      id={item.id}
-      name={item.name}
-      location={item.location}
-      longitude={item.longitude}
-      latitude={item.latitude}
-      checked={item.completed}
-      uuid={uuid}
-      update_list={update_list}
-      current_lat={currentLocation.latitude}
-      current_long={currentLocation.longitude}
-    />
-  );
-
-  const update_list = async () => {
+  const updateList = async () => {
     const response = await fetch(`${backEndUrl}/api/get_tasks`, {
       method: 'POST',
       headers: {
@@ -90,6 +75,21 @@ const HomeScreen = ({ route, navigation }) => {
     console.log(list);
     setData(list);
   };
+
+  const renderItem = ({ item }): React.ReactElement => (
+    <TaskItem
+      id={item.id}
+      name={item.name}
+      location={item.location}
+      longitude={item.longitude}
+      latitude={item.latitude}
+      checked={item.completed}
+      uuid={uuid}
+      updateList={updateList}
+      current_lat={currentLocation.latitude}
+      current_long={currentLocation.longitude}
+    />
+  );
 
   return (
     <Layout>
