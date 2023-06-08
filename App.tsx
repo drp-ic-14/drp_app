@@ -160,7 +160,7 @@ const HomeScreen = ({ route, navigation }) => {
           Refresh
         </Button> */}
         <Button onPress={() => setVisible(true)}>+</Button>
-        <Button onPress={() => navigation.navigate('GroupPage')}>Groups</Button>
+        <Button onPress={() => navigation.navigate('Groups')}>Groups</Button>
         {/* <Text className=''>UUID: {uuid}</Text> */}
       </View>
 
@@ -246,7 +246,7 @@ export default () => {
         ) : (
           <Stack.Navigator initialRouteName="Home">
             <Stack.Screen name="Home" component={HomeScreen} initialParams={{uuid:uuid}}/>
-            <Stack.Screen name="GroupPage" component={GroupPage} />
+            <Stack.Screen name="Groups" component={GroupPage} />
           </Stack.Navigator>
         )}
       </ApplicationProvider>

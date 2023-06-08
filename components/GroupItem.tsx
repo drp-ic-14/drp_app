@@ -1,22 +1,14 @@
 import React from 'react';
-import { Text, ListItem } from '@ui-kitten/components';
-import { useNavigation } from '@react-navigation/native';
+import { ListItem, Button } from '@ui-kitten/components';
 
-const GroupItem = ({ groupId, name, navigation }) => {
-  const onGroupPress = () => {
-    // Handle group item press here
-    // You can perform any necessary action or navigation
+const GroupItem = props => {
 
-    // For example, you can navigate to a group details screen
-    // by passing the group ID as a parameter
-    navigation.navigate(name);
-  };
+  const [visible, setVisible] = React.useState(false);
 
   return (
     <ListItem
-      title={name}
-      onPress={onGroupPress}
-      // You can add more accessory components as needed
+      title={props.name}
+      accessoryRight={() => <Button onPress={() => setVisible(true)}>+</Button>}
     />
   );
 };

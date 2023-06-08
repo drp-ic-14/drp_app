@@ -9,9 +9,9 @@ const GroupPage = ({ navigation }) => {
 
   // Array of groups
   const groups = [
-    { id: '1', name: 'Group 1' },
-    { id: '2', name: 'Group 2' },
-    { id: '3', name: 'Group 3' },
+    { id: '1', name: 'Family' },
+    { id: '2', name: 'IC Computing' },
+    { id: '3', name: 'Flat' },
   ];
 
   return (
