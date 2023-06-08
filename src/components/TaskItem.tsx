@@ -1,8 +1,8 @@
 import React from 'react';
 import {CheckBox} from '@ui-kitten/components';
 import {Text, ListItem} from '@ui-kitten/components';
-import {backEndUrl} from '../Constants';
-import {distance} from '../Utils';
+import {backEndUrl} from '../api/Constants';
+import {distance} from '../utils/Utils';
 
 // type TaskItemProps = {
 //   name: string;
