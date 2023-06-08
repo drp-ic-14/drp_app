@@ -98,11 +98,11 @@ const HomeScreen = props => {
         <StyledList data={data} renderItem={renderItem} className="grow" />
 
         <Button onPress={() => setVisible(true)}>+</Button>
-        <Button onPress={bgService.toggleBackgroundService}>
+        {/* <Button onPress={bgService.toggleBackgroundService}>
           Toggle Background Service
         </Button>
         <Button onPress={bgService.searchForNearbyTasks}>Check nearby</Button>
-        <Text className="">UUID: {props.uuid}</Text>
+        <Text className="">UUID: {props.uuid}</Text> */}
       </View>
 
       <AddTaskWindow
