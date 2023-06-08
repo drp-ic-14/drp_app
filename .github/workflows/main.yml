@@ -2,6 +2,9 @@ name: "Continuous Integration"
 
 on: push
 
+env:
+  BACK_END_URL: https://drp-14-server.herokuapp.com
+
 jobs:
   build:
     runs-on: ubuntu-latest
