@@ -1,3 +1,4 @@
-// export const BACK_END_URL = 'https://drp-14-server.herokuapp.com';
-export const BACK_END_URL = 'http://localhost:8000'
+import Config from "react-native-config";
+
+export const BACK_END_URL = Config.BACK_END_URL;
 export const API_KEY = '123';

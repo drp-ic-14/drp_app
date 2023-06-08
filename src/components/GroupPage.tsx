@@ -4,6 +4,8 @@ import { Button } from '@ui-kitten/components/ui/button/button.component';
 import GroupItem from './GroupItem';
 
 import { BACK_END_URL } from '../api/Constants';
+import Config from "react-native-config";
+
 
 const GroupPage = ({ route }) => {
 
@@ -11,6 +13,7 @@ const GroupPage = ({ route }) => {
   const [groups, setGroups] = React.useState([]);
 
   useEffect(() => {
+    console.log(BACK_END_URL + " backend url", Config);
     updateGroups();
   }, []);
 
@@ -43,35 +46,35 @@ const GroupPage = ({ route }) => {
         },
         body: JSON.stringify({
           group_name: "group",
+          user_id: uuid,
         }),
       });
       const newGroup = await response.json();
-      joinGroup();
       setGroups(prevGroups => [...prevGroups, newGroup]);
     } catch (error) {
       console.error('Error adding group:', error);
     }
   };
 
-  const joinGroup = async () => {
-    try {
-      const response = await fetch(`${BACK_END_URL}/api/join_group`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: uuid,
-          group_id: group_id,
-        }),
-      });
-      const newGroup = await response.json();
-      setGroups(prevGroups => [...prevGroups, newGroup]);
-    } catch (error) {
-      console.error('Error adding group:', error);
-    }
-  };
+  // const joinGroup = async () => {
+  //   try {
+  //     const response = await fetch(`${BACK_END_URL}/api/join_group`, {
+  //       method: 'POST',
+  //       headers: {
+  //         Accept: 'application/json',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         id: uuid,
+  //         group_id: group_id,
+  //       }),
+  //     });
+  //     const newGroup = await response.json();
+  //     setGroups(prevGroups => [...prevGroups, newGroup]);
+  //   } catch (error) {
+  //     console.error('Error adding group:', error);
+  //   }
+  // };
 
   return (
     <View>
