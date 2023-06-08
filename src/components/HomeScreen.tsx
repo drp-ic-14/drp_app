@@ -5,7 +5,7 @@ import { AppState, Text, View } from 'react-native';
 import { Layout, List, Button } from '@ui-kitten/components';
 
 import { styled } from 'nativewind';
-import { backEndUrl } from '../api/Constants';
+import { BACK_END_URL } from '../api/Constants';
 import TaskItem from './TaskItem';
 import Geolocater from '../features/Geolocater';
 import { Task } from '../utils/Interfaces';
@@ -61,7 +61,7 @@ const HomeScreen = ({ route, navigation }) => {
   }, []);
 
   const updateList = async () => {
-    const response = await fetch(`${backEndUrl}/api/get_tasks`, {
+    const response = await fetch(`${BACK_END_URL}/api/get_tasks`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

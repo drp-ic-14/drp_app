@@ -3,7 +3,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { Button, Modal, Card, Input } from '@ui-kitten/components';
 import { View, StyleSheet } from 'react-native';
 import { styled } from 'nativewind';
-import { backEndUrl } from '../api/Constants';
+import { BACK_END_URL } from '../api/Constants';
 
 const StyledInput = styled(Input);
 
@@ -48,7 +48,7 @@ const AddTaskWindow = ({
     };
 
     console.log(task);
-    const response = await fetch(`${backEndUrl}/api/add_task`, {
+    const response = await fetch(`${BACK_END_URL}/api/add_task`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

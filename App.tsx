@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './src/components/HomeScreen';
-import { backEndUrl } from './src/api/Constants';
+import { BACK_END_URL } from './src/api/Constants';
 import GroupPage from './src/components/GroupPage';
 
 const storeData = async value => {
@@ -40,7 +40,7 @@ const App = () => {
         setRequest(true);
         setSplash(false);
 
-        const response = await fetch(`${backEndUrl}/api/generate_id`);
+        const response = await fetch(`${BACK_END_URL}/api/generate_id`);
         const data = await response.json();
         console.info('Fetched new UUID: ', data);
 
