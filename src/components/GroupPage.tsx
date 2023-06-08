@@ -77,11 +77,15 @@ const GroupPage = ({ route }) => {
   // };
 
   return (
-    <View>
-      {groups.map(group => (
-        <GroupItem key={group.id} name={group.name} />
-      ))}
-      <Button onPress={createGroup}>New Group</Button>
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        {groups.map(group => (
+          <GroupItem key={group.id} name={group.name} />
+        ))}
+      </View>
+      <View style={{ alignItems: 'center', marginBottom: 16 }}>
+        <Button onPress={createGroup}>New Group</Button>
+      </View>
     </View>
   );
 };
