@@ -3,6 +3,7 @@ import {View} from 'react-native';
 
 // Import the GroupItem component
 import GroupItem from './GroupItem';
+import { Button } from '@ui-kitten/components/ui/button/button.component';
 
 const GroupPage = props => {
   // Array of groups
@@ -17,6 +18,7 @@ const GroupPage = props => {
       {groups.map(group => (
         <GroupItem name={group.name} />
       ))}
+      <Button>+</Button>
     </View>
   );
 };
