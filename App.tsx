@@ -70,7 +70,7 @@ const App = () => {
           component={HomeScreen}
           initialParams={{ uuid }}
         />
-        <Stack.Screen name="Groups" component={GroupPage} />
+        <Stack.Screen name="Groups" component={GroupPage} initialParams={{ uuid }} />
       </Stack.Navigator>
     );
   };
