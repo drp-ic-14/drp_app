@@ -5,6 +5,9 @@ import * as eva from '@eva-design/eva';
 import {ApplicationProvider} from '@ui-kitten/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeScreen from './src/components/HomeScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack'
+import GroupPage from './src/components/GroupPage';
 
 const storeData = async value => {
   try {
@@ -50,15 +53,26 @@ export default () => {
     check();
   }, []);
 
+  const Stack = createNativeStackNavigator();
+
   return (
-    <ApplicationProvider {...eva} theme={eva.light}>
-      {splash ? (
-        <></>
-      ) : request ? (
-        <Text>Creating user...</Text>
-      ) : (
-        <HomeScreen uuid={uuid} />
-      )}
-    </ApplicationProvider>
+    <NavigationContainer>
+      <ApplicationProvider {...eva} theme={eva.light}>
+        {splash ? (
+          <></>
+        ) : request ? (
+          <Text>Creating user...</Text>
+        ) : (
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              initialParams={{uuid: uuid}}
+            />
+            <Stack.Screen name="Groups" component={GroupPage} />
+          </Stack.Navigator>
+        )}
+      </ApplicationProvider>
+    </NavigationContainer>
   );
 };

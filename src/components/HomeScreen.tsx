@@ -14,7 +14,8 @@ import AddTaskWindow from './AddTaskWindow';
 
 const StyledList = styled(List);
 
-const HomeScreen = props => {
+const HomeScreen = ({ route, navigation }) => {
+  const uuid = route.params.uuid;
   const [visible, setVisible] = React.useState(false);
   const [currentLocation, setCurrentLocation] = React.useState({
     latitude: 10,
@@ -31,7 +32,7 @@ const HomeScreen = props => {
   // );
 
   useEffect(() => {
-    console.log(props.uuid);
+    console.log(uuid);
     update_list();
 
     geolocater.requestLocationPermission();
@@ -67,7 +68,7 @@ const HomeScreen = props => {
       longitude={item.longitude}
       latitude={item.latitude}
       checked={item.completed}
-      uuid={props.uuid}
+      uuid={uuid}
       update_list={update_list}
       current_lat={currentLocation.latitude}
       current_long={currentLocation.longitude}
@@ -82,7 +83,7 @@ const HomeScreen = props => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        user_id: props.uuid,
+        user_id: uuid,
       }),
     });
     const list = await response.json();
@@ -98,15 +99,16 @@ const HomeScreen = props => {
         <StyledList data={data} renderItem={renderItem} className="grow" />
 
         <Button onPress={() => setVisible(true)}>+</Button>
+        <Button onPress={() => navigation.navigate('Groups')}>Groups</Button>
         {/* <Button onPress={bgService.toggleBackgroundService}>
           Toggle Background Service
         </Button>
         <Button onPress={bgService.searchForNearbyTasks}>Check nearby</Button>
-        <Text className="">UUID: {props.uuid}</Text> */}
+        <Text className="">UUID: {uuid}</Text> */}
       </View>
 
       <AddTaskWindow
-        uuid={props.uuid}
+        uuid={uuid}
         visible={visible}
         setVisible={setVisible}
         data={data}
