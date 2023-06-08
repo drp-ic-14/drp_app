@@ -17,8 +17,8 @@ import {debounce} from 'debounce';
 
 import TaskItem from './components/TaskItem';
 import GroupPage from './components/GroupPage';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack'; // install react-native-screens also
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack'; // install react-native-screens also
 
 // Rest of your code...
 
@@ -42,7 +42,7 @@ const getData = async () => {
   }
 };
 
-const HomeScreen = ({ route, navigation }) => {
+const HomeScreen = ({route, navigation}) => {
   const [visible, setVisible] = React.useState(false);
   const [name, setName] = React.useState('');
   const [location, setLocation] = React.useState('');
@@ -245,7 +245,11 @@ export default () => {
           <Text>Creating user...</Text>
         ) : (
           <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="Home" component={HomeScreen} initialParams={{uuid:uuid}}/>
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              initialParams={{uuid: uuid}}
+            />
             <Stack.Screen name="Groups" component={GroupPage} />
           </Stack.Navigator>
         )}
