@@ -1,8 +1,6 @@
 import React from 'react';
-import { ListItem, Button } from '@ui-kitten/components';
+import { ListItem } from '@ui-kitten/components';
 
-const GroupItem = ({ name }) => (
-  <ListItem title={name} accessoryRight={() => <Button>+</Button>} />
-);
+const GroupItem = ({ name }) => <ListItem title={name} />;
 
 export default GroupItem;
