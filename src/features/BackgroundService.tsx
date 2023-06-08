@@ -31,7 +31,7 @@ class BgService {
     }
   };
 
-  static stopBackgroundService = async () => {
+  stopBackgroundService = async () => {
     if (BackgroundService.isRunning()) {
       console.log('Stopping background service.');
       await BackgroundService.stop();
