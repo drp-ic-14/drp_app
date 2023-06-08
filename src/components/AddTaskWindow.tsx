@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { Button, Modal, Card, Input } from '@ui-kitten/components';
 import { View, StyleSheet } from 'react-native';
 import { styled } from 'nativewind';
 import { BACK_END_URL } from '../api/Constants';
+import { Location } from '../utils/Interfaces';
 
 const StyledInput = styled(Input);
 
 const AddTaskWindow = ({
   uuid,
-  currentLocation,
   geolocater,
   setData,
   setVisible,
@@ -18,11 +18,21 @@ const AddTaskWindow = ({
 }) => {
   const [name, setName] = React.useState('');
   const [location, setLocation] = React.useState('');
-  const [locationCoords, setLocationCoords] = React.useState({
-    lat: 10,
-    lng: 10,
-  });
+  const [locationCoords, setLocationCoords] = React.useState<Location | null>(
+    null,
+  );
   const [locationName, setLocationName] = React.useState('');
+  const [currentLocation, setCurrentLocation] = React.useState<Location | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const getCurrentLocation = async () => {
+      setCurrentLocation(await geolocater.getOneTimeLocation());
+    };
+
+    getCurrentLocation();
+  }, []);
 
   const mapUpdate = async (keyword: string) => {
     const query = (await geolocater.searchLocation(keyword))[0];
@@ -89,31 +99,35 @@ const AddTaskWindow = ({
             value={location}
             onChangeText={locationChange}
           />
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: currentLocation.latitude,
-              longitude: currentLocation.longitude,
-              latitudeDelta: 0.001,
-              longitudeDelta: 0.001,
-            }}
-            showsUserLocation
-            showsMyLocationButton
-            followsUserLocation
-            showsCompass
-            scrollEnabled
-            zoomEnabled
-            pitchEnabled
-            rotateEnabled
-          >
-            <Marker
-              coordinate={{
-                latitude: locationCoords.lat,
-                longitude: locationCoords.lng,
+          {currentLocation ? (
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: currentLocation.latitude,
+                longitude: currentLocation.longitude,
+                latitudeDelta: 0.001,
+                longitudeDelta: 0.001,
               }}
-              title={locationName}
-            />
-          </MapView>
+              showsUserLocation
+              showsMyLocationButton
+              followsUserLocation
+              showsCompass
+              scrollEnabled
+              zoomEnabled
+              pitchEnabled
+              rotateEnabled
+            >
+              {locationCoords ? (
+                <Marker
+                  coordinate={{
+                    latitude: locationCoords.lat,
+                    longitude: locationCoords.lng,
+                  }}
+                  title={locationName}
+                />
+              ) : null}
+            </MapView>
+          ) : null}
           <Button onPress={addTask}>Add</Button>
         </View>
       </Card>

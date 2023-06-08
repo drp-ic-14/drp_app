@@ -23,8 +23,8 @@ const HomeScreen = ({ route, navigation }) => {
   });
   const [data, setData] = React.useState(new Array<Task>());
 
-  const bgService = new BgService(data, currentLocation);
-  const geolocater: any = new Geolocater(currentLocation, setCurrentLocation);
+  const geolocater: any = new Geolocater();
+  const bgService = new BgService(data, geolocater);
 
   const appState = React.useRef(AppState.currentState);
   // const [appStateVisible, setAppStateVisible] = React.useState(
@@ -37,6 +37,12 @@ const HomeScreen = ({ route, navigation }) => {
 
     geolocater.requestLocationPermission();
 
+    return () => {
+      geolocater.clearWatch();
+    };
+  }, []);
+
+  useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (
         appState.current.match(/inactive|background/) &&
@@ -55,10 +61,9 @@ const HomeScreen = ({ route, navigation }) => {
     });
 
     return () => {
-      geolocater.clearWatch();
       subscription.remove();
-    };
-  }, []);
+    }
+  }, [data, currentLocation]);
 
   const updateList = async () => {
     const response = await fetch(`${BACK_END_URL}/api/get_tasks`, {
@@ -114,7 +119,6 @@ const HomeScreen = ({ route, navigation }) => {
         data={data}
         setData={setData}
         geolocater={geolocater}
-        currentLocation={currentLocation}
       />
     </Layout>
   );

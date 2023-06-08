@@ -2,18 +2,19 @@ import BackgroundService from 'react-native-background-actions';
 import { distance } from '../utils/Utils';
 import { Task, Location } from '../utils/Interfaces';
 import { notify } from './Notifier';
+import Geolocater from './Geolocater';
 
 class BgService {
   data: Array<Task>;
 
-  currentLocation: Location;
+  geolocater: Geolocater;
 
   constructor(
     data: Array<Task>,
-    currentLocation: { latitude: number; longitude: number },
+    geolocater: Geolocater,
   ) {
     this.data = data;
-    this.currentLocation = currentLocation;
+    this.geolocater = geolocater;
   }
 
   startBackgroundService = async () => {
@@ -31,7 +32,7 @@ class BgService {
     }
   };
 
-  static stopBackgroundService = async () => {
+  stopBackgroundService = async () => {
     if (BackgroundService.isRunning()) {
       console.log('Stopping background service.');
       await BackgroundService.stop();
@@ -39,14 +40,16 @@ class BgService {
     }
   };
 
-  searchForNearbyTasks = () => {
+  searchForNearbyTasks = async () => {
+    
+    const loc = await this.geolocater.getOneTimeLocation();
     this.data.forEach((task: Task) => {
       const time = Date.now();
       const dist = distance(
         task.latitude,
         task.longitude,
-        this.currentLocation.latitude,
-        this.currentLocation.longitude,
+        loc.latitude,
+        loc.longitude,
       );
       if (dist < 100) {
         const timeSinceNotified = time - (task.lastNotified || 0);
