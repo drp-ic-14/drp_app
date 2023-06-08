@@ -1,3 +1,7 @@
 {
-  "extends": "@tsconfig/react-native/tsconfig.json"
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  "exclude": [
+    "__tests__/**/*-test.ts",
+    // "./.eslintrc.js"
+  ]
 }

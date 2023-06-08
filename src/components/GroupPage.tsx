@@ -5,9 +5,9 @@ import {View} from 'react-native';
 import GroupItem from './GroupItem';
 import { Button } from '@ui-kitten/components/ui/button/button.component';
 
-import {backEndUrl} from '../api/Constants';
+import {BACK_END_URL} from '../api/Constants';
 
-const GroupPage = props => {
+const GroupPage = ({ uuid }) => {
   
   // const groups = [
   //   {id: '1', name: 'Family'},
@@ -23,14 +23,14 @@ const GroupPage = props => {
 
   const updateGroups = async () => {
     try {
-      const response = await fetch(`${backEndUrl}/api/get_groups`, {
+      const response = await fetch(`${BACK_END_URL}/api/get_groups`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: props.uuid,
+          user_id: uuid,
         }),
       });
       const groupList = await response.json();
@@ -42,7 +42,7 @@ const GroupPage = props => {
 
   const handleAddGroup = async () => {
     try {
-      const response = await fetch(`${backEndUrl}/api/create_group`, {
+      const response = await fetch(`${BACK_END_URL}/api/create_group`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

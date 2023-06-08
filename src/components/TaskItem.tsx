@@ -1,8 +1,7 @@
 import React from 'react';
-import {CheckBox} from '@ui-kitten/components';
-import {Text, ListItem} from '@ui-kitten/components';
-import {backEndUrl} from '../api/Constants';
-import {distance} from '../utils/Utils';
+import { CheckBox, Text, ListItem } from '@ui-kitten/components';
+import { BACK_END_URL } from '../api/Constants';
+import { distance } from '../utils/Utils';
 
 // type TaskItemProps = {
 //   name: string;
@@ -11,48 +10,53 @@ import {distance} from '../utils/Utils';
 //   uuid: string;
 // };
 
-const TaskItem = (props): React.ReactElement => {
-  const [checked, setChecked] = React.useState(props.checked);
+const TaskItem = ({
+  checked,
+  uuid,
+  id,
+  updateList,
+  latitude,
+  longitude,
+  current_lat,
+  current_long,
+  location,
+  name,
+}): React.ReactElement => {
+  const [checkedLive, setChecked] = React.useState(checked);
 
   const onCheckedChange = async () => {
     setChecked(true);
 
-    await fetch(`${backEndUrl}/api/delete_task`, {
+    await fetch(`${BACK_END_URL}/api/delete_task`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        user_id: props.uuid,
-        task_id: props.id,
+        user_id: uuid,
+        task_id: id,
       }),
     });
-    props.update_list();
+    updateList();
     setChecked(false);
   };
 
   const renderCheckBox = (): React.ReactElement => (
-    <CheckBox checked={checked} onChange={onCheckedChange} />
+    <CheckBox checked={checkedLive} onChange={onCheckedChange} />
   );
 
   const renderLocation = (): React.ReactElement => {
-    const dist = distance(
-      props.latitude,
-      props.longitude,
-      props.current_lat,
-      props.current_long,
-    );
+    const dist = distance(latitude, longitude, current_lat, current_long);
     if (dist < 100) {
-      return <Text>{`${props.location} (${Math.round(dist)}m)`}</Text>;
-    } else {
-      return <Text>{props.location}</Text>;
+      return <Text>{`${location} (${Math.round(dist)}m)`}</Text>;
     }
+    return <Text>{location}</Text>;
   };
 
   return (
     <ListItem
-      title={`${props.name}`}
+      title={`${name}`}
       accessoryLeft={renderCheckBox}
       accessoryRight={renderLocation}
     />

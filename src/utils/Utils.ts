@@ -18,3 +18,5 @@ export const distance = (
 
   return R * c; // in metres
 };
+
+export const id = (x: number) => x;

@@ -1,9 +1,9 @@
 import React from 'react';
-import {ListItem, Button} from '@ui-kitten/components';
+import { ListItem, Button } from '@ui-kitten/components';
 
-const GroupItem = props => {
+const GroupItem = ({ name }) => {
   return (
-    <ListItem title={props.name}/>
+    <ListItem title={name}/>
   );
 };
 
