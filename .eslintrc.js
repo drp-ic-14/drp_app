@@ -52,6 +52,6 @@ module.exports = {
     // Both rules for promise errors in BackgroundService
     'no-async-promise-executor': 'off',
     'no-await-in-loop': 'off',
-    "class-methods-use-this": "off",
+    'class-methods-use-this': 'off',
   },
 };

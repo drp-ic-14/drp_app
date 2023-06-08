@@ -1,14 +1,13 @@
-import React, {useEffect} from 'react';
-import {View} from 'react-native';
+import React, { useEffect } from 'react';
+import { View } from 'react-native';
 
 // Import the GroupItem component
-import GroupItem from './GroupItem';
 import { Button } from '@ui-kitten/components/ui/button/button.component';
+import GroupItem from './GroupItem';
 
-import {BACK_END_URL} from '../api/Constants';
+import { BACK_END_URL } from '../api/Constants';
 
 const GroupPage = ({ uuid }) => {
-  
   // const groups = [
   //   {id: '1', name: 'Family'},
   //   {id: '2', name: 'IC Computing'},
@@ -54,7 +53,7 @@ const GroupPage = ({ uuid }) => {
         }),
       });
       const newGroup = await response.json();
-      setGroups((prevGroups) => [...prevGroups, newGroup]);
+      setGroups(prevGroups => [...prevGroups, newGroup]);
     } catch (error) {
       console.error('Error adding group:', error);
     }
