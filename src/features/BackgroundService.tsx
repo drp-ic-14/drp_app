@@ -15,24 +15,26 @@ class BgService {
     this.currentLocation = currentLocation;
   }
 
-  toggleBackgroundService = async () => {
+  startBackgroundService = async () => {
+    if (!BackgroundService.isRunning()) try {
+      console.log('Starting background service.');
+      await BackgroundService.start(
+        this.backgroundService,
+        this.backgroundServiceOptions,
+      );
+      console.log('Successfully started background service.');
+    } catch (e) {
+      console.log('Unable to start background service', e);
+    }
+  }
+
+  stopBackgroundService = async () => {
     if (BackgroundService.isRunning()) {
       console.log('Stopping background service.');
       await BackgroundService.stop();
       console.log('Stopped background service');
-    } else {
-      try {
-        console.log('Starting background service.');
-        await BackgroundService.start(
-          this.backgroundService,
-          this.backgroundServiceOptions,
-        );
-        console.log('Successfully started background service.');
-      } catch (e) {
-        console.log('Unable to start background service', e);
-      }
     }
-  };
+  }
 
   searchForNearbyTasks = () => {
     this.data.forEach((task: Task) => {

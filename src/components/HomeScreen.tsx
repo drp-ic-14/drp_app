@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 
-import {Text, View} from 'react-native';
+import {AppState, Text, View} from 'react-native';
 
 import {Layout, List, Button} from '@ui-kitten/components';
 
@@ -25,14 +25,34 @@ const HomeScreen = props => {
   const bgService = new BgService(data, currentLocation);
   const geolocater: any = new Geolocater(currentLocation, setCurrentLocation);
 
+  const appState = React.useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = React.useState(appState.current);
+
   useEffect(() => {
     console.log(props.uuid);
     update_list();
 
     geolocater.requestLocationPermission();
-    // toggleBackgroundService(); // TODO: add conditions to toggle
+
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        // console.log("App in foreground");
+        bgService.stopBackgroundService();
+        
+      } else {
+        // console.log("App in background");
+        bgService.startBackgroundService();
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      // console.log('AppState', appState.current);
+
+    });
+
     return () => {
       geolocater.clearWatch();
+      subscription.remove();
     };
   }, []);
 
