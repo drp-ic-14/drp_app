@@ -26,7 +26,9 @@ const HomeScreen = props => {
   const geolocater: any = new Geolocater(currentLocation, setCurrentLocation);
 
   const appState = React.useRef(AppState.currentState);
-  const [appStateVisible, setAppStateVisible] = React.useState(appState.current);
+  // const [appStateVisible, setAppStateVisible] = React.useState(
+  //   appState.current,
+  // );
 
   useEffect(() => {
     console.log(props.uuid);
@@ -35,19 +37,20 @@ const HomeScreen = props => {
     geolocater.requestLocationPermission();
 
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
         // console.log("App in foreground");
         bgService.stopBackgroundService();
-        
       } else {
         // console.log("App in background");
         bgService.startBackgroundService();
       }
 
       appState.current = nextAppState;
-      setAppStateVisible(appState.current);
+      // setAppStateVisible(appState.current);
       // console.log('AppState', appState.current);
-
     });
 
     return () => {
