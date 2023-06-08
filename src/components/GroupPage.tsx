@@ -84,7 +84,7 @@ const GroupPage = ({ route }) => {
         ))}
       </View>
       <View style={{ alignItems: 'center', marginBottom: 16 }}>
-        <Button onPress={createGroup}>New Group</Button>
+        <Button onPress={createGroup}>+</Button>
       </View>
     </View>
   );

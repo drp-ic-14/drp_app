@@ -89,6 +89,12 @@ const AddTaskWindow = ({
             value={location}
             onChangeText={locationChange}
           />
+          <StyledInput
+            className="my-2"
+            placeholder="Group"
+            value={location}
+            onChangeText={locationChange}
+          />
           <MapView
             style={styles.map}
             initialRegion={{
