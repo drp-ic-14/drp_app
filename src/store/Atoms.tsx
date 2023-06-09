@@ -1,0 +1,11 @@
+import { atom } from 'recoil';
+
+export const textState = atom({
+  key: 'textState',
+  default: '',
+});
+
+export const uuidAtom = atom<string>({
+  key: 'uuid',
+  default: '',
+});

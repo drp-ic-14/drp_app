@@ -1,3 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BACK_END_URL } from '../api/Constants';
+
 // acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371
 export const distance = (
   lat1: number,
@@ -19,4 +22,28 @@ export const distance = (
   return R * c; // in metres
 };
 
-export const id = (x: number) => x;
+export const sleep = (time: any) =>
+  new Promise<void>(resolve => {
+    setTimeout(() => resolve(), time);
+  });
+
+export const getUuid = async (): Promise<string> => {
+  try {
+    const uuid = await AsyncStorage.getItem('@uuid');
+    if (uuid) return uuid;
+  } catch {
+    // Handled by fall through
+  }
+
+  const response = await fetch(`${BACK_END_URL}/api/generate_id`);
+
+  if (response.ok) {
+    const { id }: { id: string } = await response.json();
+    console.log('Fetched new UUID: ', id);
+
+    await AsyncStorage.setItem('@uuid', id);
+    return id;
+  }
+
+  throw new Error('Failed to get UUID');
+};

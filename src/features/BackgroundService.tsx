@@ -1,5 +1,5 @@
 import BackgroundService from 'react-native-background-actions';
-import { distance } from '../utils/Utils';
+import { distance, sleep } from '../utils/Utils';
 import { Task } from '../utils/Interfaces';
 import { notify } from './Notifier';
 import Geolocater from './Geolocater';
@@ -60,10 +60,7 @@ class BgService {
   };
 
   backgroundService = async () => {
-    const sleep = (time: any) =>
-      new Promise<void>(resolve => {
-        setTimeout(() => resolve(), time);
-      });
+
 
     await new Promise(async () => {
       while (true) {
