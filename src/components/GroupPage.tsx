@@ -1,19 +1,17 @@
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import { Button } from '@ui-kitten/components/ui/button/button.component';
+import Config from 'react-native-config';
 import GroupItem from './GroupItem';
 
 import { BACK_END_URL } from '../api/Constants';
-import Config from "react-native-config";
-
 
 const GroupPage = ({ route }) => {
-
-  const { uuid, group_id } = route.params;
+  const { uuid } = route.params;
   const [groups, setGroups] = React.useState([]);
 
   useEffect(() => {
-    console.log(BACK_END_URL + " backend url", Config);
+    console.log(`${BACK_END_URL} backend url`, Config);
     updateGroups();
   }, []);
 
@@ -45,7 +43,7 @@ const GroupPage = ({ route }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          group_name: "group",
+          group_name: 'group',
           user_id: uuid,
         }),
       });

@@ -3,7 +3,6 @@ import { Platform, PermissionsAndroid } from 'react-native';
 import { Location } from '../utils/Interfaces';
 
 class Geolocater {
-
   watchID: any;
 
   clearWatch() {
@@ -28,10 +27,11 @@ class Geolocater {
     return new Promise((resolve, reject) => {
       Geolocation.getCurrentPosition(
         // Will give you the current location
-        position => resolve({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        }),
+        position =>
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          }),
         error => reject(error),
         {
           enableHighAccuracy: true,
@@ -39,12 +39,11 @@ class Geolocater {
           maximumAge: 1000,
         },
       );
-    })
+    });
   }
 
   async requestLocationPermission() {
-    if (Platform.OS === 'ios') {
-    } else {
+    if (Platform.OS !== 'ios') {
       try {
         // Request foreground location permissions
         const foregroundGranted = await PermissionsAndroid.request(
@@ -67,10 +66,9 @@ class Geolocater {
           },
         );
         if (
-          foregroundGranted === PermissionsAndroid.RESULTS.GRANTED &&
-          backgroundGranted === PermissionsAndroid.RESULTS.GRANTED
+          foregroundGranted !== PermissionsAndroid.RESULTS.GRANTED ||
+          backgroundGranted !== PermissionsAndroid.RESULTS.GRANTED
         ) {
-        } else {
           console.warn('Location permission(s) Denied');
         }
       } catch (err) {

@@ -1,4 +1,4 @@
-import Config from "react-native-config";
+import Config from 'react-native-config';
 
-export const BACK_END_URL = Config.BACK_END_URL;
+export const { BACK_END_URL } = Config;
 export const API_KEY = '123';

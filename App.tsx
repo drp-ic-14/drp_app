@@ -5,10 +5,10 @@ import { ApplicationProvider } from '@ui-kitten/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import HomeScreen from './src/components/HomeScreen';
 import { BACK_END_URL } from './src/api/Constants';
 import GroupPage from './src/components/GroupPage';
-import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 
 const storeData = async value => {
   try {
@@ -71,7 +71,11 @@ const App = () => {
           component={HomeScreen}
           initialParams={{ uuid }}
         />
-        <Stack.Screen name="Groups" component={GroupPage} initialParams={{ uuid }} />
+        <Stack.Screen
+          name="Groups"
+          component={GroupPage}
+          initialParams={{ uuid }}
+        />
       </Stack.Navigator>
     );
   };
@@ -80,7 +84,7 @@ const App = () => {
     <NavigationContainer>
       <ApplicationProvider {...eva} theme={eva.light}>
         <AutocompleteDropdownContextProvider>
-        {chooseScreen()}
+          {chooseScreen()}
         </AutocompleteDropdownContextProvider>
       </ApplicationProvider>
     </NavigationContainer>

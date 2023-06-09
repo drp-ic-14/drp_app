@@ -5,20 +5,20 @@ import { AppState, Text, View } from 'react-native';
 import { Layout, List, Button } from '@ui-kitten/components';
 
 import { styled } from 'nativewind';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { BACK_END_URL } from '../api/Constants';
 import TaskItem from './TaskItem';
 import Geolocater from '../features/Geolocater';
 import { Task } from '../utils/Interfaces';
 import BgService from '../features/BackgroundService';
 import AddTaskWindow from './AddTaskWindow';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const StyledList = styled(List);
 
 const HomeScreen = ({ route, navigation }) => {
   const { uuid } = route.params;
   const [visible, setVisible] = React.useState(false);
-  const [currentLocation, setCurrentLocation] = React.useState({
+  const [currentLocation] = React.useState({
     latitude: 10,
     longitude: 10,
   });
@@ -63,7 +63,7 @@ const HomeScreen = ({ route, navigation }) => {
 
     return () => {
       subscription.remove();
-    }
+    };
   }, [data, currentLocation]);
 
   const updateList = async () => {
@@ -99,12 +99,14 @@ const HomeScreen = ({ route, navigation }) => {
 
   return (
     <Layout>
-      <View className='p-3 flex flex-col h-full justify-between'>
+      <View className="p-3 flex flex-col h-full justify-between">
         <View>
           <Text className="text-3xl text-slate-900">Today</Text>
           <StyledList data={data} renderItem={renderItem} className="grow" />
         </View>
-        <SafeAreaView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <SafeAreaView
+          style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+        >
           <Button onPress={() => navigation.navigate('Groups')}>Groups</Button>
           <Button onPress={() => setVisible(true)}>+</Button>
         </SafeAreaView>

@@ -1,7 +1,14 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { Button, Modal, Card, Input } from '@ui-kitten/components';
-import { View, StyleSheet, TextInput, Text, TouchableOpacity, FlatList } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
 import { styled } from 'nativewind';
 import { BACK_END_URL } from '../api/Constants';
 import { Location } from '../utils/Interfaces';
@@ -18,20 +25,15 @@ const AddTaskWindow = ({
 }) => {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
-  const [locationCoords, setLocationCoords] = useState<Location | null>(
-    null,
-  );
+  const [locationCoords, setLocationCoords] = useState<Location | null>(null);
   const [locationName, setLocationName] = useState('');
-  const [currentLocation, setCurrentLocation] = useState<Location | null>(
-    null,
-  );
+  const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
 
   const [groupName, setGroupName] = useState('');
 
-
-  const [loading, setLoading] = useState(false)
-  const [suggestionsList, setSuggestionsList] = useState([])
-  const [showList, setShowList] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [suggestionsList, setSuggestionsList] = useState([]);
+  const [showList, setShowList] = useState(false);
 
   useEffect(() => {
     const getCurrentLocation = async () => {
@@ -42,19 +44,13 @@ const AddTaskWindow = ({
   }, []);
 
   const getSuggestions = useCallback(async (q: string) => {
-    console.log("Getting suggestions: ", q);
+    console.log('Getting suggestions: ', q);
     setLoading(true);
     const suggestions = await geolocater.searchLocation(q);
-    console.log("Got suggestions: ", suggestions);
+    console.log('Got suggestions: ', suggestions, loading, showList);
     setSuggestionsList(suggestions.slice(0, 4));
     setLoading(false);
   }, []);
-
-  const onClearPress = useCallback(() => {
-    setSuggestionsList(null);
-  }, []);
-
-  const onOpenSuggestionsList = useCallback(isOpened => {}, []);
 
   const mapUpdate = async (keyword: string) => {
     const query = (await geolocater.searchLocation(keyword))[0];
@@ -121,13 +117,19 @@ const AddTaskWindow = ({
             placeholder="Location"
             value={location}
             onChangeText={locationChange}
-            onFocus={() => {setShowList(true)}}
-            onBlur={() => {setShowList(false)}}
+            onFocus={() => {
+              setShowList(true);
+            }}
+            onBlur={() => {
+              setShowList(false);
+            }}
           />
-          
+
           <FlatList
             data={suggestionsList}
-            renderItem={({item}) => <Item {...item} locationChange={locationChange} />}
+            renderItem={({ item }) => (
+              <Item {...item} locationChange={locationChange} />
+            )}
             keyExtractor={item => item.place_id}
           />
           {/* <StyledInput
@@ -190,8 +192,8 @@ const AddTaskWindow = ({
 const Item = ({ name, vicinity, locationChange }) => (
   <View>
     <TouchableOpacity onPress={() => locationChange(`${name}, ${vicinity}`)}>
-      <Text>{ name }</Text>
-      <Text>{ vicinity }</Text>
+      <Text>{name}</Text>
+      <Text>{vicinity}</Text>
     </TouchableOpacity>
   </View>
 );
