@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { Button, Modal, Card, Input } from '@ui-kitten/components';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, FlatList } from 'react-native';
 import { styled } from 'nativewind';
 import { BACK_END_URL } from '../api/Constants';
 import { Location } from '../utils/Interfaces';
@@ -16,15 +16,22 @@ const AddTaskWindow = ({
   data,
   visible,
 }) => {
-  const [name, setName] = React.useState('');
-  const [location, setLocation] = React.useState('');
-  const [locationCoords, setLocationCoords] = React.useState<Location | null>(
+  const [name, setName] = useState('');
+  const [location, setLocation] = useState('');
+  const [locationCoords, setLocationCoords] = useState<Location | null>(
     null,
   );
-  const [locationName, setLocationName] = React.useState('');
-  const [currentLocation, setCurrentLocation] = React.useState<Location | null>(
+  const [locationName, setLocationName] = useState('');
+  const [currentLocation, setCurrentLocation] = useState<Location | null>(
     null,
   );
+
+  const [groupName, setGroupName] = useState('');
+
+
+  const [loading, setLoading] = useState(false)
+  const [suggestionsList, setSuggestionsList] = useState([])
+  const [showList, setShowList] = useState(false)
 
   useEffect(() => {
     const getCurrentLocation = async () => {
@@ -33,6 +40,21 @@ const AddTaskWindow = ({
 
     getCurrentLocation();
   }, []);
+
+  const getSuggestions = useCallback(async (q: string) => {
+    console.log("Getting suggestions: ", q);
+    setLoading(true);
+    const suggestions = await geolocater.searchLocation(q);
+    console.log("Got suggestions: ", suggestions);
+    setSuggestionsList(suggestions.slice(0, 4));
+    setLoading(false);
+  }, []);
+
+  const onClearPress = useCallback(() => {
+    setSuggestionsList(null);
+  }, []);
+
+  const onOpenSuggestionsList = useCallback(isOpened => {}, []);
 
   const mapUpdate = async (keyword: string) => {
     const query = (await geolocater.searchLocation(keyword))[0];
@@ -46,6 +68,7 @@ const AddTaskWindow = ({
 
   const locationChange = (v: string) => {
     setLocation(v);
+    getSuggestions(v);
     mapUpdate(v);
   };
 
@@ -93,17 +116,40 @@ const AddTaskWindow = ({
             value={name}
             onChangeText={v => setName(v)}
           />
-          <StyledInput
+          <TextInput
             className="my-2"
             placeholder="Location"
             value={location}
             onChangeText={locationChange}
+            onFocus={() => {setShowList(true)}}
+            onBlur={() => {setShowList(false)}}
           />
+          
+          <FlatList
+            data={suggestionsList}
+            renderItem={({item}) => <Item {...item} locationChange={locationChange} />}
+            keyExtractor={item => item.place_id}
+          />
+          {/* <StyledInput
+            autoCorrect={false}
+            data={suggestionsList}
+            value={location}
+            onChangeText={(text) => { locationChange(text) }}
+            flatListProps={{
+              keyExtractor: (_, idx) => idx,
+              renderItem: ({ item }) => (
+                <TouchableOpacity onPress={() => locationChange(`${item.name}, ${item.vicinity}`)}>
+                  <Text>{item.name}</Text>
+                  <Text>{item.vicinity}</Text>
+                </TouchableOpacity>
+              ),
+            }}
+          /> */}
           <StyledInput
             className="my-2"
             placeholder="Group"
-            value={location}
-            onChangeText={locationChange}
+            value={groupName}
+            onChangeText={setGroupName}
           />
           {currentLocation ? (
             <MapView
@@ -140,6 +186,15 @@ const AddTaskWindow = ({
     </Modal>
   );
 };
+
+const Item = ({ name, vicinity, locationChange }) => (
+  <View>
+    <TouchableOpacity onPress={() => locationChange(`${name}, ${vicinity}`)}>
+      <Text>{ name }</Text>
+      <Text>{ vicinity }</Text>
+    </TouchableOpacity>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {

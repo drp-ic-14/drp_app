@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './src/components/HomeScreen';
 import { BACK_END_URL } from './src/api/Constants';
 import GroupPage from './src/components/GroupPage';
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 
 const storeData = async value => {
   try {
@@ -78,7 +79,9 @@ const App = () => {
   return (
     <NavigationContainer>
       <ApplicationProvider {...eva} theme={eva.light}>
+        <AutocompleteDropdownContextProvider>
         {chooseScreen()}
+        </AutocompleteDropdownContextProvider>
       </ApplicationProvider>
     </NavigationContainer>
   );

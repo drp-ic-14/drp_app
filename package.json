@@ -23,6 +23,8 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "0.71.8",
+    "react-native-autocomplete-dropdown": "^3.0.2",
+    "react-native-autocomplete-input": "^5.3.2",
     "react-native-background-actions": "^3.0.0",
     "react-native-config": "^1.5.1",
     "react-native-maps": "^1.7.1",
