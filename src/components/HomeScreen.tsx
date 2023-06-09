@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
-
 import { AppState, Text, View } from 'react-native';
-
 import { Layout, List, Button } from '@ui-kitten/components';
-
 import { styled } from 'nativewind';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { BACK_END_URL } from '../api/Constants';
 import TaskItem from './TaskItem';
 import Geolocater from '../features/Geolocater';

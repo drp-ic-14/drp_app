@@ -1,29 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { useAsyncFn } from 'react-use';
+import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import * as Icons from 'react-native-heroicons/solid';
 
-import { uuidAtom } from '../store/Atoms';
-import { getUuid, sleep } from '../utils/Utils';
+import { useFetchUuid } from '../hooks/useFetchUuid';
 
 type SplashProps = {
   complete: () => void;
 };
 
 const Splash = ({ complete }: SplashProps) => {
-  const [uuid, setUuid] = useRecoilState(uuidAtom);
-
-  const [{ loading, error }, run] = useAsyncFn(async () => {
-    const id = await getUuid();
-    await sleep(1000);
-    setUuid(id);
-    complete();
-  });
+  const [uuid, loading, error, update] = useFetchUuid();
 
   useEffect(() => {
-    run();
-  }, []);
+    if (!loading && !error && uuid) {
+      complete();
+    }
+  }, [loading, error, uuid]);
 
   return (
     <View className="bg-white flex-1 justify-center items-center gap-y-12">
@@ -39,9 +31,13 @@ const Splash = ({ complete }: SplashProps) => {
               className="text-base text-slate-800 text-center"
               style={{ includeFontPadding: false, textAlignVertical: 'center' }}
             >
-              <Text className="font-bold">Setup error: </Text>{error.message}
+              <Text className="font-bold">Setup error: </Text>
+              {error.message}
             </Text>
-            <TouchableOpacity className="bg-rose-600/10 p-1 rounded-md border border-rose-600/40" onPress={run}>
+            <TouchableOpacity
+              className="bg-rose-600/10 p-1 rounded-md border border-rose-600/40"
+              onPress={update}
+            >
               <Icons.ArrowPathRoundedSquareIcon fill="#1e293b" />
             </TouchableOpacity>
           </View>

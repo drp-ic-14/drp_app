@@ -23,6 +23,11 @@ module.exports = {
     // Hide warnings on console logs
     'no-console': 0,
 
+    // Allow nested ternary
+    'no-nested-ternary': 'off',
+
+    'import/prefer-default-export': 'off',
+
     // Allow prop spreading for ui-kitten
     'react/jsx-props-no-spreading': 'off',
 
