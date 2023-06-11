@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
-import { AppState, Text, View } from 'react-native';
-import { Layout, List, Button } from '@ui-kitten/components';
-import { styled } from 'nativewind';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppState, Text, TouchableOpacity, View } from 'react-native';
+import * as Icons from 'react-native-heroicons/outline';
 
 import { BACK_END_URL } from '../api/Constants';
 import TaskItem from './TaskItem';
@@ -10,11 +8,12 @@ import Geolocater from '../features/Geolocater';
 import { Task } from '../utils/Interfaces';
 import BgService from '../features/BackgroundService';
 import AddTaskWindow from './AddTaskWindow';
+import { useUuid } from '../hooks/useUuid';
+import AddTaskSheet from './AddTaskSheet';
 
-const StyledList = styled(List);
+const HomeScreen = ({ navigation }) => {
+  const uuid = useUuid();
 
-const HomeScreen = ({ route, navigation }) => {
-  const { uuid } = route.params;
   const [visible, setVisible] = React.useState(false);
   const [currentLocation] = React.useState({
     latitude: 10,
@@ -96,25 +95,36 @@ const HomeScreen = ({ route, navigation }) => {
   );
 
   return (
-    <Layout>
-      <View className="p-3 flex flex-col h-full justify-between">
+    <View className="bg-white flex-1">
+      <View className="px-3 flex-1 justify-between pb-3">
         <View>
-          <Text className="text-3xl text-slate-900">Today</Text>
-          <StyledList data={data} renderItem={renderItem} className="grow" />
+          <Text className="text-4xl text-slate-900 py-3 tracking-wider">
+            Home
+          </Text>
+          <View className="gap-3">
+            <View className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30">
+              <View className="space-y-2 flex-1">
+                <Text className="text-slate-900 text-lg">
+                  Learn how to do something a bit insane
+                </Text>
+                <View className="flex-row space-x-1 -ml-1">
+                  <Icons.MapPinIcon stroke="#0f172a99" size={20} />
+                  <Text
+                    className="text-slate-900/60"
+                    style={{ textAlignVertical: 'center' }}
+                  >
+                    Tesco Express, North End Road
+                  </Text>
+                </View>
+              </View>
+              <TouchableOpacity className="rounded-full bg-indigo-950/5 h-10 w-10 justify-center items-center">
+                <Icons.CheckIcon stroke="#0f172a" />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-        <SafeAreaView
-          style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-        >
-          <Button onPress={() => navigation.navigate('Groups')}>Groups</Button>
-          <Button onPress={() => setVisible(true)}>+</Button>
-        </SafeAreaView>
-        {/* <Button onPress={bgService.toggleBackgroundService}>
-          Toggle Background Service
-        </Button>
-        <Button onPress={bgService.searchForNearbyTasks}>Check nearby</Button>
-        <Text className="">UUID: {uuid}</Text> */}
+        <AddTaskSheet />
       </View>
-
       <AddTaskWindow
         uuid={uuid}
         visible={visible}
@@ -123,7 +133,7 @@ const HomeScreen = ({ route, navigation }) => {
         setData={setData}
         geolocater={geolocater}
       />
-    </Layout>
+    </View>
   );
 };
 
