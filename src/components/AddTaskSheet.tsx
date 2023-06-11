@@ -19,11 +19,11 @@ import {
   AutocompleteDropdownRef,
 } from 'react-native-autocomplete-dropdown';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
-
 import * as Icons from 'react-native-heroicons/outline';
 import { styled } from 'nativewind';
 import MapView, { Marker } from 'react-native-maps';
 import { useAsyncFn } from 'react-use';
+
 import { useLocation } from '../hooks/location';
 import { useUuid } from '../hooks/uuid';
 import { BACK_END_URL } from '../api/Constants';
@@ -33,9 +33,10 @@ const StyledInput = styled(TextInput);
 
 type AddTaskSheetProps = {
   updateList: () => void;
+  bottomSheetModalRef: BottomSheetModal;
 };
 
-const AddTaskSheet = ({ updateList }: AddTaskSheetProps) => {
+const AddTaskSheet = ({ updateList, bottomSheetModalRef }: AddTaskSheetProps) => {
   // Form states
   const [name, setName] = useState('');
   const [inputLoc, setInputLoc] = useState(null);
@@ -45,10 +46,6 @@ const AddTaskSheet = ({ updateList }: AddTaskSheetProps) => {
   const [currentLoc] = useLocation();
 
   // Bottom sheet
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
   const handleClosePress = () => bottomSheetModalRef.current?.close();
 
   // Autocomplete
@@ -130,18 +127,6 @@ const AddTaskSheet = ({ updateList }: AddTaskSheetProps) => {
 
   return (
     <BottomSheetModalProvider>
-      <TouchableOpacity
-        onPress={handlePresentModalPress}
-        className="bg-slate-200 rounded-xl shadow-2xl shadow-black/30 p-3 flex-row items-center space-x-2"
-      >
-        <Icons.PlusIcon stroke="#0f172a" size={20} />
-        <Text
-          className="text-slate-900 text-xl"
-          style={{ textAlignVertical: 'center' }}
-        >
-          New
-        </Text>
-      </TouchableOpacity>
       <BottomSheetModal
         ref={bottomSheetModalRef}
         snapPoints={['80%']}
