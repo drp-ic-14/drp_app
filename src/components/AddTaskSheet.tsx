@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Platform,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
+  TextInput,
 } from 'react-native';
 import {
   BottomSheetModal,
@@ -15,6 +16,7 @@ import {
   BottomSheetTextInput,
 } from '@gorhom/bottom-sheet';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 
 import * as Icons from 'react-native-heroicons/outline';
 import { styled } from 'nativewind';
@@ -26,7 +28,7 @@ import { useUuid } from '../hooks/useUuid';
 import { BACK_END_URL } from '../api/Constants';
 import { searchLocation } from '../features/Geolocation';
 
-const StyledInput = styled(BottomSheetTextInput);
+const StyledInput = styled(TextInput);
 
 const AddTaskSheet = () => {
   // Form states
@@ -151,104 +153,112 @@ const AddTaskSheet = () => {
         )}
         style={styles.sheetContainer}
         enablePanDownToClose
+        enableContentPanningGesture={false}
       >
-        <View className="flex-1">
-          <View className="flex-row mx-4 mb-4 ">
-            <StyledInput
-              value={name}
-              onChange={v => setName(v.nativeEvent.text)}
-              className="p-3 pl-5 mr-4 text-lg flex-grow text-slate-900 bg-neutral-200 self-stretch rounded-xl shadow-xl shadow-black/40"
-              placeholder="Name..."
-            />
-            <TouchableOpacity
-              onPress={() => submit(name, inputLoc)}
-              disabled={submitLoading}
-              className={`p-1 justify-center items-center ${submitLoading ? "bg-gray-300" : "bg-indigo-200"} aspect-square rounded-xl`}
-            >
-              {submitLoading ? (
-                <ActivityIndicator size="small" color="#0f172ates" />
-              ) : (
-                <Icons.PaperAirplaneIcon stroke="#0f172a" />
-              )}
-            </TouchableOpacity>
-          </View>
+        <NativeViewGestureHandler disallowInterruption>
+          <View className="flex-1">
+            <View className="flex-row mx-4 mb-4 ">
+              <StyledInput
+                value={name}
+                onChange={v => setName(v.nativeEvent.text)}
+                className="p-3 pl-5 mr-4 text-lg flex-grow text-slate-900 bg-neutral-200 self-stretch rounded-xl shadow-xl shadow-black/40"
+                placeholder="Name..."
+              />
+              <TouchableOpacity
+                onPress={() => submit(name, inputLoc)}
+                disabled={submitLoading}
+                className={`p-1 justify-center items-center ${
+                  submitLoading ? 'bg-gray-300' : 'bg-indigo-200'
+                } aspect-square rounded-xl`}
+              >
+                {submitLoading ? (
+                  <ActivityIndicator size="small" color="#0f172ates" />
+                ) : (
+                  <Icons.PaperAirplaneIcon stroke="#0f172a" />
+                )}
+              </TouchableOpacity>
+            </View>
 
-          <View className="px-4">
-            <AutocompleteDropdown
-              ref={searchRef}
-              controller={controller => {
-                dropdownController.current = controller;
-              }}
-              direction={Platform.select({ ios: 'down' })}
-              dataSet={suggestionsList}
-              onChangeText={getSuggestions}
-              onSelectItem={item => {
-                item && setInputLoc(item);
-              }}
-              debounce={600}
-              suggestionsListMaxHeight={Dimensions.get('window').height * 0.2}
-              onClear={onClearPress}
-              onOpenSuggestionsList={onOpenSuggestionsList}
-              loading={loading}
-              useFilter={false}
-              textInputProps={{
-                placeholder: 'Location...',
-                autoCorrect: false,
-                autoCapitalize: 'none',
-                style: {
-                  color: '#0F172A',
-                },
-              }}
-              inputContainerStyle={{
-                backgroundColor: '#E5E5E5',
-                borderRadius: 12,
-                paddingLeft: 8,
-                paddingRight: 4,
-              }}
-              suggestionsListContainerStyle={{
-                backgroundColor: '#E5E5E5',
-                borderRadius: 12,
-              }}
-              containerStyle={{ flexGrow: 1, flexShrink: 1 }}
-              renderItem={item => (
-                <Text style={{ color: '#0F172A', padding: 15 }}>
-                  {item.title}
-                </Text>
-              )}
-              ClearIconComponent={<Icons.XCircleIcon stroke="#0F172A" />}
-              inputHeight={50}
-              showChevron={false}
-              closeOnBlur
-            />
+            <View className="px-4">
+              <AutocompleteDropdown
+                ref={searchRef}
+                controller={controller => {
+                  dropdownController.current = controller;
+                }}
+                direction={Platform.select({ ios: 'down' })}
+                dataSet={suggestionsList}
+                onChangeText={getSuggestions}
+                onSelectItem={item => {
+                  item && setInputLoc(item);
+                }}
+                debounce={600}
+                suggestionsListMaxHeight={Dimensions.get('window').height * 0.2}
+                onClear={onClearPress}
+                onOpenSuggestionsList={onOpenSuggestionsList}
+                loading={loading}
+                useFilter={false}
+                textInputProps={{
+                  placeholder: 'Location...',
+                  autoCorrect: false,
+                  autoCapitalize: 'none',
+                  style: {
+                    color: '#0F172A',
+                  },
+                }}
+                inputContainerStyle={{
+                  backgroundColor: '#E5E5E5',
+                  borderRadius: 12,
+                  paddingLeft: 8,
+                  paddingRight: 4,
+                }}
+                suggestionsListContainerStyle={{
+                  backgroundColor: '#E5E5E5',
+                  borderRadius: 12,
+                }}
+                containerStyle={{ flexGrow: 1, flexShrink: 1 }}
+                renderItem={item => (
+                  <Text style={{ color: '#0F172A', padding: 15 }}>
+                    {item.title}
+                  </Text>
+                )}
+                ClearIconComponent={<Icons.XCircleIcon stroke="#0F172A" />}
+                inputHeight={50}
+                showChevron={false}
+                closeOnBlur={false}
+              />
+            </View>
+            <View className="flex-1 mt-4 rounded-t-xl overflow-hidden">
+              <MapView
+                region={{
+                  latitude: inputLoc
+                    ? inputLoc.location.latitude
+                    : currentLoc.latitude,
+                  longitude: inputLoc
+                    ? inputLoc.location.longitude
+                    : currentLoc.longitude,
+                  latitudeDelta: 0.001,
+                  longitudeDelta: 0.001,
+                }}
+                style={{ flex: 1 }}
+                showsUserLocation
+                showsMyLocationButton
+                followsUserLocation
+                showsCompass
+                scrollEnabled
+                zoomEnabled
+                pitchEnabled
+                rotateEnabled
+              >
+                {inputLoc ? (
+                  <Marker
+                    coordinate={inputLoc.location}
+                    title={inputLoc.title}
+                  />
+                ) : null}
+              </MapView>
+            </View>
           </View>
-          <View className="flex-1 mt-4 rounded-t-xl overflow-hidden">
-            <MapView
-              region={{
-                latitude: inputLoc
-                  ? inputLoc.location.latitude
-                  : currentLoc.latitude,
-                longitude: inputLoc
-                  ? inputLoc.location.longitude
-                  : currentLoc.longitude,
-                latitudeDelta: 0.001,
-                longitudeDelta: 0.001,
-              }}
-              style={{ flex: 1 }}
-              showsUserLocation
-              showsMyLocationButton
-              followsUserLocation
-              showsCompass
-              scrollEnabled
-              zoomEnabled
-              pitchEnabled
-              rotateEnabled
-            >
-              {inputLoc ? (
-                <Marker coordinate={inputLoc.location} title={inputLoc.title} />
-              ) : null}
-            </MapView>
-          </View>
-        </View>
+        </NativeViewGestureHandler>
       </BottomSheetModal>
     </BottomSheetModalProvider>
   );

@@ -7,14 +7,13 @@ import TaskItem from './TaskItem';
 import Geolocater from '../features/Geolocater';
 import { Task } from '../utils/Interfaces';
 import BgService from '../features/BackgroundService';
-import AddTaskWindow from './AddTaskWindow';
 import { useUuid } from '../hooks/useUuid';
 import AddTaskSheet from './AddTaskSheet';
+import Test from './Test';
 
 const HomeScreen = ({ navigation }) => {
   const uuid = useUuid();
 
-  const [visible, setVisible] = React.useState(false);
   const [currentLocation] = React.useState({
     latitude: 10,
     longitude: 10,
@@ -125,14 +124,6 @@ const HomeScreen = ({ navigation }) => {
         </View>
         <AddTaskSheet />
       </View>
-      <AddTaskWindow
-        uuid={uuid}
-        visible={visible}
-        setVisible={setVisible}
-        data={data}
-        setData={setData}
-        geolocater={geolocater}
-      />
     </View>
   );
 };
