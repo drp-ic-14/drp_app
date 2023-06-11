@@ -3,8 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Icons from 'react-native-heroicons/outline';
 
-import HomeScreen from '../components/HomeScreen';
-import GroupPage from '../components/GroupPage';
+import HomeScreen from './Home';
+import GroupPage from './Groups';
 
 const Navigation = () => {
   const Tab = createBottomTabNavigator();

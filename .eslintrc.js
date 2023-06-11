@@ -58,5 +58,7 @@ module.exports = {
     'no-async-promise-executor': 'off',
     'no-await-in-loop': 'off',
     'class-methods-use-this': 'off',
+
+    'react-native/no-inline-styles': 'off',
   },
 };

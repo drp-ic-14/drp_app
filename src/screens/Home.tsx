@@ -3,15 +3,16 @@ import { AppState, Text, TouchableOpacity, View } from 'react-native';
 import * as Icons from 'react-native-heroicons/outline';
 
 import { BACK_END_URL } from '../api/Constants';
-import TaskItem from './TaskItem';
+import TaskItem from '../components/TaskItem';
 import Geolocater from '../features/Geolocater';
 import { Task } from '../utils/Interfaces';
 import BgService from '../features/BackgroundService';
 import { useUuid } from '../hooks/useUuid';
-import AddTaskSheet from './AddTaskSheet';
-import Test from './Test';
+import AddTaskSheet from '../components/AddTaskSheet';
+import Test from '../components/Test';
+import { FlatList } from 'react-native-gesture-handler';
 
-const HomeScreen = ({ navigation }) => {
+const Home = ({ navigation }) => {
   const uuid = useUuid();
 
   const [currentLocation] = React.useState({
@@ -94,38 +95,20 @@ const HomeScreen = ({ navigation }) => {
   );
 
   return (
-    <View className="bg-white flex-1">
-      <View className="px-3 flex-1 justify-between pb-3">
-        <View>
-          <Text className="text-4xl text-slate-900 py-3 tracking-wider">
-            Home
-          </Text>
-          <View className="gap-3">
-            <View className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30">
-              <View className="space-y-2 flex-1">
-                <Text className="text-slate-900 text-lg">
-                  Learn how to do something a bit insane
-                </Text>
-                <View className="flex-row space-x-1 -ml-1">
-                  <Icons.MapPinIcon stroke="#0f172a99" size={20} />
-                  <Text
-                    className="text-slate-900/60"
-                    style={{ textAlignVertical: 'center' }}
-                  >
-                    Tesco Express, North End Road
-                  </Text>
-                </View>
-              </View>
-              <TouchableOpacity className="rounded-full bg-indigo-950/5 h-10 w-10 justify-center items-center">
-                <Icons.CheckIcon stroke="#0f172a" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+    <View className="flex-1 bg-white p-3 space-y-3">
+      <Text className="text-4xl text-slate-900 tracking-wider">Home</Text>
+      <View className="flex-1 justify-between">
+        <FlatList
+          data={data}
+          renderItem={({ item }) => <TaskItem task={item} />}
+          keyExtractor={item => item.id}
+          className="mb-3"
+          ItemSeparatorComponent={() => <View className="h-2" />}
+        />
         <AddTaskSheet />
       </View>
     </View>
   );
 };
 
-export default HomeScreen;
+export default Home;

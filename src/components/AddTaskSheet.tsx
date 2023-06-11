@@ -13,7 +13,6 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetBackdrop,
-  BottomSheetTextInput,
 } from '@gorhom/bottom-sheet';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
@@ -22,7 +21,6 @@ import * as Icons from 'react-native-heroicons/outline';
 import { styled } from 'nativewind';
 import MapView, { Marker } from 'react-native-maps';
 import { useAsyncFn } from 'react-use';
-import LocationAutocomplete from './LocationAutocomplete';
 import { useLocation } from '../hooks/useLocation';
 import { useUuid } from '../hooks/useUuid';
 import { BACK_END_URL } from '../api/Constants';
@@ -44,15 +42,15 @@ const AddTaskSheet = () => {
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+  const handleClosePress = () => bottomSheetModalRef.current?.close();
 
   // Autocomplete
   const [loading, setLoading] = useState(false);
   const [suggestionsList, setSuggestionsList] = useState(null);
   const dropdownController = useRef(null);
-
   const searchRef = useRef(null);
 
-  const getSuggestions = useCallback(async q => {
+  const getSuggestions = useCallback(async (q: string) => {
     if (typeof q !== 'string' || q.length < 3) {
       setSuggestionsList(null);
       return;
@@ -84,20 +82,15 @@ const AddTaskSheet = () => {
     setSuggestionsList(null);
   }, []);
 
-  const onOpenSuggestionsList = useCallback(isOpened => {}, []);
-
   // HTTP Add task
   const addTask = async (name, inputLoc) => {
-    console.log('Hello', name, inputLoc);
     const task = {
       name,
       location: inputLoc.title,
       latitude: inputLoc.location.latitude,
       longitude: inputLoc.location.longitude,
     };
-    console.log('Hello2');
-
-    console.log(task);
+    console.log('Got input', task);
 
     const response = await fetch(`${BACK_END_URL}/api/add_task`, {
       method: 'POST',
@@ -114,12 +107,13 @@ const AddTaskSheet = () => {
     console.log(response);
 
     const newTask = await response.json();
-    console.log('task: ', newTask);
+    console.log('Server: ', newTask);
 
     setName('');
     setInputLoc(null);
     onClearPress();
     dropdownController.current.clear();
+    handleClosePress();
 
     // setData([...data, newTask]);
   };
@@ -194,7 +188,6 @@ const AddTaskSheet = () => {
                 debounce={600}
                 suggestionsListMaxHeight={Dimensions.get('window').height * 0.2}
                 onClear={onClearPress}
-                onOpenSuggestionsList={onOpenSuggestionsList}
                 loading={loading}
                 useFilter={false}
                 textInputProps={{
