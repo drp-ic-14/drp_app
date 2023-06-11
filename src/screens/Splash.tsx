@@ -1,16 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useAsync } from 'react-use';
 import * as Icons from 'react-native-heroicons/solid';
 
-import { useFetchUuid } from '../hooks/useFetchUuid';
-import { useSetupLocation } from '../hooks/useLocation';
+import { useFetchUuid } from '../hooks/uuid';
+import { notificationPermissions } from '../features/Notifier';
+import { geolocationPermissions } from '../features/Geolocation';
+import { useLocation } from '../hooks/location';
 
 type SplashProps = {
   complete: () => void;
 };
 
 const Splash = ({ complete }: SplashProps) => {
-  const [uuid, loading, error, update] = useFetchUuid();
+  const [uuid, uuidLoading, error, update] = useFetchUuid();
+  const [, updateLoc] = useLocation();
+
+  const setup = async () => {
+    await geolocationPermissions();
+    await notificationPermissions();
+    await updateLoc();
+  };
+
+  const { loading: setupLoading } = useAsync(setup);
+
+  const loading = useMemo(
+    () => uuidLoading || setupLoading,
+    [uuidLoading, setupLoading],
+  );
 
   useEffect(() => {
     if (!loading && !error && uuid) {

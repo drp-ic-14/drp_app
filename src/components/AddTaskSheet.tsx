@@ -14,21 +14,28 @@ import {
   BottomSheetModalProvider,
   BottomSheetBackdrop,
 } from '@gorhom/bottom-sheet';
-import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import {
+  AutocompleteDropdown,
+  AutocompleteDropdownRef,
+} from 'react-native-autocomplete-dropdown';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 
 import * as Icons from 'react-native-heroicons/outline';
 import { styled } from 'nativewind';
 import MapView, { Marker } from 'react-native-maps';
 import { useAsyncFn } from 'react-use';
-import { useLocation } from '../hooks/useLocation';
-import { useUuid } from '../hooks/useUuid';
+import { useLocation } from '../hooks/location';
+import { useUuid } from '../hooks/uuid';
 import { BACK_END_URL } from '../api/Constants';
 import { searchLocation } from '../features/Geolocation';
 
 const StyledInput = styled(TextInput);
 
-const AddTaskSheet = () => {
+type AddTaskSheetProps = {
+  updateList: () => void;
+};
+
+const AddTaskSheet = ({ updateList }: AddTaskSheetProps) => {
   // Form states
   const [name, setName] = useState('');
   const [inputLoc, setInputLoc] = useState(null);
@@ -47,7 +54,7 @@ const AddTaskSheet = () => {
   // Autocomplete
   const [loading, setLoading] = useState(false);
   const [suggestionsList, setSuggestionsList] = useState(null);
-  const dropdownController = useRef(null);
+  const dropdownController = useRef<AutocompleteDropdownRef>(null);
   const searchRef = useRef(null);
 
   const getSuggestions = useCallback(async (q: string) => {
@@ -83,7 +90,7 @@ const AddTaskSheet = () => {
   }, []);
 
   // HTTP Add task
-  const addTask = async (name, inputLoc) => {
+  const addTask = async (name: string, inputLoc) => {
     const task = {
       name,
       location: inputLoc.title,
@@ -109,16 +116,17 @@ const AddTaskSheet = () => {
     const newTask = await response.json();
     console.log('Server: ', newTask);
 
+    // setData([...data, newTask]);
+    updateList();
+
     setName('');
     setInputLoc(null);
     onClearPress();
-    dropdownController.current.clear();
+    dropdownController.current?.clear();
     handleClosePress();
-
-    // setData([...data, newTask]);
   };
 
-  const [{ loading: submitLoading, error }, submit] = useAsyncFn(addTask);
+  const [{ loading: submitLoading }, submit] = useAsyncFn(addTask);
 
   return (
     <BottomSheetModalProvider>

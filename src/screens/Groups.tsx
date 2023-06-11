@@ -5,9 +5,10 @@ import Config from 'react-native-config';
 import GroupItem from '../components/GroupItem';
 
 import { BACK_END_URL } from '../api/Constants';
+import { useUuid } from '../hooks/uuid';
 
-const Groups = ({ route }) => {
-  const { uuid } = route.params;
+const Groups = () => {
+  const uuid = useUuid();
   const [groups, setGroups] = React.useState([]);
 
   useEffect(() => {

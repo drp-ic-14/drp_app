@@ -1,4 +1,4 @@
-import { useSetupLocation } from '../hooks/useLocation';
+import { useSetupLocation } from '../hooks/location';
 
 const LocationProvider = () => {
   useSetupLocation();

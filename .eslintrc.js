@@ -16,6 +16,7 @@ module.exports = {
           'warn',
           { variables: true },
         ],
+        '@typescript-eslint/no-shadow': 'off',
       },
     },
   ],

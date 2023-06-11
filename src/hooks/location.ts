@@ -1,27 +1,16 @@
 import Geolocation from '@react-native-community/geolocation';
-import { atom, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
 import { Location } from '../utils/Interfaces';
+import { locationAtom } from '../store/Atoms';
+import { getCurrentPosition } from '../features/Geolocation';
 
-const locationAtom = atom({
-  key: 'location',
-  default: { longitude: 0, latitude: 0 },
-});
-
-export const useLocation = (): [Location, () => void] => {
+export const useLocation = (): [Location, () => Promise<void>] => {
   const [location, setLocation] = useRecoilState(locationAtom);
 
-  const update = () => {
-    Geolocation.getCurrentPosition(
-      ({ coords: { longitude, latitude } }) =>
-        setLocation({ longitude, latitude }),
-      () => {},
-      {
-        enableHighAccuracy: true,
-        timeout: 30000,
-        maximumAge: 1000,
-      },
-    );
+  const update = async () => {
+    const { longitude, latitude } = await getCurrentPosition();
+    setLocation({ longitude, latitude });
   };
 
   return [location, update];
@@ -37,7 +26,9 @@ export const useSetupLocation = (): boolean => {
         setLocation({ longitude, latitude });
         setLoading(false);
       },
-      e => {console.log(e)},
+      e => {
+        console.log(e);
+      },
       {
         enableHighAccuracy: true,
         timeout: 30000,
@@ -46,7 +37,7 @@ export const useSetupLocation = (): boolean => {
     );
 
     return () => {
-      console.log("Cleanup");
+      console.log('Cleanup location watch');
       Geolocation.clearWatch(watchId);
     };
   }, []);

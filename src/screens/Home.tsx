@@ -1,43 +1,25 @@
-import React, { useEffect } from 'react';
-import { AppState, Text, TouchableOpacity, View } from 'react-native';
-import * as Icons from 'react-native-heroicons/outline';
+import React, { useState, useEffect, useRef } from 'react';
+import { AppState, Text, View, FlatList } from 'react-native';
 
 import { BACK_END_URL } from '../api/Constants';
 import TaskItem from '../components/TaskItem';
-import Geolocater from '../features/Geolocater';
 import { Task } from '../utils/Interfaces';
-import BgService from '../features/BackgroundService';
-import { useUuid } from '../hooks/useUuid';
+import { useUuid } from '../hooks/uuid';
 import AddTaskSheet from '../components/AddTaskSheet';
-import Test from '../components/Test';
-import { FlatList } from 'react-native-gesture-handler';
+import {
+  startBackgroundService,
+  stopBackgroundService,
+} from '../features/BackgroundService';
 
-const Home = ({ navigation }) => {
+const Home = () => {
   const uuid = useUuid();
+  const [data, setData] = useState(new Array<Task>());
 
-  const [currentLocation] = React.useState({
-    latitude: 10,
-    longitude: 10,
-  });
-  const [data, setData] = React.useState(new Array<Task>());
-
-  const geolocater: any = new Geolocater();
-  const bgService = new BgService(data, geolocater);
-
-  const appState = React.useRef(AppState.currentState);
-  // const [appStateVisible, setAppStateVisible] = React.useState(
-  //   appState.current,
-  // );
+  const appState = useRef(AppState.currentState);
 
   useEffect(() => {
     console.log(uuid);
     updateList();
-
-    geolocater.requestLocationPermission();
-
-    return () => {
-      geolocater.clearWatch();
-    };
   }, []);
 
   useEffect(() => {
@@ -46,24 +28,21 @@ const Home = ({ navigation }) => {
         appState.current.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
-        // console.log("App in foreground");
-        bgService.stopBackgroundService();
+        stopBackgroundService();
       } else {
-        // console.log("App in background");
-        bgService.startBackgroundService();
+        startBackgroundService(data);
       }
 
       appState.current = nextAppState;
-      // setAppStateVisible(appState.current);
-      // console.log('AppState', appState.current);
     });
 
     return () => {
       subscription.remove();
     };
-  }, [data, currentLocation]);
+  }, [data]);
 
   const updateList = async () => {
+    console.log("updating list...");
     const response = await fetch(`${BACK_END_URL}/api/get_tasks`, {
       method: 'POST',
       headers: {
@@ -79,33 +58,20 @@ const Home = ({ navigation }) => {
     setData(list);
   };
 
-  const renderItem = ({ item }): React.ReactElement => (
-    <TaskItem
-      id={item.id}
-      name={item.name}
-      location={item.location}
-      longitude={item.longitude}
-      latitude={item.latitude}
-      checked={item.completed}
-      uuid={uuid}
-      updateList={updateList}
-      current_lat={currentLocation.latitude}
-      current_long={currentLocation.longitude}
-    />
-  );
-
   return (
     <View className="flex-1 bg-white p-3 space-y-3">
       <Text className="text-4xl text-slate-900 tracking-wider">Home</Text>
       <View className="flex-1 justify-between">
         <FlatList
           data={data}
-          renderItem={({ item }) => <TaskItem task={item} />}
+          renderItem={({ item }) => (
+            <TaskItem task={item} updateList={updateList} />
+          )}
           keyExtractor={item => item.id}
           className="mb-3"
           ItemSeparatorComponent={() => <View className="h-2" />}
         />
-        <AddTaskSheet />
+        <AddTaskSheet updateList={updateList} />
       </View>
     </View>
   );

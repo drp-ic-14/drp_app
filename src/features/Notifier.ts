@@ -1,4 +1,5 @@
 import notifee from '@notifee/react-native';
+import { Task } from '../utils/Interfaces';
 
 export async function notify(task: Task, distance: number) {
   console.log(`Notifying user about task '${task.name}'`);
@@ -20,6 +21,6 @@ export async function notify(task: Task, distance: number) {
   }, 1000);
 }
 
-export async function requestPermission() {
+export async function notificationPermissions() {
   await notifee.requestPermission();
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
 import { RecoilRoot } from 'recoil';
+import RecoilNexus from 'recoil-nexus';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 
@@ -24,12 +25,13 @@ const App = () => {
 
   return (
     <RecoilRoot>
+      <RecoilNexus />
       <GestureHandlerRootView style={{ flex: 1 }}>
         <AutocompleteDropdownContextProvider>
           <ApplicationProvider {...eva} theme={eva.light}>
-            <LocationProvider />
             <StatusBar barStyle="dark-content" backgroundColor="white" />
             {splash ? <Splash complete={hideSplash} /> : <Navigation />}
+            <LocationProvider />
           </ApplicationProvider>
         </AutocompleteDropdownContextProvider>
       </GestureHandlerRootView>

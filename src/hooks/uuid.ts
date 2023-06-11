@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { useAsyncFn } from 'react-use';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { uuidAtom } from '../store/Atoms';
 import { sleep } from '../utils/Utils';
 import { BACK_END_URL } from '../api/Constants';
@@ -46,4 +47,9 @@ export const useFetchUuid = (): [
   }, []);
 
   return [uuid, loading, error, update];
+};
+
+export const useUuid = () => {
+  const [uuid] = useRecoilState(uuidAtom);
+  return uuid;
 };
