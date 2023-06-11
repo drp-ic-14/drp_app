@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import * as Icons from 'react-native-heroicons/solid';
 
 import { useFetchUuid } from '../hooks/useFetchUuid';
+import { useSetupLocation } from '../hooks/useLocation';
 
 type SplashProps = {
   complete: () => void;

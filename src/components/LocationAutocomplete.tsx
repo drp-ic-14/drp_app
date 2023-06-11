@@ -27,7 +27,10 @@ const LocationAutocomplete = memo(({setLocation}) => {
       ({ place_id, name, vicinity, geometry }) => ({
         id: place_id,
         title: `${name}, ${vicinity}`,
-        geometry,
+        location: {
+          latitude: geometry.location.lat,
+          longitude: geometry.location.lng,
+        },
       }),
     );
 

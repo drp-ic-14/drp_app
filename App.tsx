@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
 import { RecoilRoot } from 'recoil';
@@ -9,9 +9,10 @@ import { StatusBar } from 'react-native';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import Splash from './src/screens/Splash';
 import Navigation from './src/screens/Navigation';
+import LocationProvider from './src/components/LocationProvider';
 
 const App = () => {
-  const [splash, setSplash] = React.useState(true);
+  const [splash, setSplash] = useState(true);
 
   const hideSplash = () => {
     setSplash(false);
@@ -26,6 +27,7 @@ const App = () => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <AutocompleteDropdownContextProvider>
           <ApplicationProvider {...eva} theme={eva.light}>
+            <LocationProvider />
             <StatusBar barStyle="dark-content" backgroundColor="white" />
             {splash ? <Splash complete={hideSplash} /> : <Navigation />}
           </ApplicationProvider>
