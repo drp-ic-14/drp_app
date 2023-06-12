@@ -4,12 +4,13 @@ import Geolocation from '@react-native-community/geolocation';
 import { locationAtom } from '../store/Atoms';
 import { Location } from '../utils/Interfaces';
 
-export const searchLocation = async (keyword: String): Promise<Array<any>> => {
+export const searchLocation = async (query: String): Promise<Array<any>> => {
   const loc = getRecoil(locationAtom);
   try {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=${keyword}&location=${loc.latitude}%2C${loc.longitude}&radius=1000&key=AIzaSyCe4_m0Axs6LanGk8u8ZQzX19yiM9ITyDM`,
+      `http://drp-14-server.herokuapp.com/api/search_location?query=${query}&latitude=${loc.latitude}&longitude=${loc.longitude}`,
     );
+
     const json = await response.json();
     return json.results;
   } catch (error) {

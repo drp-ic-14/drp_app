@@ -31,8 +31,7 @@ const searchForNearbyTasks = async (data: Task[]) => {
 };
 
 const backgroundService = async (
-  args?:
-    | {
+  args?: {
         data: Task[];
       }
     | undefined,
