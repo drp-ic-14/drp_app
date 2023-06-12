@@ -6,6 +6,8 @@ import { useLocation } from './location';
 import { geolocationPermissions } from '../features/Geolocation';
 import { notificationPermissions } from '../features/Notifier';
 import { sleep } from '../utils/Utils';
+import { PERMISSIONS, check } from 'react-native-permissions';
+import { Platform } from 'react-native';
 
 export const useSplash = (): [
   string,
@@ -20,10 +22,19 @@ export const useSplash = (): [
     setStatus('Getting user account');
     await updateUuid();
     await sleep(300);
+
     setStatus('Getting permissions');
-    await geolocationPermissions();
+    if (Platform.OS === 'ios') {
+      const status = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      if (status != "granted") {
+        await geolocationPermissions();
+      }
+    } else {
+      await geolocationPermissions();
+    }
     await notificationPermissions();
     await sleep(300);
+
     setStatus('Getting location');
     await updateLoc();
     await sleep(300);

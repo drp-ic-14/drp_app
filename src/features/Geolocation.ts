@@ -26,7 +26,7 @@ export const getCurrentPosition = async (): Promise<Location> =>
       ({ coords: { latitude, longitude } }) => resolve({ latitude, longitude }),
       reject,
       {
-        enableHighAccuracy: true,
+        enableHighAccuracy: false,
         timeout: 30000,
         maximumAge: 1000,
       },
