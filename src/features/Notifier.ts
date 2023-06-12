@@ -16,6 +16,20 @@ export async function notify(task: Task, distance: number) {
         pressAction: {
           id: 'default',
         },
+        actions: [
+          {
+            title: 'Mark as done',
+            pressAction: {
+              id: 'mark-as-done',
+            },
+          },
+          {
+            title: 'Remind me later',
+            pressAction: {
+              id: 'remind-later',
+            },
+          },
+        ]
       },
     });
   }, 1000);
