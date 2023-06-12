@@ -67,7 +67,7 @@ const Home = () => {
 
   return (
     <View className="flex-1 bg-white p-3 space-y-3">
-      <Text className="text-4xl text-slate-900 tracking-wider">Home</Text>
+      <Text className="text-4xl text-slate-900 tracking-wider">Tasks</Text>
       <View className="flex-1 justify-between">
         <FlatList
           data={data}
