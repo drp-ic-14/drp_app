@@ -26,6 +26,7 @@ const Home = () => {
 
   useEffect(() => {
     console.log(uuid);
+    stopBackgroundService();
     updateList();
   }, []);
 
