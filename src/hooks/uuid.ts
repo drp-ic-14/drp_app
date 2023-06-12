@@ -38,13 +38,12 @@ export const useFetchUuid = (): [
 
   const [{ loading, error }, update] = useAsyncFn(async () => {
     const id = await loadUuid();
-    await sleep(1000);
     setUuid(id);
   });
 
-  useEffect(() => {
-    update();
-  }, []);
+  // useEffect(() => {
+  //   update();
+  // }, []);
 
   return [uuid, loading, error, update];
 };

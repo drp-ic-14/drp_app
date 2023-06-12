@@ -13,7 +13,8 @@ export const searchLocation = async (keyword: String): Promise<Array<any>> => {
     const json = await response.json();
     return json.results;
   } catch (error) {
-    console.warn(error);
+    console.error('Failed places API request');
+    console.error(error);
     return Promise.resolve([]);
   }
 };
