@@ -7,7 +7,7 @@ import GroupItem from '../components/GroupItem';
 import { BACK_END_URL } from '../api/Constants';
 import { useUuid } from '../hooks/uuid';
 
-const GroupPage = ({ route }) => {
+const Groups = ({ route }) => {
   const { uuid } = route.params;
   const [groups, setGroups] = useState([]);
 
