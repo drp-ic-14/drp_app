@@ -8,6 +8,7 @@ import { distance } from '../utils/Utils';
 import { Task } from '../utils/Interfaces';
 import { useUuid } from '../hooks/uuid';
 import { useLocation } from '../hooks/location';
+import { deleteTask } from '../api/BackEnd';
 
 type TaskItemProps = {
   task: Task;
@@ -22,18 +23,7 @@ const TaskItem = ({
   const [currentLocation] = useLocation();
 
   const onComplete = async () => {
-    await fetch(`${BACK_END_URL}/api/delete_task`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_id: uuid,
-        task_id: id,
-      }),
-    });
-
+    await deleteTask(uuid, id);
     updateList();
   };
 
