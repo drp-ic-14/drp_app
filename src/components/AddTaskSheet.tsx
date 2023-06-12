@@ -39,6 +39,7 @@ type AddTaskSheetProps = {
 const AddTaskSheet = ({ updateList, bottomSheetModalRef }: AddTaskSheetProps) => {
   // Form states
   const [name, setName] = useState('');
+  const [group, setGroup] = useState('');
   const [inputLoc, setInputLoc] = useState(null);
 
   // Util states
@@ -87,9 +88,10 @@ const AddTaskSheet = ({ updateList, bottomSheetModalRef }: AddTaskSheetProps) =>
   }, []);
 
   // HTTP Add task
-  const addTask = async (name: string, inputLoc) => {
+  const addTask = async (name: string, group: string, inputLoc) => {
     const task = {
       name,
+      group,
       location: inputLoc.title,
       latitude: inputLoc.location.latitude,
       longitude: inputLoc.location.longitude,
@@ -117,6 +119,7 @@ const AddTaskSheet = ({ updateList, bottomSheetModalRef }: AddTaskSheetProps) =>
     updateList();
 
     setName('');
+    setGroup('');
     setInputLoc(null);
     onClearPress();
     dropdownController.current?.clear();
@@ -149,10 +152,10 @@ const AddTaskSheet = ({ updateList, bottomSheetModalRef }: AddTaskSheetProps) =>
                 value={name}
                 onChange={v => setName(v.nativeEvent.text)}
                 className="p-3 pl-5 mr-4 text-lg flex-grow text-slate-900 bg-neutral-200 self-stretch rounded-xl shadow-xl shadow-black/40"
-                placeholder="Name..."
+                placeholder="Task Name..."
               />
               <TouchableOpacity
-                onPress={() => submit(name, inputLoc)}
+                onPress={() => submit(name, group, inputLoc)}
                 disabled={submitLoading}
                 className={`p-1 justify-center items-center ${
                   submitLoading ? 'bg-gray-300' : 'bg-indigo-200'
@@ -164,6 +167,15 @@ const AddTaskSheet = ({ updateList, bottomSheetModalRef }: AddTaskSheetProps) =>
                   <Icons.PaperAirplaneIcon stroke="#0f172a" />
                 )}
               </TouchableOpacity>
+            </View>
+
+            <View className="flex-row mx-4 mb-4 ">
+              <StyledInput
+                value={group}
+                onChange={v => setGroup(v.nativeEvent.text)}
+                className="p-3 pl-5 mr-4 text-lg flex-grow text-slate-900 bg-neutral-200 self-stretch rounded-xl shadow-xl shadow-black/40"
+                placeholder="Group..."
+              />
             </View>
 
             <View className="px-4">

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Modal, TextInput, Text } from 'react-native';
+import { View, Modal, TextInput, Text, TouchableOpacity } from 'react-native';
 import { Button } from '@ui-kitten/components/ui/button/button.component';
 import Config from 'react-native-config';
 import GroupItem from '../components/GroupItem';
+import * as Icons from 'react-native-heroicons/outline';
 
 import { BACK_END_URL } from '../api/Constants';
 import { useUuid } from '../hooks/uuid';
@@ -91,7 +92,12 @@ const Groups = () => {
         )}
       </View>
       <View style={{ alignItems: 'center', marginBottom: 16 }}>
-        <Button onPress={() => setModalVisible(true)}>+</Button>
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          className="bg-slate-200 rounded-xl shadow-2xl shadow-black/30 p-3 flex-row items-center space-x-2"
+        >
+          <Icons.PlusIcon stroke="#0f172a" size={20} />
+        </TouchableOpacity>
       </View>
       <Modal
         visible={modalVisible}
