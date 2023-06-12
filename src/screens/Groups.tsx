@@ -7,12 +7,12 @@ import GroupItem from '../components/GroupItem';
 import { BACK_END_URL } from '../api/Constants';
 import { useUuid } from '../hooks/uuid';
 
-const Groups = ({ route }) => {
-  const { uuid } = route.params;
+const Groups = () => {
+  const uuid = useUuid();
   const [groups, setGroups] = useState([]);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [groupName, setGroupName] = useState('')
+  const [groupName, setGroupName] = useState('');
 
   useEffect(() => {
     console.log(`${BACK_END_URL} backend url`, Config);
@@ -85,9 +85,7 @@ const Groups = ({ route }) => {
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         {groups.length > 0 ? (
-          groups.map(group => (
-            <GroupItem key={group.id} name={group.name} />
-          ))
+          groups.map(group => <GroupItem key={group.id} name={group.name} />)
         ) : (
           <Text>No groups available</Text>
         )}
@@ -99,12 +97,18 @@ const Groups = ({ route }) => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
           <TextInput
             value={groupName}
             onChangeText={text => setGroupName(text)}
             placeholder="Enter group name"
-            style={{ borderBottomWidth: 1, borderBottomColor: 'black', marginBottom: 16 }}
+            style={{
+              borderBottomWidth: 1,
+              borderBottomColor: 'black',
+              marginBottom: 16,
+            }}
           />
           <Button onPress={createGroup}>Create</Button>
           <Button onPress={() => setModalVisible(false)}>Cancel</Button>
