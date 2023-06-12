@@ -28,7 +28,7 @@ export const getCurrentPosition = async (): Promise<Location> =>
       {
         enableHighAccuracy: false,
         timeout: 30000,
-        maximumAge: 1000,
+        // maximumAge: 1000,
       },
     );
   });
