@@ -1,4 +1,5 @@
 export interface Task {
+  id: string;
   name: string;
   location: string;
   latitude: number;

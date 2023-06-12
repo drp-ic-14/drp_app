@@ -16,12 +16,18 @@ module.exports = {
           'warn',
           { variables: true },
         ],
+        '@typescript-eslint/no-shadow': 'off',
       },
     },
   ],
   rules: {
     // Hide warnings on console logs
     'no-console': 0,
+
+    // Allow nested ternary
+    'no-nested-ternary': 'off',
+
+    'import/prefer-default-export': 'off',
 
     // Allow prop spreading for ui-kitten
     'react/jsx-props-no-spreading': 'off',
@@ -53,5 +59,7 @@ module.exports = {
     'no-async-promise-executor': 'off',
     'no-await-in-loop': 'off',
     'class-methods-use-this': 'off',
+
+    'react-native/no-inline-styles': 'off',
   },
 };

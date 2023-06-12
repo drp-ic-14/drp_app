@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Modal, TextInput, Text } from 'react-native';
 import { Button } from '@ui-kitten/components/ui/button/button.component';
 import Config from 'react-native-config';
-import GroupItem from './GroupItem';
+import GroupItem from '../components/GroupItem';
 
 import { BACK_END_URL } from '../api/Constants';
+import { useUuid } from '../hooks/uuid';
 
 const GroupPage = ({ route }) => {
   const { uuid } = route.params;
@@ -113,4 +114,4 @@ const GroupPage = ({ route }) => {
   );
 };
 
-export default GroupPage;
+export default Groups;

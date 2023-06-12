@@ -19,4 +19,7 @@ export const distance = (
   return R * c; // in metres
 };
 
-export const id = (x: number) => x;
+export const sleep = (time: any) =>
+  new Promise<void>(resolve => {
+    setTimeout(() => resolve(), time);
+  });
