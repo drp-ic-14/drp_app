@@ -5,6 +5,7 @@ import * as Icons from 'react-native-heroicons/outline';
 
 import Home from './Home';
 import Groups from './Groups';
+import Map from './Map';
 
 const Navigation = () => {
   const Tab = createBottomTabNavigator();
@@ -25,6 +26,8 @@ const Navigation = () => {
               icon = (
                 <Icons.UserGroupIcon stroke={focused ? '#ff0000' : '#333'} />
               );
+            } else if (route.name === 'Map') {
+              icon = <Icons.MapIcon stroke={focused ? '#ff0000' : '#333'} />;
             }
 
             return icon;
@@ -33,6 +36,7 @@ const Navigation = () => {
           tabBarInactiveTintColor: 'gray',
         })}
       >
+        <Tab.Screen name="Map" component={Map} />
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="Groups" component={Groups} />
       </Tab.Navigator>

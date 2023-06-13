@@ -92,6 +92,7 @@ const Groups = () => {
   return (
     <View className="bg-white flex-1 justify-between p-3">
       <View className="flex-1">
+        <Text className="text-4xl text-slate-900">Groups</Text>
         {groups.length > 0 ? (
           <FlatList
             data={groups}

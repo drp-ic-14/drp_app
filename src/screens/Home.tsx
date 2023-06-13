@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { AppState, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import * as Icons from 'react-native-heroicons/outline';
 
 import { BACK_END_URL } from '../api/Constants';
 import TaskItem from '../components/TaskItem';
-import { Task } from '../utils/Interfaces';
 import { useUuid } from '../hooks/uuid';
 import AddTaskSheet from '../components/AddTaskSheet';
 import {
   startBackgroundService,
   stopBackgroundService,
 } from '../features/BackgroundService';
+import { useData } from '../hooks/data';
 
 const Home = () => {
   const uuid = useUuid();
-  const [data, setData] = useState(new Array<Task>());
+  const [data, setData] = useData();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const handlePresentModalPress = useCallback(() => {
@@ -36,6 +36,7 @@ const Home = () => {
         appState.current.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
+        updateList();
         stopBackgroundService();
       } else {
         startBackgroundService(data);
