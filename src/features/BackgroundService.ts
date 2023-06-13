@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/indent */
 import BackgroundService from 'react-native-background-actions';
-import { getRecoil } from 'recoil-nexus';
+import { getRecoil, setRecoil } from 'recoil-nexus';
 
 import { distance, sleep } from '../utils/Utils';
 import { Task } from '../utils/Interfaces';
 import { notify } from './Notifier';
-import { locationAtom } from '../store/Atoms';
+import { dataAtom, lastNotifiedAtom, locationAtom } from '../store/Atoms';
 
-const searchForNearbyTasks = async (data: Task[]) => {
+const searchForNearbyTasks = async () => {
   const loc = getRecoil(locationAtom);
+  const data: Task[] = getRecoil(dataAtom);
+  const lastNotified = getRecoil(lastNotifiedAtom);
+  // console.log(`old: `, data);
 
   data.forEach((task: Task) => {
     const time = Date.now();
@@ -19,15 +22,17 @@ const searchForNearbyTasks = async (data: Task[]) => {
       loc.longitude,
     );
     if (dist < 100) {
-      const timeSinceNotified = time - (task.lastNotified || 0);
+      const taskLastNotified = (lastNotified.has(task.id) ? lastNotified.get(task.id) : 0) || 0;
+      const timeSinceNotified = time - taskLastNotified;
       // default time is 300000ms aka 5mins
       if (timeSinceNotified > 300000) {
         notify(task, Math.round(dist));
         /* eslint-disable no-param-reassign */ // TODO: do without reassignment
-        task.lastNotified = time;
+        lastNotified.set(task.id, time);
       }
     }
   });
+  setRecoil(lastNotifiedAtom, lastNotified);
 };
 
 const backgroundService = async (
@@ -43,7 +48,7 @@ const backgroundService = async (
       BackgroundService.isRunning()
     ) {
       console.log('[BG] Ping');
-      searchForNearbyTasks(args.data);
+      searchForNearbyTasks();
       await sleep(10000);
     }
   });
@@ -57,6 +62,7 @@ const backgroundServiceOptions = {
     name: 'ic_launcher',
     type: 'mipmap',
   },
+  actions: ['Stop']
 };
 
 export const startBackgroundService = async (data: Task[]) => {

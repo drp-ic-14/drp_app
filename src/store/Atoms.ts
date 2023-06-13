@@ -15,3 +15,8 @@ export const dataAtom = atom<Task[]>({
   key: 'data',
   default: []
 })
+
+export const lastNotifiedAtom = atom<Map<string, number>>({
+  key: 'last-notified',
+  default: new Map<string, number>()
+})
