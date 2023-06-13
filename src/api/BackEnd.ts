@@ -29,7 +29,7 @@ export const checkId = async (uuid: string): Promise<boolean> => {
   return exists;
 };
 
-export const createUser = async (uuid: string): Promise<void> => {
+export const createUser = async (uuid: string): Promise<boolean> => {
   const response = await fetch(`${BACK_END_URL}/api/create_user`, {
     method: 'POST',
     headers: {
@@ -40,6 +40,5 @@ export const createUser = async (uuid: string): Promise<void> => {
       user_id: uuid,
     }),
   });
-  if (response.ok) console.log(`Created new user '${uuid}'.`);
-  else console.error(`unable to create user ${uuid}`);
+  return response.ok;
 };

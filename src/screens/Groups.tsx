@@ -13,7 +13,7 @@ import * as Icons from 'react-native-heroicons/outline';
 
 import GroupItem from '../components/GroupItem';
 import { BACK_END_URL } from '../api/Constants';
-import { useUuid } from '../hooks/uuid';
+import { useUuid } from '../hooks/login';
 
 const Groups = () => {
   const uuid = useUuid();

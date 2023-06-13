@@ -3,10 +3,9 @@ import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { useAsyncFn } from 'react-use';
 import * as Icons from 'react-native-heroicons/outline';
 
-import { BACK_END_URL } from '../api/Constants';
 import { distance } from '../utils/Utils';
 import { Task } from '../utils/Interfaces';
-import { useUuid } from '../hooks/uuid';
+import { useUuid } from '../hooks/login';
 import { useLocation } from '../hooks/location';
 import { deleteTask } from '../api/BackEnd';
 

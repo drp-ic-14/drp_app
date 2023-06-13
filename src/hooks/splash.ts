@@ -16,7 +16,7 @@ export const useSplash = (): [string, boolean, Error | undefined] => {
     setStatus('Getting permissions');
     if (Platform.OS === 'ios') {
       const status = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-      if (status != 'granted') {
+      if (status !== 'granted') {
         await geolocationPermissions();
       }
     } else {

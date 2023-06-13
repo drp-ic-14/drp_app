@@ -25,7 +25,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { useAsyncFn } from 'react-use';
 
 import { useLocation } from '../hooks/location';
-import { useUuid } from '../hooks/uuid';
+import { useUuid } from '../hooks/login';
 import { BACK_END_URL } from '../api/Constants';
 import { searchLocation } from '../features/Geolocation';
 
