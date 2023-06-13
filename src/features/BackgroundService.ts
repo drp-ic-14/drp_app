@@ -22,12 +22,13 @@ const searchForNearbyTasks = async () => {
       loc.longitude,
     );
     if (dist < 100) {
-      const taskLastNotified = (lastNotified.has(task.id) ? lastNotified.get(task.id) : 0) || 0;
+      const taskLastNotified =
+        (lastNotified.has(task.id) ? lastNotified.get(task.id) : 0) || 0;
       const timeSinceNotified = time - taskLastNotified;
       // default time is 300000ms aka 5mins
       if (timeSinceNotified > 300000) {
         notify(task, Math.round(dist));
-        /* eslint-disable no-param-reassign */ // TODO: do without reassignment
+        // TODO: do without reassignment
         lastNotified.set(task.id, time);
       }
     }
@@ -36,7 +37,8 @@ const searchForNearbyTasks = async () => {
 };
 
 const backgroundService = async (
-  args?: {
+  args?:
+    | {
         data: Task[];
       }
     | undefined,
@@ -62,7 +64,7 @@ const backgroundServiceOptions = {
     name: 'ic_launcher',
     type: 'mipmap',
   },
-  actions: ['Stop']
+  actions: ['Stop'],
 };
 
 export const startBackgroundService = async (data: Task[]) => {

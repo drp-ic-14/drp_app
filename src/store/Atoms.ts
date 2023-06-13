@@ -13,10 +13,10 @@ export const uuidAtom = atom<string>({
 
 export const dataAtom = atom<Task[]>({
   key: 'data',
-  default: []
-})
+  default: [],
+});
 
 export const lastNotifiedAtom = atom<Map<string, number>>({
   key: 'last-notified',
-  default: new Map<string, number>()
-})
+  default: new Map<string, number>(),
+});

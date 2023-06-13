@@ -1,18 +1,17 @@
 import notifee, { EventType } from '@notifee/react-native';
+import { getRecoil } from 'recoil-nexus';
 import { Task } from '../utils/Interfaces';
 import { uuidAtom } from '../store/Atoms';
 import { deleteTask } from '../api/BackEnd';
-import { getRecoil } from 'recoil-nexus';
 
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   const { notification, pressAction } = detail;
 
   if (type === EventType.ACTION_PRESS) {
-
     switch (pressAction?.id) {
       case 'mark-as-done': {
         const data = notification?.data;
-        console.log(`deleting task '${data.taskId}' from user '${data.uuid}'`)    
+        console.log(`deleting task '${data.taskId}' from user '${data.uuid}'`);
         await deleteTask(getRecoil(uuidAtom), data.taskId);
 
         // Remove the notification
@@ -36,11 +35,11 @@ async function setCategories() {
         },
         {
           id: 'remind-later',
-          title: 'Remind me later'
-        }
-      ]
-    }
-  ])
+          title: 'Remind me later',
+        },
+      ],
+    },
+  ]);
 }
 
 export async function notify(task: Task, distance: number) {
@@ -54,7 +53,7 @@ export async function notify(task: Task, distance: number) {
     await notifee.displayNotification({
       title: `${task.name} - ${task.location} (${distance}m)`,
       data: {
-        taskId: task.id
+        taskId: task.id,
       },
       android: {
         channelId,
@@ -74,11 +73,11 @@ export async function notify(task: Task, distance: number) {
               id: 'remind-later',
             },
           },
-        ]
+        ],
       },
       ios: {
-        categoryId: 'reminder'
-      }
+        categoryId: 'reminder',
+      },
     });
   }, 1000);
 }

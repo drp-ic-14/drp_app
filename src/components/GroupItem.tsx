@@ -9,7 +9,7 @@ const GroupItem = ({ name, groupTask }) => {
     setIsOpen(!isOpen);
   };
 
-  const handleOptionSelect = (option) => {
+  const handleOptionSelect = option => {
     setSelectedOption(option);
     setIsOpen(false);
   };
@@ -21,8 +21,11 @@ const GroupItem = ({ name, groupTask }) => {
       </TouchableOpacity>
       {isOpen && (
         <View>
-          {groupTask.map((task) => (
-            <TouchableOpacity key={task.id} onPress={() => handleOptionSelect(task)}>
+          {groupTask.map(task => (
+            <TouchableOpacity
+              key={task.id}
+              onPress={() => handleOptionSelect(task)}
+            >
               <Text>{task.name}</Text>
             </TouchableOpacity>
           ))}

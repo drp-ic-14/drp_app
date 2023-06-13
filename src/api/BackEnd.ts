@@ -1,4 +1,4 @@
-import { BACK_END_URL } from "./Constants";
+import { BACK_END_URL } from './Constants';
 
 export const deleteTask = async (uuid: string, taskId: string) => {
   await fetch(`${BACK_END_URL}/api/delete_task`, {
@@ -12,7 +12,7 @@ export const deleteTask = async (uuid: string, taskId: string) => {
       task_id: taskId,
     }),
   });
-}
+};
 
 export const checkId = async (uuid: string): Promise<boolean> => {
   const response = await fetch(`${BACK_END_URL}/api/check_id`, {
@@ -28,7 +28,7 @@ export const checkId = async (uuid: string): Promise<boolean> => {
   const exists = await response.json();
   console.log(`check_id(${uuid}) => ${exists}`);
   return exists;
-}
+};
 
 export const createUser = async (uuid: string): Promise<void> => {
   const response = await fetch(`${BACK_END_URL}/api/create_user`, {
@@ -41,6 +41,6 @@ export const createUser = async (uuid: string): Promise<void> => {
       user_id: uuid,
     }),
   });
-  if (response.ok) console.log(`Created new user '${uuid}'.`)
-  else console.error(`unable to create user ${uuid}`)
-}
+  if (response.ok) console.log(`Created new user '${uuid}'.`);
+  else console.error(`unable to create user ${uuid}`);
+};
