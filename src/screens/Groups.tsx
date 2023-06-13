@@ -33,10 +33,9 @@ const Groups = () => {
         }),
       });
       const groupList = await response.json();
-      console.log('Group List:', groupList);
       setGroups(groupList.groups);
     } catch (error) {
-      console.error('Error updating groups:', error);
+      // console.error('Error updating groups:', error);
     }
   };
 
@@ -86,7 +85,7 @@ const Groups = () => {
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         {groups.length > 0 ? (
-          groups.map(group => <GroupItem key={group.id} name={group.name} />)
+          groups.map(group => <GroupItem key={group.id} name={group.name} groupTask={group.groupTask || []}/>)
         ) : (
           <Text>No groups available</Text>
         )}
