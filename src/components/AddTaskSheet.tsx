@@ -143,8 +143,8 @@ const AddTaskSheet = ({ updateList, bottomSheetModalRef }: AddTaskSheetProps) =>
         enableContentPanningGesture={false}
       >
         <NativeViewGestureHandler disallowInterruption>
-          <View className="flex-1 space-y-4">
-            <View className="flex-row mx-4">
+          <View className="flex-1">
+            <View className="flex-row mx-4 mb-4 ">
               <StyledInput
                 value={name}
                 onChange={v => setName(v.nativeEvent.text)}
@@ -213,16 +213,6 @@ const AddTaskSheet = ({ updateList, bottomSheetModalRef }: AddTaskSheetProps) =>
                 closeOnBlur={false}
               />
             </View>
-
-            <View className="px-4">
-              <StyledInput
-                value={name}
-                onChange={v => setName(v.nativeEvent.text)}
-                className="p-3 pl-5 text-lg flex-grow text-slate-900 bg-neutral-200 self-stretch rounded-xl shadow-xl shadow-black/40"
-                placeholder="Group..."
-              />
-            </View>
-
             <View className="flex-1 mt-4 rounded-t-xl overflow-hidden">
               <MapView
                 region={{
