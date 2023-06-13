@@ -93,7 +93,7 @@ const Home = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      
+
       <AddTaskSheet
         bottomSheetModalRef={bottomSheetModalRef}
         updateList={updateList}

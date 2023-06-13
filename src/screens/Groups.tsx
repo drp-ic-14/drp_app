@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Modal, TextInput, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Modal,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
 import { Button } from '@ui-kitten/components/ui/button/button.component';
 import Config from 'react-native-config';
-import GroupItem from '../components/GroupItem';
 import * as Icons from 'react-native-heroicons/outline';
 
+import GroupItem from '../components/GroupItem';
 import { BACK_END_URL } from '../api/Constants';
 import { useUuid } from '../hooks/uuid';
 
@@ -34,8 +41,9 @@ const Groups = () => {
       });
       const groupList = await response.json();
       setGroups(groupList.groups);
+      console.log('groups:', groupList);
     } catch (error) {
-      // console.error('Error updating groups:', error);
+      console.error('Error fetching groups:', error);
     }
   };
 
@@ -82,15 +90,29 @@ const Groups = () => {
   // };
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
+    <View className="bg-white flex-1 justify-between p-3">
+      <View className="flex-1">
         {groups.length > 0 ? (
-          groups.map(group => <GroupItem key={group.id} name={group.name} groupTask={group.groupTask || []}/>)
+          <FlatList
+            data={groups}
+            renderItem={({ item: { name, groupTask: tasks } }) => (
+              <GroupItem name={name} tasks={tasks} />
+            )}
+            keyExtractor={item => item.id}
+          />
         ) : (
-          <Text>No groups available</Text>
+          <View className="flex-1 justify-center items-center flex-row space-x-1">
+            <Text
+              className="text-slate-600 text-lg"
+              style={{ textAlignVertical: 'center' }}
+            >
+              No groups
+            </Text>
+            <Icons.FaceFrownIcon stroke="#475569" />
+          </View>
         )}
       </View>
-      <View style={{ alignItems: 'center', marginBottom: 16 }}>
+      <View className="items-center">
         <TouchableOpacity
           onPress={() => setModalVisible(true)}
           className="bg-slate-200 rounded-xl shadow-2xl shadow-black/30 p-3 flex-row items-center space-x-2"
