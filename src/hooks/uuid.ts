@@ -4,7 +4,6 @@ import { useAsyncFn } from 'react-use';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { uuidAtom } from '../store/Atoms';
-import { sleep } from '../utils/Utils';
 import { BACK_END_URL } from '../api/Constants';
 
 const loadUuid = async (): Promise<string> => {

@@ -4,7 +4,6 @@ export interface Task {
   location: string;
   latitude: number;
   longitude: number;
-  lastNotified?: number;
 }
 
 export interface Location {
