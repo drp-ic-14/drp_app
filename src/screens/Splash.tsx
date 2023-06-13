@@ -7,6 +7,7 @@ import { useSplash } from '../hooks/splash';
 import Login from './Login';
 import { uuidAtom } from '../store/Atoms';
 import { loadUuidFromAsync } from '../hooks/uuid';
+import { checkId } from '../api/BackEnd';
 
 type SplashProps = {
   complete: () => void;
@@ -26,7 +27,12 @@ const Splash = ({ complete }: SplashProps) => {
       const id = await loadUuidFromAsync();
       if (id) {
         console.log(`id ${id} found in async`);
-        await handleLogin(id);
+        if (await checkId(id)) {
+          console.log(`id ${id} is valid.`);
+          await handleLogin(id);
+        } else {
+          console.log(`id ${id} is invalid.`)
+        }
       }
     };
 

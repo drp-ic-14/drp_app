@@ -9,11 +9,11 @@ export const useLocation = (): [Location, () => Promise<void>] => {
   const [location, setLocation] = useRecoilState(locationAtom);
 
   const update = async () => {
-    console.log('hello');
+    // console.log('hello');
     const { longitude, latitude } = await getCurrentPosition();
-    console.log('wow');
+    // console.log('wow');
     setLocation({ longitude, latitude });
-    console.log('efine');
+    // console.log('efine');
   };
 
   return [location, update];

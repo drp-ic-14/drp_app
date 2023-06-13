@@ -26,7 +26,6 @@ export const checkId = async (uuid: string): Promise<boolean> => {
     }),
   });
   const exists = await response.json();
-  console.log(`check_id(${uuid}) => ${exists}`);
   return exists;
 };
 
