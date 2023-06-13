@@ -27,7 +27,7 @@ const Navigation = () => {
                 <Icons.UserGroupIcon stroke={focused ? '#ff0000' : '#333'} />
               );
             } else if (route.name === 'Map') {
-              icon = <Icons.MapIcon stroke={focused ? '#ff0000' : '#333'} />
+              icon = <Icons.MapIcon stroke={focused ? '#ff0000' : '#333'} />;
             }
 
             return icon;

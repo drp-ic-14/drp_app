@@ -31,7 +31,7 @@ const Splash = ({ complete }: SplashProps) => {
           console.log(`id ${id} is valid.`);
           await handleLogin(id);
         } else {
-          console.log(`id ${id} is invalid.`)
+          console.log(`id ${id} is invalid.`);
         }
       }
     };
