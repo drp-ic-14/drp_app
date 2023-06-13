@@ -40,7 +40,7 @@ const GroupItem = ({ name, tasks }) => {
       </TouchableOpacity>
       {open && (
         <FlatList
-          data={tasks}
+          data={[...tasks].reverse()}
           renderItem={({ item }) => (
             <TaskItem task={item} updateList={() => {}} />
           )}

@@ -3,7 +3,6 @@ import { AppState, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import * as Icons from 'react-native-heroicons/outline';
 
-import { BACK_END_URL } from '../api/Constants';
 import TaskItem from '../components/TaskItem';
 import { useUuid } from '../hooks/login';
 import AddTaskSheet from '../components/AddTaskSheet';
@@ -11,11 +10,11 @@ import {
   startBackgroundService,
   stopBackgroundService,
 } from '../features/BackgroundService';
-import { useData } from '../hooks/data';
+import { useUser } from '../hooks/user';
 
 const Home = () => {
   const uuid = useUuid();
-  const [data, setData] = useData();
+  const [{ tasks: data }, update] = useUser();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const handlePresentModalPress = useCallback(() => {
@@ -27,7 +26,7 @@ const Home = () => {
   useEffect(() => {
     console.log(uuid);
     stopBackgroundService();
-    updateList();
+    update();
   }, []);
 
   useEffect(() => {
@@ -36,7 +35,7 @@ const Home = () => {
         appState.current.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
-        updateList();
+        update();
         stopBackgroundService();
       } else {
         startBackgroundService(data);
@@ -50,23 +49,6 @@ const Home = () => {
     };
   }, [data]);
 
-  const updateList = async () => {
-    console.log('updating list...');
-    const response = await fetch(`${BACK_END_URL}/api/get_tasks`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_id: uuid,
-      }),
-    });
-    const list = await response.json();
-    console.log(list);
-    setData(list);
-  };
-
   return (
     <View className="flex-1 bg-white p-3 space-y-3">
       <Text className="text-4xl text-slate-900 tracking-wider">Tasks</Text>
@@ -74,7 +56,7 @@ const Home = () => {
         <FlatList
           data={data}
           renderItem={({ item }) => (
-            <TaskItem task={item} updateList={updateList} />
+            <TaskItem task={item} updateList={update} />
           )}
           keyExtractor={item => item.id}
           className="mb-3"
@@ -97,7 +79,7 @@ const Home = () => {
 
       <AddTaskSheet
         bottomSheetModalRef={bottomSheetModalRef}
-        updateList={updateList}
+        updateList={update}
       />
     </View>
   );

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { checkId, createUser } from '../api/BackEnd';
-import { uuidAtom } from '../store/Atoms';
+import { checkId, createUser, getUser } from '../api/BackEnd';
+import { userAtom, uuidAtom } from '../store/Atoms';
 
 export enum LoginState {
   LOADING,
@@ -29,10 +29,14 @@ export const useLogin = (): [
   const [state, setState] = useState(LoginState.LOADING);
   const [error, setError] = useState('');
   const [, setUuid] = useRecoilState(uuidAtom);
+  const [, setUser] = useRecoilState(userAtom);
 
   const postLogin = async (uuid: string) => {
     setUuid(uuid);
     await AsyncStorage.setItem('@uuid', uuid);
+    const user = await getUser(uuid);
+    console.log('Fetched:', user);
+    setUser(user);
   };
 
   const login = async () => {

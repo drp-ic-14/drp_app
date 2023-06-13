@@ -1,14 +1,12 @@
-import { Text, View } from 'react-native';
+import React, { View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { useLocation } from '../hooks/location';
-import { useData } from '../hooks/data';
+import { useUser } from '../hooks/user';
 import { Task } from '../utils/Interfaces';
 
 const Map = () => {
   const [currentLoc] = useLocation();
-  const [data] = useData();
-
-  const task1: Task = data[0];
+  const [{ tasks: data }] = useUser();
 
   return (
     <View style={{ flex: 1 }}>

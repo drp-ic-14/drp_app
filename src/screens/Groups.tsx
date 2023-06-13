@@ -14,38 +14,18 @@ import * as Icons from 'react-native-heroicons/outline';
 import GroupItem from '../components/GroupItem';
 import { BACK_END_URL } from '../api/Constants';
 import { useUuid } from '../hooks/login';
+import { useUser } from '../hooks/user';
 
 const Groups = () => {
   const uuid = useUuid();
-  const [groups, setGroups] = useState([]);
+  const [{ groups }, update] = useUser();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [groupName, setGroupName] = useState('');
 
   useEffect(() => {
-    console.log(`${BACK_END_URL} backend url`, Config);
-    updateGroups();
+    update();
   }, []);
-
-  const updateGroups = async () => {
-    try {
-      const response = await fetch(`${BACK_END_URL}/api/get_groups`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: uuid,
-        }),
-      });
-      const groupList = await response.json();
-      setGroups(groupList.groups);
-      console.log('groups:', groupList);
-    } catch (error) {
-      console.error('Error fetching groups:', error);
-    }
-  };
 
   const createGroup = async () => {
     try {
@@ -60,10 +40,10 @@ const Groups = () => {
           user_id: uuid,
         }),
       });
-      const newGroup = await response.json();
-      setGroups(prevGroups => [...prevGroups, newGroup]);
-      setModalVisible(false); // Close the modal after creating the group
+      // const newGroup = await response.json();
+      await update();
       setGroupName(''); // Clear the group name
+      setModalVisible(false); // Close the modal after creating the group
     } catch (error) {
       console.error('Error adding group:', error);
     }

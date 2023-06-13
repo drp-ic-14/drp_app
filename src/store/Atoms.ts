@@ -11,9 +11,13 @@ export const uuidAtom = atom<string>({
   default: '',
 });
 
-export const dataAtom = atom<Task[]>({
-  key: 'data',
-  default: [],
+export const userAtom = atom({
+  key: 'user',
+  default: {
+    id: '',
+    tasks: [],
+    groups: [],
+  },
 });
 
 export const lastNotifiedAtom = atom<Map<string, number>>({
