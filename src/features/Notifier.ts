@@ -25,6 +25,24 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
   }
 });
 
+async function setCategories() {
+  await notifee.setNotificationCategories([
+    {
+      id: 'reminder',
+      actions: [
+        {
+          id: 'mark-as-done',
+          title: 'Mark as done',
+        },
+        {
+          id: 'remind-later',
+          title: 'Remind me later'
+        }
+      ]
+    }
+  ])
+}
+
 export async function notify(task: Task, distance: number) {
   console.log(`Notifying user about task '${task.name}'`);
   setTimeout(async () => {
@@ -58,6 +76,9 @@ export async function notify(task: Task, distance: number) {
           },
         ]
       },
+      ios: {
+        categoryId: 'reminder'
+      }
     });
   }, 1000);
 }
