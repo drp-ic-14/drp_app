@@ -66,6 +66,7 @@ export const useLogin = (): [
         // blank input - generate uuid
         uuid = await generateUuid();
         await postLogin(uuid);
+        setState(LoginState.DONE);
       } else {
         // verify username is allowed and send to back-end to create user
         if (verifyUsername(uuid)) {
