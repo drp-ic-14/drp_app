@@ -82,7 +82,7 @@ export const useLogin = (): [
         } else {
           setState(LoginState.INPUT);
           setError(
-            'Username is invalid!\nUsername must contain 5-20 alphanumeric, underscore or dot characters.\nUsername cannot start or end with an underscore or dot.',
+            'Username is invalid!\nUsername must contain 5-20 alphanumeric, underscore or dot characters\nUsername cannot start or end with an underscore or dot',
           );
         }
       }

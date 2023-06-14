@@ -69,18 +69,18 @@ const Navigation = () => {
             let icon;
 
             if (route.name === 'Home') {
-              icon = <Icons.HomeIcon stroke={focused ? '#ff0000' : '#333'} />;
+              icon = <Icons.HomeIcon stroke={focused ? '#818cf8' : '#333'} />;
             } else if (route.name === 'Groups') {
               icon = (
-                <Icons.UserGroupIcon stroke={focused ? '#ff0000' : '#333'} />
+                <Icons.UserGroupIcon stroke={focused ? '#818cf8' : '#333'} />
               );
             } else if (route.name === 'Map') {
-              icon = <Icons.MapIcon stroke={focused ? '#ff0000' : '#333'} />;
+              icon = <Icons.MapIcon stroke={focused ? '#818cf8' : '#333'} />;
             }
 
             return icon;
           },
-          tabBarActiveTintColor: 'tomato',
+          tabBarActiveTintColor: '#818cf8',
           tabBarInactiveTintColor: 'gray',
         })}
       >

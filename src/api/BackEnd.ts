@@ -1,6 +1,6 @@
 import { BACK_END_URL } from './Constants';
 
-export const deleteTask = async (uuid: string, taskId: string) => {
+export const deleteTask = async (taskId: string) => {
   await fetch(`${BACK_END_URL}/api/delete_task`, {
     method: 'POST',
     headers: {
@@ -8,7 +8,6 @@ export const deleteTask = async (uuid: string, taskId: string) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      user_id: uuid,
       task_id: taskId,
     }),
   });

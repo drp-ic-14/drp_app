@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -20,14 +20,18 @@ import {
 } from 'react-native-autocomplete-dropdown';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 import * as Icons from 'react-native-heroicons/outline';
+import * as IconsMini from 'react-native-heroicons/mini';
 import { styled } from 'nativewind';
 import MapView, { Marker } from 'react-native-maps';
 import { useAsyncFn } from 'react-use';
 
+import DropDownPicker from 'react-native-dropdown-picker';
+import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import { useLocation } from '../hooks/location';
 import { useUuid } from '../hooks/login';
 import { BACK_END_URL } from '../api/Constants';
 import { searchLocation } from '../features/Geolocation';
+import { useUser } from '../hooks/user';
 
 const StyledInput = styled(TextInput);
 
@@ -36,21 +40,44 @@ type AddTaskSheetProps = {
   bottomSheetModalRef: BottomSheetModal;
 };
 
+const UserIcon = ({ style }) => <IconsMini.UserIcon fill={style.tintColor} />;
+
+const GroupIcon = ({ style }) => (
+  <IconsMini.UserGroupIcon fill={style.tintColor} />
+);
+
 const AddTaskSheet = ({
   bottomSheetModalRef,
   updateList,
 }: AddTaskSheetProps) => {
   // Form states
   const [name, setName] = useState('');
-  const [group, setGroup] = useState('');
   const [inputLoc, setInputLoc] = useState(null);
 
   // Util states
   const uuid = useUuid();
+  const [user] = useUser();
   const [currentLoc] = useLocation();
 
   // Bottom sheet
   const handleClosePress = () => bottomSheetModalRef.current?.close();
+
+  // Dropdown
+  const [groupIx, setGroupIx] = useState(new IndexPath(0));
+
+  const groupName = useMemo(() => {
+    if (groupIx.row === 0) {
+      return 'Personal';
+    }
+    return user.groups[groupIx.row - 1].name;
+  }, [groupIx]);
+
+  const groupId = useMemo(() => {
+    if (groupIx.row === 0) {
+      return null;
+    }
+    return user.groups[groupIx.row - 1].id;
+  }, [groupIx]);
 
   // Autocomplete
   const [loading, setLoading] = useState(false);
@@ -95,7 +122,7 @@ const AddTaskSheet = ({
   // HTTP Add task
   const addTask = async (
     name: string,
-    group: string,
+    groupId: string,
     inputLoc: {
       name: any;
       vicinity: any;
@@ -104,7 +131,6 @@ const AddTaskSheet = ({
   ) => {
     const task = {
       name,
-      group,
       location: inputLoc.name,
       vicinity: inputLoc.vicinity,
       latitude: inputLoc.location.latitude,
@@ -112,16 +138,27 @@ const AddTaskSheet = ({
     };
     console.log('Got input', task);
 
+    let body;
+    if (groupId) {
+      body = JSON.stringify({
+        group_id: groupId,
+        task,
+      });
+    } else {
+      body = JSON.stringify({
+        user_id: uuid,
+        task,
+      });
+    }
+    console.log('Body:', body);
+
     const response = await fetch(`${BACK_END_URL}/api/add_task`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        user_id: uuid,
-        task,
-      }),
+      body,
     });
 
     console.log(response);
@@ -133,7 +170,7 @@ const AddTaskSheet = ({
     updateList();
 
     setName('');
-    setGroup('');
+    // setGroupIx(new IndexPath(0));
     setInputLoc(null);
     onClearPress();
     dropdownController.current?.clear();
@@ -161,38 +198,44 @@ const AddTaskSheet = ({
       >
         <NativeViewGestureHandler disallowInterruption>
           <View className="flex-1">
-            <View className="flex-row mx-4 mb-4 ">
+            <View className="flex-row mx-4 mb-4">
               <StyledInput
                 value={name}
                 onChange={v => setName(v.nativeEvent.text)}
-                className="p-3 pl-5 mr-4 text-lg flex-grow text-slate-900 bg-neutral-200 self-stretch rounded-xl shadow-xl shadow-black/40"
+                className="p-2 pl-5 mr-4 text-base flex-grow text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] self-stretch rounded-xl shadow-xl shadow-black/40"
                 placeholder="Task Name..."
+                placeholderTextColor="#0f172aaa"
               />
               <TouchableOpacity
-                onPress={() => submit(name, group, inputLoc)}
+                onPress={() => submit(name, groupId, inputLoc)}
                 disabled={submitLoading}
-                className={`p-1 justify-center items-center ${
-                  submitLoading ? 'bg-gray-300' : 'bg-indigo-200'
+                className={`p-1 justify-center items-center shadow-lg shadow-black/40 ${
+                  submitLoading ? 'bg-gray-300' : 'bg-indigo-100'
                 } aspect-square rounded-xl`}
               >
                 {submitLoading ? (
-                  <ActivityIndicator size="small" color="#0f172ates" />
+                  <ActivityIndicator size="small" color="#0f172a" />
                 ) : (
                   <Icons.PaperAirplaneIcon stroke="#0f172a" />
                 )}
               </TouchableOpacity>
             </View>
 
-            <View className="flex-row mx-4 mb-4 ">
-              <StyledInput
-                value={group}
-                onChange={v => setGroup(v.nativeEvent.text)}
-                className="p-3 pl-5 mr-4 text-lg flex-grow text-slate-900 bg-neutral-200 self-stretch rounded-xl shadow-xl shadow-black/40"
-                placeholder="Group..."
-              />
+            <View className="mx-4 mb-4 rounded-xl overflow-hidden shadow-lg shadow-black/40 border-[#e4e9f2]">
+              <Select
+                value={groupName}
+                selectedIndex={groupIx}
+                onSelect={i => setGroupIx(i)}
+                size="large"
+              >
+                <SelectItem title="Personal" accessoryLeft={UserIcon} />
+                {user.groups.map(({ name }) => (
+                  <SelectItem title={name} accessoryLeft={GroupIcon} />
+                ))}
+              </Select>
             </View>
 
-            <View className="px-4">
+            <View className="mx-4">
               <AutocompleteDropdown
                 ref={searchRef}
                 controller={controller => {
@@ -211,21 +254,27 @@ const AddTaskSheet = ({
                 useFilter={false}
                 textInputProps={{
                   placeholder: 'Location...',
+                  placeholderTextColor: '#0f172aaa',
                   autoCorrect: false,
                   autoCapitalize: 'none',
                   style: {
                     color: '#0F172A',
+                    fontSize: 15,
                   },
                 }}
                 inputContainerStyle={{
-                  backgroundColor: '#E5E5E5',
-                  borderRadius: 12,
+                  backgroundColor: '#f7f9fc',
+                  borderRadius: 10,
                   paddingLeft: 8,
                   paddingRight: 4,
+                  shadowColor: '#999',
+                  elevation: 5,
+                  borderColor: '#e4e9f2',
+                  borderWidth: 1,
                 }}
                 suggestionsListContainerStyle={{
-                  backgroundColor: '#E5E5E5',
-                  borderRadius: 12,
+                  backgroundColor: '#f7f9fc',
+                  borderRadius: 10,
                 }}
                 containerStyle={{ flexGrow: 1, flexShrink: 1 }}
                 renderItem={item => (
@@ -234,7 +283,7 @@ const AddTaskSheet = ({
                   </Text>
                 )}
                 ClearIconComponent={<Icons.XCircleIcon stroke="#0F172A" />}
-                inputHeight={50}
+                inputHeight={45}
                 showChevron={false}
                 closeOnBlur={false}
               />

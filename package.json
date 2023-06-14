@@ -31,6 +31,7 @@
     "react-native-autocomplete-dropdown": "^3.0.2",
     "react-native-background-actions": "^3.0.0",
     "react-native-config": "^1.5.1",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "^2.11.0",
     "react-native-heroicons": "^3.2.0",
     "react-native-maps": "^1.7.1",

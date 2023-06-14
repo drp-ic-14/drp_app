@@ -12,7 +12,7 @@ const GroupItem = ({ name, tasks }) => {
   };
 
   return (
-    <View className="border-b border-slate-900/30 px-1 py-5 space-y-5">
+    <View className="border-b border-slate-900/30 px-1 py-5">
       <TouchableOpacity
         onPress={toggleDropdown}
         className="flex-row space-x-1 items-center"
@@ -46,6 +46,7 @@ const GroupItem = ({ name, tasks }) => {
           )}
           keyExtractor={item => item.id}
           ItemSeparatorComponent={() => <View className="h-2" />}
+          className={tasks.length > 0 ? 'mt-5' : ''}
         />
       )}
     </View>

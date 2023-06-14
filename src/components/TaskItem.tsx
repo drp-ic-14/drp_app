@@ -5,7 +5,6 @@ import * as Icons from 'react-native-heroicons/outline';
 
 import { distance } from '../utils/Utils';
 import { Task } from '../utils/Interfaces';
-import { useUuid } from '../hooks/login';
 import { useLocation } from '../hooks/location';
 import { deleteTask } from '../api/BackEnd';
 
@@ -18,11 +17,10 @@ const TaskItem = ({
   task: { id, name, location, vicinity, longitude, latitude },
   updateList,
 }: TaskItemProps) => {
-  const uuid = useUuid();
   const [currentLocation] = useLocation();
 
   const onComplete = async () => {
-    await deleteTask(uuid, id);
+    await deleteTask(id);
     updateList();
   };
 
