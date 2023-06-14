@@ -22,6 +22,7 @@ export const loadUuidFromAsync = async (): Promise<string | undefined> => {
 };
 
 const verifyUsername = (username: string) => {
+  // TODO: split rules and return exact error
   const regex = /^(?=.{5,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/
   const valid = regex.test(username);
   console.log(`${username} is ${valid ? "valid" : "invalid"}`)
@@ -75,7 +76,7 @@ export const useLogin = (): [
           }
         } else {
           setState(LoginState.INPUT);
-          setError('Username is invalid!');
+          setError('Username is invalid!\nUsername must contain 5-20 alphanumeric, underscore or dot characters.\nUsername cannot start or end with an underscore or dot.');
         }
       }
     } catch {
