@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Modal,
@@ -10,15 +10,21 @@ import {
 import { Button } from '@ui-kitten/components/ui/button/button.component';
 import Config from 'react-native-config';
 import * as Icons from 'react-native-heroicons/outline';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import GroupItem from '../components/GroupItem';
 import { BACK_END_URL } from '../api/Constants';
 import { useUuid } from '../hooks/login';
 import { useUser } from '../hooks/user';
+import AddGroupSheet from '../components/AddGroupSheet';
 
 const Groups = () => {
   const uuid = useUuid();
   const [{ groups }, update] = useUser();
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [groupName, setGroupName] = useState('');
@@ -92,36 +98,23 @@ const Groups = () => {
             <Icons.FaceFrownIcon stroke="#475569" />
           </View>
         )}
-      </View>
-      <View className="items-center">
         <TouchableOpacity
-          onPress={() => setModalVisible(true)}
+          onPress={handlePresentModalPress}
           className="bg-slate-200 rounded-xl shadow-2xl shadow-black/30 p-3 flex-row items-center space-x-2"
         >
           <Icons.PlusIcon stroke="#0f172a" size={20} />
+          <Text
+            className="text-slate-900 text-xl"
+            style={{ textAlignVertical: 'center' }}
+          >
+            New Group
+          </Text>
         </TouchableOpacity>
       </View>
-      <Modal
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <TextInput
-            value={groupName}
-            onChangeText={text => setGroupName(text)}
-            placeholder="Enter group name"
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: 'black',
-              marginBottom: 16,
-            }}
-          />
-          <Button onPress={createGroup}>Create</Button>
-          <Button onPress={() => setModalVisible(false)}>Cancel</Button>
-        </View>
-      </Modal>
+      <AddGroupSheet
+        bottomSheetModalRef={bottomSheetModalRef}
+        updateList={update}
+      />
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { Task } from '../utils/Interfaces';
+import { User } from '../utils/Interfaces';
 
 export const locationAtom = atom({
   key: 'location',
@@ -11,11 +11,7 @@ export const uuidAtom = atom<string>({
   default: '',
 });
 
-export const userAtom = atom<{
-  id: string;
-  tasks: Task[];
-  groups: any[]; // TODO: implement group interface
-}>({
+export const userAtom = atom<User>({
   key: 'user',
   default: {
     id: '',

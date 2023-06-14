@@ -37,8 +37,8 @@ type AddTaskSheetProps = {
 };
 
 const AddTaskSheet = ({
-  updateList,
   bottomSheetModalRef,
+  updateList,
 }: AddTaskSheetProps) => {
   // Form states
   const [name, setName] = useState('');
