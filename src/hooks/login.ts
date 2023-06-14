@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { checkId, createUser } from '../api/BackEnd';
+import { checkId, createUser, generateUuid } from '../api/BackEnd';
 import { uuidAtom } from '../store/Atoms';
 
 export enum LoginState {
@@ -20,6 +20,13 @@ export const loadUuidFromAsync = async (): Promise<string | undefined> => {
   }
   return undefined;
 };
+
+const verifyUsername = (username: string) => {
+  const regex = /^(?=.{5,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/
+  const valid = regex.test(username);
+  console.log(`${username} is ${valid ? "valid" : "invalid"}`)
+  return valid;
+}
 
 export const useLogin = (): [
   LoginState,
@@ -50,13 +57,26 @@ export const useLogin = (): [
     try {
       setError('');
       setState(LoginState.LOADING);
-      const created = await createUser(uuid);
-      if (created) {
+      if (uuid === '') {
+        // blank input - generate uuid
+        uuid = await generateUuid();
         await postLogin(uuid);
-        setState(LoginState.DONE);
       } else {
-        setState(LoginState.INPUT);
-        setError('Username is already taken or invalid!');
+        // verify username is allowed and send to back-end to create user
+        if (verifyUsername(uuid)) {
+          const created = await createUser(uuid);
+          console.log(`create ${uuid}`)
+          if (created) {
+            await postLogin(uuid);
+            setState(LoginState.DONE);
+          } else {
+            setState(LoginState.INPUT);
+            setError('Username is already taken!'); // TODO: write message on valid usernames
+          }
+        } else {
+          setState(LoginState.INPUT);
+          setError('Username is invalid!');
+        }
       }
     } catch {
       setState(LoginState.INPUT);

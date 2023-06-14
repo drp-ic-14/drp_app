@@ -42,3 +42,9 @@ export const createUser = async (uuid: string): Promise<boolean> => {
   });
   return response.ok;
 };
+
+export const generateUuid = async () => {
+  const response = await fetch(`${BACK_END_URL}/api/generate_id`)
+  const data = await response.json();
+  return data.id;
+}
