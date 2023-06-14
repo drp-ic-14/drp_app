@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { checkId, createUser, getUser } from '../api/BackEnd';
+import { checkId, createUser, getUser, generateUuid } from '../api/BackEnd';
 import { userAtom, uuidAtom } from '../store/Atoms';
 
 export enum LoginState {
@@ -20,6 +20,14 @@ export const loadUuidFromAsync = async (): Promise<string | undefined> => {
   }
   return undefined;
 };
+
+const verifyUsername = (username: string) => {
+  // TODO: split rules and return exact error
+  const regex = /^(?=.{5,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/
+  const valid = regex.test(username);
+  console.log(`${username} is ${valid ? "valid" : "invalid"}`)
+  return valid;
+}
 
 export const useLogin = (): [
   LoginState,
@@ -54,13 +62,26 @@ export const useLogin = (): [
     try {
       setError('');
       setState(LoginState.LOADING);
-      const created = await createUser(uuid);
-      if (created) {
+      if (uuid === '') {
+        // blank input - generate uuid
+        uuid = await generateUuid();
         await postLogin(uuid);
-        setState(LoginState.DONE);
       } else {
-        setState(LoginState.INPUT);
-        setError('Username is already taken or invalid!');
+        // verify username is allowed and send to back-end to create user
+        if (verifyUsername(uuid)) {
+          const created = await createUser(uuid);
+          console.log(`create ${uuid}`)
+          if (created) {
+            await postLogin(uuid);
+            setState(LoginState.DONE);
+          } else {
+            setState(LoginState.INPUT);
+            setError('Username is already taken!'); // TODO: write message on valid usernames
+          }
+        } else {
+          setState(LoginState.INPUT);
+          setError('Username is invalid!\nUsername must contain 5-20 alphanumeric, underscore or dot characters.\nUsername cannot start or end with an underscore or dot.');
+        }
       }
     } catch {
       setState(LoginState.INPUT);
