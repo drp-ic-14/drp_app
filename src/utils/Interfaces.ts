@@ -13,14 +13,14 @@ export interface Location {
 }
 
 export interface Group {
-  id: String;
-  name: String;
+  id: string;
+  name: string;
   tasks: Task[];
   users: User[];
 }
 
 export interface User {
-  id: String;
+  id: string;
   tasks: Task[];
   groups: Group[];
 }

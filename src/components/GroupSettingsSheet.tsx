@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
+  TouchableOpacity,
 } from 'react-native';
 import {
   BottomSheetModal,
@@ -13,8 +14,9 @@ import {
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 import { styled } from 'nativewind';
 
-import { useUuid } from '../hooks/login';
 import { Group } from '../utils/Interfaces';
+import { addUserToGroup } from '../api/BackEnd';
+import { useAsyncFn } from 'react-use';
 
 const StyledInput = styled(TextInput);
 
@@ -30,17 +32,30 @@ const GroupSettingsSheet = ({
   group,
 }: GroupSettingsSheetProps) => {
   // Form states
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
 
   // Util states
-  const uuid = useUuid();
+  // const uuid = useUuid();
 
   // Bottom sheet
   const handleClosePress = () => {
-    console.log('close');
     bottomSheetModalRef.current?.close();
   };
 
-  return (
+  const addUser = async () => {
+    if (await addUserToGroup(username, group.id)) {
+      console.log(`'${username}' added to group '${group.name}'`)
+      handleClosePress();
+    }
+    else {
+      console.log(`unable to add '${username}' to group '${group.name}'`)
+    }
+  };
+
+  const [{ loading: submitLoading }, submit] = useAsyncFn(addUser);
+
+  return !!group ? (
     <BottomSheetModalProvider>
       <BottomSheetModal
         ref={bottomSheetModalRef}
@@ -60,15 +75,39 @@ const GroupSettingsSheet = ({
         <NativeViewGestureHandler disallowInterruption>
           <View className="flex-1">
             <View className="flex-row mx-4 mb-4 ">
-              <Text className="text-2xl text-slate-900">{`Edit Group: ${
-                group ? group.name : ''
-              }`}</Text>
+              <Text className="text-2xl text-slate-900">{`Edit Group: ${group.name}`}</Text>
+            </View>
+            <View className="flex-1">
+              <StyledInput
+                value={username}
+                onChange={v => setUsername(v.nativeEvent.text)}
+                placeholder="Username..."
+                className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-neutral-200 self-stretch rounded-xl shadow-xl shadow-black/40"
+              />
+              <TouchableOpacity
+                onPress={addUser}
+                disabled={submitLoading}
+                className={`p-1 justify-center items-center ${
+                  submitLoading ? 'bg-gray-300' : 'bg-indigo-200'
+                } aspect-square rounded-xl`}
+              >
+                {submitLoading ? (
+                  <ActivityIndicator size="small" color="#0f172ates" />
+                ) : (
+                  <Text
+                    className="text-slate-900 text-xl text-center"
+                    style={{ textAlignVertical: 'center' }}
+                  >
+                    Add group member
+                  </Text>
+                )}
+              </TouchableOpacity>
             </View>
           </View>
         </NativeViewGestureHandler>
       </BottomSheetModal>
     </BottomSheetModalProvider>
-  );
+  ) : null;
 };
 
 const styles = StyleSheet.create({
