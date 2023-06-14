@@ -11,7 +11,11 @@ export const uuidAtom = atom<string>({
   default: '',
 });
 
-export const userAtom = atom({
+export const userAtom = atom<{
+  id: string,
+  tasks: Task[],
+  groups: any[], // TODO: implement group interface
+}>({
   key: 'user',
   default: {
     id: '',

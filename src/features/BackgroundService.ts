@@ -5,11 +5,11 @@ import { getRecoil, setRecoil } from 'recoil-nexus';
 import { distance, sleep } from '../utils/Utils';
 import { Task } from '../utils/Interfaces';
 import { notify } from './Notifier';
-import { dataAtom, lastNotifiedAtom, locationAtom } from '../store/Atoms';
+import { lastNotifiedAtom, locationAtom, userAtom } from '../store/Atoms';
 
 const searchForNearbyTasks = async () => {
   const loc = getRecoil(locationAtom);
-  const data: Task[] = getRecoil(dataAtom);
+  const data: Task[] = getRecoil(userAtom).tasks;
   const lastNotified = getRecoil(lastNotifiedAtom);
   // console.log(`old: `, data);
 
