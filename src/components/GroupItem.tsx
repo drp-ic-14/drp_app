@@ -18,13 +18,13 @@ const GroupItem = ({ name, tasks }) => {
         className="flex-row space-x-1 items-center"
       >
         {open ? (
-          <Icons.ChevronUpIcon
+          <Icons.ChevronDownIcon
             stroke="#0F172A"
             fill="#0F172A"
             style={{ textAlignVertical: 'center' }}
           />
         ) : (
-          <Icons.ChevronDownIcon
+          <Icons.ChevronRightIcon
             stroke="#0F172A"
             fill="#0F172A"
             style={{ textAlignVertical: 'center' }}
