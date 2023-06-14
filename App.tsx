@@ -15,6 +15,7 @@ import Splash from './src/screens/Splash';
 import Navigation from './src/screens/Navigation';
 import LocationProvider from './src/components/LocationProvider';
 import { BACK_END_WS } from './src/api/Constants';
+import { default as theme } from './theme.json';
 
 // Initialize Apollo Client
 const wsLink = new GraphQLWsLink(
@@ -45,7 +46,7 @@ const App = () => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ApolloProvider client={client}>
           <AutocompleteDropdownContextProvider>
-            <ApplicationProvider {...eva} theme={eva.light}>
+            <ApplicationProvider {...eva} theme={{...eva.light, ...theme}}>
               <StatusBar barStyle="dark-content" backgroundColor="white" />
               {splash ? <Splash complete={hideSplash} /> : <Navigation />}
               <LocationProvider />

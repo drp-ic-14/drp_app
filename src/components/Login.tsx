@@ -30,12 +30,13 @@ const Login = ({ state, error, create }: LoginProps) => {
         <TextInput
           value={input}
           onChange={v => setInput(v.nativeEvent.text)}
-          className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-neutral-200 flex-1 rounded-xl shadow-xl shadow-black/40"
+          className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] flex-1 rounded-xl shadow-xl shadow-black/30"
           placeholder="Username..."
+          placeholderTextColor="#0f172aaa"
         />
         <TouchableOpacity
           onPress={handleLogin}
-          className="p-1 justify-center items-center bg-indigo-200 aspect-square rounded-xl"
+          className="p-1 justify-center items-center bg-indigo-100 shadow-xl shadow-black/30 aspect-square rounded-xl"
         >
           {state === LoginState.LOADING ? (
             <ActivityIndicator color="#0f172a" />
@@ -46,11 +47,11 @@ const Login = ({ state, error, create }: LoginProps) => {
       </View>
       {error && (
         <View className="mx-4 mb-4">
-          <Text className="text-base text-center text-rose-900">{error}</Text>
+          <Text className="text-sm text-center text-rose-900">{error}</Text>
         </View>
       )}
       <View className="mx-4 mb-4">
-        <Text className="text-base text-center text-slate-700">
+        <Text className="text-sm text-center text-slate-700">
           Leave blank to auto-generate username
         </Text>
       </View>
