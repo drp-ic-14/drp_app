@@ -1,79 +1,38 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
-  Modal,
-  TextInput,
   Text,
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import { Button } from '@ui-kitten/components/ui/button/button.component';
-import Config from 'react-native-config';
 import * as Icons from 'react-native-heroicons/outline';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import GroupItem from '../components/GroupItem';
-import { BACK_END_URL } from '../api/Constants';
-import { useUuid } from '../hooks/login';
 import { useUser } from '../hooks/user';
 import AddGroupSheet from '../components/AddGroupSheet';
+import GroupSettingsSheet from '../components/GroupSettingsSheet';
+import { Group } from '../utils/Interfaces';
 
 const Groups = () => {
-  const uuid = useUuid();
   const [{ groups }, update] = useUser();
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+  const [group, setGroup] = useState<Group | null>(null);
+
+  const newGroupSheetModalRef = useRef<BottomSheetModal>(null);
+  const newGroupModalPress = useCallback(() => {
+    newGroupSheetModalRef.current?.present();
   }, []);
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [groupName, setGroupName] = useState('');
+  const groupSettingsModalRef = useRef<BottomSheetModal>(null);
+  const groupSettingsModalPress = useCallback((group: Group) => {
+    console.log('open settings for: ', group.name);
+    setGroup(group);
+    groupSettingsModalRef.current?.present();
+  }, []);
 
   useEffect(() => {
     update();
   }, []);
-
-  const createGroup = async () => {
-    try {
-      const response = await fetch(`${BACK_END_URL}/api/create_group`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          group_name: groupName,
-          user_id: uuid,
-        }),
-      });
-      // const newGroup = await response.json();
-      await update();
-      setGroupName(''); // Clear the group name
-      setModalVisible(false); // Close the modal after creating the group
-    } catch (error) {
-      console.error('Error adding group:', error);
-    }
-  };
-
-  // const joinGroup = async () => {
-  //   try {
-  //     const response = await fetch(`${BACK_END_URL}/api/join_group`, {
-  //       method: 'POST',
-  //       headers: {
-  //         Accept: 'application/json',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         id: uuid,
-  //         group_id: group_id,
-  //       }),
-  //     });
-  //     const newGroup = await response.json();
-  //     setGroups(prevGroups => [...prevGroups, newGroup]);
-  //   } catch (error) {
-  //     console.error('Error adding group:', error);
-  //   }
-  // };
 
   return (
     <View className="bg-white flex-1 justify-between p-3">
@@ -82,8 +41,16 @@ const Groups = () => {
         {groups.length > 0 ? (
           <FlatList
             data={groups}
-            renderItem={({ item: { name, groupTask: tasks } }) => (
-              <GroupItem name={name} tasks={tasks} />
+            renderItem={({ item }) => (
+              <GroupItem
+                group={{
+                  id: item.id,
+                  name: item.name,
+                  tasks: item.groupTask,
+                  users: item.users,
+                }}
+                groupSettingsModalPress={groupSettingsModalPress}
+              />
             )}
             keyExtractor={item => item.id}
           />
@@ -99,7 +66,7 @@ const Groups = () => {
           </View>
         )}
         <TouchableOpacity
-          onPress={handlePresentModalPress}
+          onPress={newGroupModalPress}
           className="bg-slate-200 rounded-xl shadow-2xl shadow-black/30 p-3 flex-row items-center space-x-2"
         >
           <Icons.PlusIcon stroke="#0f172a" size={20} />
@@ -112,8 +79,12 @@ const Groups = () => {
         </TouchableOpacity>
       </View>
       <AddGroupSheet
-        bottomSheetModalRef={bottomSheetModalRef}
+        bottomSheetModalRef={newGroupSheetModalRef}
         updateList={update}
+      />
+      <GroupSettingsSheet
+        bottomSheetModalRef={groupSettingsModalRef}
+        group={group}
       />
     </View>
   );

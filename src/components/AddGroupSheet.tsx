@@ -10,7 +10,6 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetBackdrop,
-  BottomSheetTextInput,
 } from '@gorhom/bottom-sheet';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 import * as Icons from 'react-native-heroicons/outline';
@@ -39,9 +38,9 @@ const AddGroupSheet = ({
 
   // Bottom sheet
   const handleClosePress = () => {
-    console.log("close")
+    console.log('close');
     bottomSheetModalRef.current?.close();
-  }
+  };
 
   // HTTP Add task
   const addGroup = async (name: string) => {
@@ -85,7 +84,6 @@ const AddGroupSheet = ({
         style={styles.sheetContainer}
         enablePanDownToClose
         enableContentPanningGesture={false}
-
       >
         <NativeViewGestureHandler disallowInterruption>
           <View className="flex-1">

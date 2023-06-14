@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { gql, useQuery, useSubscription } from '@apollo/client';
+import { gql, useSubscription } from '@apollo/client';
 import * as Icons from 'react-native-heroicons/outline';
 
 import { useRecoilState } from 'recoil';
