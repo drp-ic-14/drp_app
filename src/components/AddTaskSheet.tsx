@@ -73,6 +73,8 @@ const AddTaskSheet = ({
       ({ place_id, name, vicinity, geometry }) => ({
         id: place_id,
         title: `${name}, ${vicinity}`,
+        name,
+        vicinity,
         location: {
           latitude: geometry.location.lat,
           longitude: geometry.location.lng,
@@ -91,11 +93,20 @@ const AddTaskSheet = ({
   }, []);
 
   // HTTP Add task
-  const addTask = async (name: string, group: string, inputLoc) => {
+  const addTask = async (
+    name: string,
+    group: string,
+    inputLoc: {
+      name: any;
+      vicinity: any;
+      location: { latitude: any; longitude: any };
+    },
+  ) => {
     const task = {
       name,
       group,
-      location: inputLoc.title,
+      location: inputLoc.name,
+      vicinity: inputLoc.vicinity,
       latitude: inputLoc.location.latitude,
       longitude: inputLoc.location.longitude,
     };

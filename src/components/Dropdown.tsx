@@ -16,24 +16,21 @@ const Dropdown: FC<Props> = ({ label }) => {
   const renderDropdown = () => {
     if (visible) {
       return (
-          <Text style={styles.dropdown}>
-            This is where the dropdown will be rendered.
-          </Text>
+        <Text style={styles.dropdown}>
+          This is where the dropdown will be rendered.
+        </Text>
       );
     }
   };
 
   return (
-    <TouchableOpacity
-      style={styles.button}
-      onPress={toggleDropdown}
-    >
+    <TouchableOpacity style={styles.button} onPress={toggleDropdown}>
       {renderDropdown()}
       <Text style={styles.buttonText}>{label}</Text>
-      <Icon.ChevronDown stroke="#0f172a"/>
+      <Icon.ChevronDown stroke="#0f172a" />
     </TouchableOpacity>
   );
-}
+};
 
 const styles = StyleSheet.create({
   button: {

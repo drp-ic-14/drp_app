@@ -15,7 +15,7 @@ type TaskItemProps = {
 };
 
 const TaskItem = ({
-  task: { id, name, location, longitude, latitude },
+  task: { id, name, location, vicinity, longitude, latitude },
   updateList,
 }: TaskItemProps) => {
   const uuid = useUuid();
@@ -49,7 +49,7 @@ const TaskItem = ({
             className="text-slate-900/60"
             style={{ textAlignVertical: 'center' }}
           >
-            {location} ({Math.round(dist)}m)
+            {`${location}, ${vicinity}`} ({Math.round(dist)}m)
           </Text>
         </View>
       </View>

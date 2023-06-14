@@ -12,9 +12,9 @@ export const uuidAtom = atom<string>({
 });
 
 export const userAtom = atom<{
-  id: string,
-  tasks: Task[],
-  groups: any[], // TODO: implement group interface
+  id: string;
+  tasks: Task[];
+  groups: any[]; // TODO: implement group interface
 }>({
   key: 'user',
   default: {
