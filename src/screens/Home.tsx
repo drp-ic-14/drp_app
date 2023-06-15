@@ -56,7 +56,7 @@ const Home = ({ navigation }) => {
         <FlatList
           data={data}
           renderItem={({ item }) => (
-            <TaskItem task={item} updateList={update} navigation={navigation} />
+            <TaskItem task={item} navigation={navigation} />
           )}
           keyExtractor={item => item.id}
           className="mb-3"

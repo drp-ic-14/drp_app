@@ -16,7 +16,7 @@ import { BACK_END_URL } from '../api/Constants';
 import { useUuid } from '../hooks/login';
 import { useUser } from '../hooks/user';
 
-const Groups = () => {
+const Groups = ({ navigation }) => {
   const uuid = useUuid();
   const [{ groups }, update] = useUser();
 
@@ -77,7 +77,7 @@ const Groups = () => {
           <FlatList
             data={groups}
             renderItem={({ item: { name, groupTask: tasks } }) => (
-              <GroupItem name={name} tasks={tasks} />
+              <GroupItem name={name} tasks={tasks} navigation={navigation} />
             )}
             keyExtractor={item => item.id}
           />

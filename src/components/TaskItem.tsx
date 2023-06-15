@@ -7,22 +7,22 @@ import { distance } from '../utils/Utils';
 import { Task } from '../utils/Interfaces';
 import { useLocation } from '../hooks/location';
 import { deleteTask } from '../api/BackEnd';
+import { useUser } from '../hooks/user';
 
 type TaskItemProps = {
   task: Task;
-  updateList: () => void;
 };
 
 const TaskItem = ({
   task: { id, name, location, vicinity, longitude, latitude, description },
-  updateList,
   navigation,
 }: TaskItemProps) => {
   const [currentLocation] = useLocation();
+  const [, updateUser] = useUser();
 
   const onComplete = async () => {
     await deleteTask(id);
-    updateList();
+    updateUser();
   };
 
   const [{ loading }, handleComplete] = useAsyncFn(onComplete);

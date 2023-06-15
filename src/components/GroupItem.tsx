@@ -4,7 +4,7 @@ import * as Icons from 'react-native-heroicons/mini';
 
 import TaskItem from './TaskItem';
 
-const GroupItem = ({ name, tasks }) => {
+const GroupItem = ({ name, tasks, navigation }) => {
   const [open, setOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -42,7 +42,10 @@ const GroupItem = ({ name, tasks }) => {
         <FlatList
           data={[...tasks].reverse()}
           renderItem={({ item }) => (
-            <TaskItem task={item} updateList={() => {}} />
+            <TaskItem
+              task={item}
+              navigation={navigation}
+            />
           )}
           keyExtractor={item => item.id}
           ItemSeparatorComponent={() => <View className="h-2" />}
