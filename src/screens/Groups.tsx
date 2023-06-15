@@ -16,7 +16,7 @@ import { Group } from '../utils/Interfaces';
 
 const Groups = () => {
   const [{ groups }, update] = useUser();
-  const [group, setGroup] = useState<Group | null>(null);
+  const [groupId, setGroupId] = useState<string>("");
 
   const newGroupSheetModalRef = useRef<BottomSheetModal>(null);
   const newGroupModalPress = useCallback(() => {
@@ -24,9 +24,8 @@ const Groups = () => {
   }, []);
 
   const groupSettingsModalRef = useRef<BottomSheetModal>(null);
-  const groupSettingsModalPress = useCallback((group: Group) => {
-    console.log('open settings for: ', group.name);
-    setGroup(group);
+  const groupSettingsModalPress = useCallback((groupId: string) => {
+    setGroupId(groupId);
     groupSettingsModalRef.current?.present();
   }, []);
 
@@ -84,7 +83,7 @@ const Groups = () => {
       />
       <GroupSettingsSheet
         bottomSheetModalRef={groupSettingsModalRef}
-        group={group}
+        groupId={groupId}
       />
     </View>
   );

@@ -46,7 +46,7 @@ const GroupItem = ({ group, groupSettingsModalPress }: GroupItemProps) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            groupSettingsModalPress(group);
+            groupSettingsModalPress(group.id);
           }}
           className="flex-row space-x-1"
         >

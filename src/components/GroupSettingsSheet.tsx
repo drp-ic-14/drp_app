@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -16,41 +16,61 @@ import {
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 import { styled } from 'nativewind';
 
-import { Group } from '../utils/Interfaces';
+import { Group, User } from '../utils/Interfaces';
 import { addUserToGroup, removeUserFromGroup } from '../api/BackEnd';
 import { useAsyncFn } from 'react-use';
 import * as Icons from 'react-native-heroicons/outline';
+import { useUser } from '../hooks/user';
 
 const StyledInput = styled(TextInput);
 
 type GroupSettingsSheetProps = {
   // updateList: () => void;
   bottomSheetModalRef: BottomSheetModal;
-  group: Group;
+  groupId: string;
 };
 
 const GroupSettingsSheet = ({
   // updateList,
   bottomSheetModalRef,
-  group,
+  groupId,
 }: GroupSettingsSheetProps) => {
   // Form states
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
+  const [group, setGroup] = useState<Group | null>(null);
+
+  const [user] = useUser();
   // Util states
   // const uuid = useUuid();
+
+  useEffect(() => {
+    update();
+  }, [groupId, user]);
 
   // Bottom sheet
   const handleClosePress = () => {
     bottomSheetModalRef.current?.close();
   };
 
-  const addUser = async () => {
-    if (await addUserToGroup(username, group.id)) {
+  const update = async () => {
+    const g = user.groups.filter(g => g.id === groupId);
+    if (g.length) {
+      setGroup(g[0]);
+    } else {
+      console.log(`Unable to find group with id: `, groupId);
+      handleClosePress();
+    }
+  };
+
+  const addUser = async (username: string) => {
+    console.log(`add user`, username, " to ", groupId);
+    if (await addUserToGroup(username, groupId)) {
       console.log(`'${username}' added to group '${group.name}'`);
       setUsername('');
       setError('');
-      handleClosePress();
+      await update();
+      // handleClosePress();
     } else {
       console.log(`unable to add '${username}' to group '${group.name}'`);
       setError('Error: cannot add user to group.');
@@ -58,9 +78,14 @@ const GroupSettingsSheet = ({
   };
 
   const removeUser = async (username: string) => {
-    console.log('remove user', username);
-    await removeUserFromGroup(username, group.id);
-    handleClosePress();
+    console.log('trying to remove user', username);
+    if (await removeUserFromGroup(username, groupId)) {
+      console.log('removed user', username);
+    } else {
+      console.log('unable to remove user ', username);
+    }
+    await update();
+    // handleClosePress();
   };
 
   const [{ loading: submitLoading }, submit] = useAsyncFn(addUser);
@@ -69,7 +94,7 @@ const GroupSettingsSheet = ({
   const truncateUser = (username: string) =>
     username.length > 27 ? username.substring(0, 27) + '...' : username;
 
-  if (!!group) {
+  if (group) {
     return (
       <BottomSheetModalProvider>
         <BottomSheetModal
@@ -134,7 +159,7 @@ const GroupSettingsSheet = ({
                     placeholderTextColor="#0f172aaa"
                   />
                   <TouchableOpacity
-                    onPress={submit}
+                    onPress={() => submit(username)}
                     className="p-1 justify-center items-center bg-indigo-100 shadow-xl shadow-black/30 aspect-square rounded-xl"
                   >
                     {submitLoading ? (
