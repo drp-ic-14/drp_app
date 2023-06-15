@@ -84,7 +84,7 @@ const AddTaskSheet = ({
   const dropdownController = useRef<AutocompleteDropdownRef>(null);
   const searchRef = useRef(null);
 
-  const getSuggestions = useCallback(async (q: string) => {
+  const getSuggestions = async (q: string) => {
     if (typeof q !== 'string' || q.length < 3) {
       setSuggestionsList(null);
       return;
@@ -112,7 +112,7 @@ const AddTaskSheet = ({
     setSuggestionsList(suggestions);
 
     setLoading(false);
-  }, []);
+  };
 
   const onClearPress = useCallback(() => {
     setSuggestionsList(null);
@@ -228,8 +228,8 @@ const AddTaskSheet = ({
                 size="large"
               >
                 <SelectItem title="Personal" accessoryLeft={UserIcon} />
-                {user.groups.map(({ name }) => (
-                  <SelectItem title={name} accessoryLeft={GroupIcon} />
+                {user.groups.map(({ id, name }) => (
+                  <SelectItem key={id} title={name} accessoryLeft={GroupIcon} />
                 ))}
               </Select>
             </View>

@@ -1,10 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import * as Icons from 'react-native-heroicons/outline';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
@@ -14,9 +9,10 @@ import AddGroupSheet from '../components/AddGroupSheet';
 import GroupSettingsSheet from '../components/GroupSettingsSheet';
 import { Group } from '../utils/Interfaces';
 
-const Groups = () => {
+const Groups = ({ navigation }) => {
+  // const uuid = useUuid();
   const [{ groups }, update] = useUser();
-  const [groupId, setGroupId] = useState<string>("");
+  const [groupId, setGroupId] = useState<string>('');
 
   const newGroupSheetModalRef = useRef<BottomSheetModal>(null);
   const newGroupModalPress = useCallback(() => {
@@ -50,6 +46,7 @@ const Groups = () => {
                   users: item.users,
                 }}
                 groupSettingsModalPress={groupSettingsModalPress}
+                navigation={navigation}
               />
             )}
             keyExtractor={item => item.id}

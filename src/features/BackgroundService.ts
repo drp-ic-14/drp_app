@@ -1,17 +1,25 @@
-/* eslint-disable @typescript-eslint/indent */
 import BackgroundService from 'react-native-background-actions';
 import { getRecoil, setRecoil } from 'recoil-nexus';
 
 import { distance, sleep } from '../utils/Utils';
-import { Task } from '../utils/Interfaces';
+import { Location, Task } from '../utils/Interfaces';
 import { notify } from './Notifier';
 import { lastNotifiedAtom, locationAtom, userAtom } from '../store/Atoms';
+import { getCurrentPosition } from './Geolocation';
 
 const searchForNearbyTasks = async () => {
   const loc = getRecoil(locationAtom);
-  const data: Task[] = getRecoil(userAtom).tasks;
+  const user = getRecoil(userAtom);
+
+  getCurrentPosition().then((loc: Location) => {
+    console.log("set loc");
+    setRecoil(locationAtom, loc);
+  }); 
+
+  let data: Task[] = user.groups.map(({ groupTask }) => groupTask).flat();
+  data = data.concat(user.tasks);
+
   const lastNotified = getRecoil(lastNotifiedAtom);
-  // console.log(`old: `, data);
 
   data.forEach((task: Task) => {
     const time = Date.now();
@@ -21,6 +29,12 @@ const searchForNearbyTasks = async () => {
       loc.latitude,
       loc.longitude,
     );
+    // console.log(task, dist)
+    console.log("-----")
+    console.log(task.name)
+    console.log(`taskloc - ${task.location}`);
+    console.log(`task - ${task.longitude}, ${task.latitude}`);
+    console.log(`dist - `, dist);
     if (dist < 100) {
       const taskLastNotified =
         (lastNotified.has(task.id) ? lastNotified.get(task.id) : 0) || 0;
@@ -36,20 +50,10 @@ const searchForNearbyTasks = async () => {
   setRecoil(lastNotifiedAtom, lastNotified);
 };
 
-const backgroundService = async (
-  args?:
-    | {
-        data: Task[];
-      }
-    | undefined,
-): Promise<void> => {
+const backgroundService = async (): Promise<void> => {
   await new Promise(async () => {
-    while (
-      args?.data &&
-      args.data.length > 0 &&
-      BackgroundService.isRunning()
-    ) {
-      console.log('[BG] Ping');
+    while (BackgroundService.isRunning()) {
+      console.log('[BG] Ping - ', getRecoil(locationAtom));
       searchForNearbyTasks();
       await sleep(10000);
     }
@@ -67,16 +71,14 @@ const backgroundServiceOptions = {
   actions: ['Stop'],
 };
 
-export const startBackgroundService = async (data: Task[]) => {
+export const startBackgroundService = async () => {
   if (!BackgroundService.isRunning()) {
     try {
       console.log('Starting background service.');
-      await BackgroundService.start(backgroundService, {
-        ...backgroundServiceOptions,
-        parameters: {
-          data,
-        },
-      });
+      await BackgroundService.start(
+        backgroundService,
+        backgroundServiceOptions,
+      );
       console.log('Successfully started background service.');
     } catch (e) {
       console.log('Unable to start background service', e);

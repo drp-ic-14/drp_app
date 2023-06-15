@@ -9,7 +9,11 @@ type GroupItemProps = {
   groupSettingsModalPress: any;
 };
 
-const GroupItem = ({ group, groupSettingsModalPress }: GroupItemProps) => {
+const GroupItem = ({
+  group,
+  groupSettingsModalPress,
+  navigation,
+}: GroupItemProps) => {
   const [open, setOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -61,7 +65,7 @@ const GroupItem = ({ group, groupSettingsModalPress }: GroupItemProps) => {
         <FlatList
           data={[...group.tasks].reverse()}
           renderItem={({ item }) => (
-            <TaskItem task={item} updateList={() => {}} />
+            <TaskItem task={item} navigation={navigation} />
           )}
           keyExtractor={item => item.id}
           ItemSeparatorComponent={() => <View className="h-2" />}
