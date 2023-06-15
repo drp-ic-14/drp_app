@@ -25,7 +25,6 @@ import { styled } from 'nativewind';
 import MapView, { Marker } from 'react-native-maps';
 import { useAsyncFn } from 'react-use';
 
-import DropDownPicker from 'react-native-dropdown-picker';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import { useLocation } from '../hooks/location';
 import { useUuid } from '../hooks/login';
@@ -47,8 +46,8 @@ const GroupIcon = ({ style }) => (
 );
 
 const AddTaskSheet = ({
-  updateList,
   bottomSheetModalRef,
+  updateList,
 }: AddTaskSheetProps) => {
   // Form states
   const [name, setName] = useState('');

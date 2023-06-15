@@ -95,3 +95,39 @@ export const getUser = async (uuid: string): Promise<any> => {
   const data = await response.json();
   return data;
 };
+
+export const addUserToGroup = async (
+  username: string,
+  groupId: string,
+): Promise<boolean> => {
+  const response = await fetch(`${BACK_END_URL}/api/join_group`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      user_id: username,
+      group_id: groupId,
+    }),
+  });
+  return response.ok;
+};
+
+export const removeUserFromGroup = async (
+  username: string,
+  groupId: string,
+): Promise<boolean> => {
+  const response = await fetch(`${BACK_END_URL}/api/leave_group`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      user_id: username,
+      group_id: groupId,
+    }),
+  });
+  return response.ok;
+};

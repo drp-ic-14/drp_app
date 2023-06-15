@@ -5,13 +5,13 @@ import { gql, useSubscription } from '@apollo/client';
 import * as Icons from 'react-native-heroicons/outline';
 
 import { useRecoilState } from 'recoil';
+import { createStackNavigator } from '@react-navigation/stack';
 import Groups from './Groups';
 import Map from './Map';
 import { useUuid } from '../hooks/login';
 import { userAtom } from '../store/Atoms';
 import HomeStack from './HomeStack';
 import Home from './Home';
-import { createStackNavigator } from '@react-navigation/stack';
 import TaskDetails from './TaskDetails';
 
 const USER_SUBSCRIPTION = gql`

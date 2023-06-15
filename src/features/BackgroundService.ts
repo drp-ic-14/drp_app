@@ -1,19 +1,23 @@
-/* eslint-disable @typescript-eslint/indent */
 import BackgroundService from 'react-native-background-actions';
 import { getRecoil, setRecoil } from 'recoil-nexus';
 
 import { distance, sleep } from '../utils/Utils';
-import { Task } from '../utils/Interfaces';
+import { Location, Task } from '../utils/Interfaces';
 import { notify } from './Notifier';
 import { lastNotifiedAtom, locationAtom, userAtom } from '../store/Atoms';
+import { getCurrentPosition } from './Geolocation';
 
 const searchForNearbyTasks = async () => {
   const loc = getRecoil(locationAtom);
   const user = getRecoil(userAtom);
 
-  const data: Task[] = user.groups.map(({ groupTask }) => groupTask).flat();
-  data.push(user.tasks);
-  console.log('BG!: ', data);
+  getCurrentPosition().then((loc: Location) => {
+    console.log("set loc: ", loc);
+    setRecoil(locationAtom, loc);
+  }); 
+
+  let data: Task[] = user.groups.map(({ groupTask }) => groupTask).flat();
+  data = data.concat(user.tasks);
 
   const lastNotified = getRecoil(lastNotifiedAtom);
 
@@ -25,6 +29,12 @@ const searchForNearbyTasks = async () => {
       loc.latitude,
       loc.longitude,
     );
+    // console.log(task, dist)
+    console.log("-----")
+    console.log(task.name)
+    console.log(`taskloc - ${task.location}`);
+    console.log(`task - ${task.longitude}, ${task.latitude}`);
+    console.log(`dist - `, dist);
     if (dist < 100) {
       const taskLastNotified =
         (lastNotified.has(task.id) ? lastNotified.get(task.id) : 0) || 0;
@@ -43,7 +53,7 @@ const searchForNearbyTasks = async () => {
 const backgroundService = async (): Promise<void> => {
   await new Promise(async () => {
     while (BackgroundService.isRunning()) {
-      console.log('[BG] Ping');
+      console.log('[BG] Ping - ', getRecoil(locationAtom));
       searchForNearbyTasks();
       await sleep(10000);
     }
