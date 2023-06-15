@@ -12,7 +12,7 @@ const searchForNearbyTasks = async () => {
   const user = getRecoil(userAtom);
 
   getCurrentPosition().then((loc: Location) => {
-    console.log("set loc");
+    console.log("set loc: ", loc);
     setRecoil(locationAtom, loc);
   }); 
 
