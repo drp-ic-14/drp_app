@@ -45,6 +45,7 @@ const GroupSettingsSheet = ({
   // const uuid = useUuid();
 
   useEffect(() => {
+    // console.log(`*`, groupId);
     update();
   }, [groupId, user]);
 
@@ -55,15 +56,17 @@ const GroupSettingsSheet = ({
 
   const update = async () => {
     const g = user.groups.filter(g => g.id === groupId);
+    // console.log('update ', g);
     if (g.length) {
       setGroup(g[0]);
+      // console.log('set ', g);
     } else {
       console.log(`Unable to find group with id: `, groupId);
       handleClosePress();
     }
   };
 
-  const addUser = async (username: string) => {
+  const addUser = async (username: string, groupId: string) => {
     console.log(`add user`, username, ' to ', groupId);
     if (await addUserToGroup(username, groupId)) {
       console.log(`'${username}' added to group '${group.name}'`);
@@ -75,7 +78,7 @@ const GroupSettingsSheet = ({
     }
   };
 
-  const removeUser = async (username: string) => {
+  const removeUser = async (username: string, groupId: string) => {
     console.log('trying to remove user', username);
     if (await removeUserFromGroup(username, groupId)) {
       console.log('removed user', username);
@@ -90,94 +93,91 @@ const GroupSettingsSheet = ({
   const truncateUser = (username: string) =>
     username.length > 27 ? username.substring(0, 27) + '...' : username;
 
-  if (group) {
-    return (
-      <BottomSheetModalProvider>
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          snapPoints={['70%']}
-          backdropComponent={backDropProps => (
-            <BottomSheetBackdrop
-              {...backDropProps}
-              opacity={0.5}
-              pressBehavior="close"
-              disappearsOnIndex={-1}
-            />
-          )}
-          style={styles.sheetContainer}
-          enablePanDownToClose
-          enableContentPanningGesture={false}
-        >
-          <NativeViewGestureHandler disallowInterruption>
-            <View className="flex-1">
-              <View className="flex-row mx-4 mb-4 ">
-                <Text className="text-2xl text-slate-900">{`Edit Group: ${group.name}`}</Text>
-              </View>
-              <View className="flex-1 mx-4 mb-4">
-                <Text className="text-xl text-slate-900">Group members:</Text>
-                <FlatList
-                  data={group.users}
-                  renderItem={({ item }) => (
-                    <View className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30">
-                      <View className="space-y-2 flex-1">
-                        <Text className="text-slate-900 text-lg">
-                          {truncateUser(item.id)}
-                        </Text>
-                      </View>
-                      <TouchableOpacity
-                        onPress={() => remove(item.id)}
-                        className="p-1 justify-center items-center bg-white shadow-xl shadow-black/30 aspect-square rounded-xl"
-                      >
-                        {removeLoading ? (
-                          <ActivityIndicator color="#0f172a" />
-                        ) : (
-                          <Icons.TrashIcon stroke="#0f172a" />
-                        )}
-                      </TouchableOpacity>
+  return (
+    <BottomSheetModalProvider>
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        snapPoints={['70%']}
+        backdropComponent={backDropProps => (
+          <BottomSheetBackdrop
+            {...backDropProps}
+            opacity={0.5}
+            pressBehavior="close"
+            disappearsOnIndex={-1}
+          />
+        )}
+        style={styles.sheetContainer}
+        enablePanDownToClose
+        enableContentPanningGesture={false}
+      >
+        {group && (<NativeViewGestureHandler disallowInterruption>
+          <View className="flex-1">
+            <View className="flex-row mx-4 mb-4 ">
+              <Text className="text-2xl text-slate-900">{`Edit Group: ${group.name}`}</Text>
+            </View>
+            <View className="flex-1 mx-4 mb-4">
+              <Text className="text-xl text-slate-900">Group members:</Text>
+              <FlatList
+                data={group.users}
+                renderItem={({ item }) => (
+                  <View className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30">
+                    <View className="space-y-2 flex-1">
+                      <Text className="text-slate-900 text-lg">
+                        {truncateUser(item.id)}
+                      </Text>
                     </View>
-                  )}
-                  keyExtractor={item => item.id}
-                  className="mb-3"
-                  ItemSeparatorComponent={() => <View className="h-2" />}
-                />
-              </View>
-              <View className="flex-1 mx-4 mb-4">
-                <View className="pt-4 flex-row mx-4 mb-4">
-                  <StyledInput
-                    value={username}
-                    onChangeText={setUsername}
-                    className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] flex-1 rounded-xl shadow-xl shadow-black/30"
-                    placeholder="Add user..."
-                    placeholderTextColor="#0f172aaa"
-                  />
-                  <TouchableOpacity
-                    onPress={() => submit(username)}
-                    className="p-1 justify-center items-center bg-indigo-100 shadow-xl shadow-black/30 aspect-square rounded-xl"
-                  >
-                    {submitLoading ? (
-                      <ActivityIndicator color="#0f172a" />
-                    ) : (
-                      <Icons.PlusIcon stroke="#0f172a" />
-                    )}
-                  </TouchableOpacity>
-                </View>
-                {error != '' && (
-                  <View className="mx-4 mb-4">
-                    <Text className="text-base text-center text-rose-900">
-                      {error}
-                    </Text>
+                    <TouchableOpacity
+                      onPress={() => remove(item.id, groupId)}
+                      className="p-1 justify-center items-center bg-white shadow-xl shadow-black/30 aspect-square rounded-xl"
+                    >
+                      {removeLoading ? (
+                        <ActivityIndicator color="#0f172a" />
+                      ) : (
+                        <Icons.TrashIcon stroke="#0f172a" />
+                      )}
+                    </TouchableOpacity>
                   </View>
                 )}
-              </View>
+                keyExtractor={item => item.id}
+                className="mb-3"
+                ItemSeparatorComponent={() => <View className="h-2" />}
+              />
             </View>
-          </NativeViewGestureHandler>
-        </BottomSheetModal>
-      </BottomSheetModalProvider>
-    );
-  } else {
-    console.log('group settings sheet: group is null');
-    return null;
-  }
+            <View className="flex-1 mx-4 mb-4">
+              <View className="pt-4 flex-row mx-4 mb-4">
+                <StyledInput
+                  value={username}
+                  onChangeText={setUsername}
+                  className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] flex-1 rounded-xl shadow-xl shadow-black/30"
+                  placeholder="Add user..."
+                  placeholderTextColor="#0f172aaa"
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    submit(username, groupId)
+                  }}
+                  className="p-1 justify-center items-center bg-indigo-100 shadow-xl shadow-black/30 aspect-square rounded-xl"
+                >
+                  {submitLoading ? (
+                    <ActivityIndicator color="#0f172a" />
+                  ) : (
+                    <Icons.PlusIcon stroke="#0f172a" />
+                  )}
+                </TouchableOpacity>
+              </View>
+              {error != '' && (
+                <View className="mx-4 mb-4">
+                  <Text className="text-base text-center text-rose-900">
+                    {error}
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+        </NativeViewGestureHandler>)}
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
+  );
 };
 
 const styles = StyleSheet.create({

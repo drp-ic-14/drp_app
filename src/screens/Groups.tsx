@@ -24,10 +24,11 @@ const Groups = () => {
   }, []);
 
   const groupSettingsModalRef = useRef<BottomSheetModal>(null);
-  const groupSettingsModalPress = useCallback((groupId: string) => {
+  const groupSettingsModalPress = (groupId: string) => {
     setGroupId(groupId);
+    // console.log(`-`, groupId);
     groupSettingsModalRef.current?.present();
-  }, []);
+  };
 
   useEffect(() => {
     update();
