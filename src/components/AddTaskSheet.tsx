@@ -85,7 +85,7 @@ const AddTaskSheet = ({
   const dropdownController = useRef<AutocompleteDropdownRef>(null);
   const searchRef = useRef(null);
 
-  const getSuggestions = useCallback(async (q: string) => {
+  const getSuggestions = async (q: string) => {
     if (typeof q !== 'string' || q.length < 3) {
       setSuggestionsList(null);
       return;
@@ -113,7 +113,7 @@ const AddTaskSheet = ({
     setSuggestionsList(suggestions);
 
     setLoading(false);
-  }, []);
+  };
 
   const onClearPress = useCallback(() => {
     setSuggestionsList(null);

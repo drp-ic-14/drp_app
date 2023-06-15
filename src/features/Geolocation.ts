@@ -3,12 +3,13 @@ import { getRecoil } from 'recoil-nexus';
 import Geolocation from '@react-native-community/geolocation';
 import { locationAtom } from '../store/Atoms';
 import { Location } from '../utils/Interfaces';
+import { BACK_END_URL } from '../api/Constants';
 
 export const searchLocation = async (query: String): Promise<Array<any>> => {
   const loc = getRecoil(locationAtom);
   try {
     const response = await fetch(
-      `http://drp-14-server.herokuapp.com/api/search_location?query=${query}&latitude=${loc.latitude}&longitude=${loc.longitude}`,
+      `${BACK_END_URL}/api/search_location?query=${query}&latitude=${loc.latitude}&longitude=${loc.longitude}`,
     );
 
     const json = await response.json();
