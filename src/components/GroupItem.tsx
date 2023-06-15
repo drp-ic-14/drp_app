@@ -42,10 +42,7 @@ const GroupItem = ({ name, tasks, navigation }) => {
         <FlatList
           data={[...tasks].reverse()}
           renderItem={({ item }) => (
-            <TaskItem
-              task={item}
-              navigation={navigation}
-            />
+            <TaskItem task={item} navigation={navigation} />
           )}
           keyExtractor={item => item.id}
           ItemSeparatorComponent={() => <View className="h-2" />}

@@ -229,8 +229,8 @@ const AddTaskSheet = ({
                 size="large"
               >
                 <SelectItem title="Personal" accessoryLeft={UserIcon} />
-                {user.groups.map(({ name }) => (
-                  <SelectItem title={name} accessoryLeft={GroupIcon} />
+                {user.groups.map(({ id, name }) => (
+                  <SelectItem key={id} title={name} accessoryLeft={GroupIcon} />
                 ))}
               </Select>
             </View>
