@@ -64,13 +64,11 @@ const GroupSettingsSheet = ({
   };
 
   const addUser = async (username: string) => {
-    console.log(`add user`, username, " to ", groupId);
+    console.log(`add user`, username, ' to ', groupId);
     if (await addUserToGroup(username, groupId)) {
       console.log(`'${username}' added to group '${group.name}'`);
       setUsername('');
       setError('');
-      await update();
-      // handleClosePress();
     } else {
       console.log(`unable to add '${username}' to group '${group.name}'`);
       setError('Error: cannot add user to group.');
@@ -84,8 +82,6 @@ const GroupSettingsSheet = ({
     } else {
       console.log('unable to remove user ', username);
     }
-    await update();
-    // handleClosePress();
   };
 
   const [{ loading: submitLoading }, submit] = useAsyncFn(addUser);
@@ -149,11 +145,7 @@ const GroupSettingsSheet = ({
                 <View className="pt-4 flex-row mx-4 mb-4">
                   <StyledInput
                     value={username}
-                    onChange={v => {
-                      console.log(`v:`, v.nativeEvent.text);
-                      setUsername(v.nativeEvent.text)
-                      console.log(`username: `, username)
-                    }}
+                    onChangeText={setUsername}
                     className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] flex-1 rounded-xl shadow-xl shadow-black/30"
                     placeholder="Add user..."
                     placeholderTextColor="#0f172aaa"
