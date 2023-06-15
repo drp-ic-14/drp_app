@@ -5,6 +5,7 @@ export interface Task {
   vicinity: String;
   latitude: number;
   longitude: number;
+  description?: string;
 }
 
 export interface Location {

@@ -12,7 +12,7 @@ import {
 } from '../features/BackgroundService';
 import { useUser } from '../hooks/user';
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const uuid = useUuid();
   const [{ tasks: data }, update] = useUser();
 
@@ -56,7 +56,7 @@ const Home = () => {
         <FlatList
           data={data}
           renderItem={({ item }) => (
-            <TaskItem task={item} updateList={update} />
+            <TaskItem task={item} updateList={update} navigation={navigation} />
           )}
           keyExtractor={item => item.id}
           className="mb-3"

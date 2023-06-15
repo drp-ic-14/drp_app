@@ -13,6 +13,39 @@ export const deleteTask = async (taskId: string) => {
   });
 };
 
+export const updateTask = async (
+  id: number,
+  name: string,
+  description: string,
+  location: string,
+  vicinity: string,
+  latitude: number,
+  longitude: number,
+) => {
+  try {
+    await fetch(`${BACK_END_URL}/api/update_task`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        task_id: id,
+        task: {
+          name,
+          description,
+          location,
+          vicinity,
+          latitude,
+          longitude,
+        },
+      }),
+    });
+  } catch (e) {
+    console.log('Failed to update task', e);
+  }
+};
+
 export const checkId = async (uuid: string): Promise<boolean> => {
   const response = await fetch(`${BACK_END_URL}/api/check_id`, {
     method: 'POST',

@@ -14,8 +14,9 @@ type TaskItemProps = {
 };
 
 const TaskItem = ({
-  task: { id, name, location, vicinity, longitude, latitude },
+  task: { id, name, location, vicinity, longitude, latitude, description },
   updateList,
+  navigation,
 }: TaskItemProps) => {
   const [currentLocation] = useLocation();
 
@@ -38,7 +39,20 @@ const TaskItem = ({
   );
 
   return (
-    <View className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30">
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('Task', {
+          id,
+          name,
+          location,
+          vicinity,
+          longitude,
+          latitude,
+          description,
+        })
+      }
+      className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30"
+    >
       <View className="space-y-2 flex-1">
         <Text className="text-slate-900 text-lg">{name}</Text>
         <View className="flex-row space-x-1 -ml-1">
@@ -58,7 +72,7 @@ const TaskItem = ({
       >
         {loading ? <ActivityIndicator /> : <Icons.CheckIcon stroke="#0f172a" />}
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 

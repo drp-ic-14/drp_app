@@ -46,7 +46,7 @@ const App = () => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ApolloProvider client={client}>
           <AutocompleteDropdownContextProvider>
-            <ApplicationProvider {...eva} theme={{...eva.light, ...theme}}>
+            <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
               <StatusBar barStyle="dark-content" backgroundColor="white" />
               {splash ? <Splash complete={hideSplash} /> : <Navigation />}
               <LocationProvider />

@@ -11,11 +11,13 @@
     "postinstall": "react-native setup-ios-permissions && pod-install"
   },
   "dependencies": {
+    "@ant-design/icons-react-native": "^2.3.2",
     "@apollo/client": "^3.7.15",
     "@eva-design/eva": "^2.2.0",
     "@gorhom/bottom-sheet": "^4.4.7",
     "@notifee/react-native": "^7.7.1",
     "@react-native-async-storage/async-storage": "^1.18.1",
+    "@react-native-community/blur": "^4.3.2",
     "@react-native-community/eslint-config": "^3.2.0",
     "@react-native-community/geolocation": "^3.0.6",
     "@react-navigation/bottom-tabs": "^6.5.7",
