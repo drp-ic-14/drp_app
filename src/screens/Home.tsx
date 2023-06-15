@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import { AppState, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import * as Icons from 'react-native-heroicons/outline';
@@ -14,7 +14,8 @@ import { useUser } from '../hooks/user';
 
 const Home = ({ navigation }) => {
   const uuid = useUuid();
-  const [{ tasks: data }, update] = useUser();
+  const [user, update] = useUser();
+  const { tasks: data } = user;
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const handlePresentModalPress = useCallback(() => {
@@ -38,7 +39,7 @@ const Home = ({ navigation }) => {
         update();
         stopBackgroundService();
       } else {
-        startBackgroundService(data);
+        startBackgroundService();
       }
 
       appState.current = nextAppState;
@@ -47,7 +48,7 @@ const Home = ({ navigation }) => {
     return () => {
       subscription.remove();
     };
-  }, [data]);
+  }, [user]);
 
   return (
     <View className="flex-1 bg-white p-3 space-y-3">

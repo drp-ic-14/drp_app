@@ -9,9 +9,13 @@ import { lastNotifiedAtom, locationAtom, userAtom } from '../store/Atoms';
 
 const searchForNearbyTasks = async () => {
   const loc = getRecoil(locationAtom);
-  const data: Task[] = getRecoil(userAtom).tasks;
+  const user = getRecoil(userAtom);
+
+  const data: Task[] = user.groups.map(({ groupTask }) => groupTask).flat();
+  data.push(user.tasks);
+  console.log('BG!: ', data);
+
   const lastNotified = getRecoil(lastNotifiedAtom);
-  // console.log(`old: `, data);
 
   data.forEach((task: Task) => {
     const time = Date.now();
@@ -36,19 +40,9 @@ const searchForNearbyTasks = async () => {
   setRecoil(lastNotifiedAtom, lastNotified);
 };
 
-const backgroundService = async (
-  args?:
-    | {
-        data: Task[];
-      }
-    | undefined,
-): Promise<void> => {
+const backgroundService = async (): Promise<void> => {
   await new Promise(async () => {
-    while (
-      args?.data &&
-      args.data.length > 0 &&
-      BackgroundService.isRunning()
-    ) {
+    while (BackgroundService.isRunning()) {
       console.log('[BG] Ping');
       searchForNearbyTasks();
       await sleep(10000);
@@ -67,16 +61,14 @@ const backgroundServiceOptions = {
   actions: ['Stop'],
 };
 
-export const startBackgroundService = async (data: Task[]) => {
+export const startBackgroundService = async () => {
   if (!BackgroundService.isRunning()) {
     try {
       console.log('Starting background service.');
-      await BackgroundService.start(backgroundService, {
-        ...backgroundServiceOptions,
-        parameters: {
-          data,
-        },
-      });
+      await BackgroundService.start(
+        backgroundService,
+        backgroundServiceOptions,
+      );
       console.log('Successfully started background service.');
     } catch (e) {
       console.log('Unable to start background service', e);
