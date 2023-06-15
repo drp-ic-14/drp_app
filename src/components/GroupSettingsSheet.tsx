@@ -5,6 +5,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import {
   BottomSheetModal,
@@ -17,6 +19,7 @@ import { styled } from 'nativewind';
 import { Group } from '../utils/Interfaces';
 import { addUserToGroup } from '../api/BackEnd';
 import { useAsyncFn } from 'react-use';
+import * as Icons from 'react-native-heroicons/outline';
 
 const StyledInput = styled(TextInput);
 
@@ -45,15 +48,23 @@ const GroupSettingsSheet = ({
 
   const addUser = async () => {
     if (await addUserToGroup(username, group.id)) {
-      console.log(`'${username}' added to group '${group.name}'`)
+      console.log(`'${username}' added to group '${group.name}'`);
       handleClosePress();
-    }
-    else {
-      console.log(`unable to add '${username}' to group '${group.name}'`)
+    } else {
+      console.log(`unable to add '${username}' to group '${group.name}'`);
+      setError('Error: cannot add user to group.');
+      console.log(`error = ${error}`);
     }
   };
 
+  const removeUser = async (username) => {
+    console.log("remove user", username)
+  }
+
   const [{ loading: submitLoading }, submit] = useAsyncFn(addUser);
+  const [{ loading: removeLoading }, remove] = useAsyncFn(removeUser);
+
+  const truncateUser = (username: string) => username.substring(0,27) + "...";
 
   return !!group ? (
     <BottomSheetModalProvider>
@@ -77,31 +88,61 @@ const GroupSettingsSheet = ({
             <View className="flex-row mx-4 mb-4 ">
               <Text className="text-2xl text-slate-900">{`Edit Group: ${group.name}`}</Text>
             </View>
-            <View className="flex-1">
-              <StyledInput
-                value={username}
-                onChange={v => setUsername(v.nativeEvent.text)}
-                placeholder="Username..."
-                className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-neutral-200 self-stretch rounded-xl shadow-xl shadow-black/40"
-              />
-              <TouchableOpacity
-                onPress={addUser}
-                disabled={submitLoading}
-                className={`p-1 justify-center items-center ${
-                  submitLoading ? 'bg-gray-300' : 'bg-indigo-200'
-                } aspect-square rounded-xl`}
-              >
-                {submitLoading ? (
-                  <ActivityIndicator size="small" color="#0f172ates" />
-                ) : (
-                  <Text
-                    className="text-slate-900 text-xl text-center"
-                    style={{ textAlignVertical: 'center' }}
-                  >
-                    Add group member
-                  </Text>
+            <View className="flex-1 mx-4 mb-4">
+              <Text className="text-xl text-slate-900">Group members:</Text>
+              <FlatList
+                data={group.users}
+                renderItem={({ item }) => (
+                  <View className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30">
+                    <View className="space-y-2 flex-1">
+                      <Text className="text-slate-900 text-lg">
+                        {truncateUser(item.id)}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => remove(item.id)}
+                      className="p-1 justify-center items-center bg-white shadow-xl shadow-black/30 aspect-square rounded-xl"
+                    >
+                      {removeLoading ? (
+                        <ActivityIndicator color="#0f172a" />
+                      ) : (
+                        <Icons.TrashIcon stroke="#0f172a" />
+                      )}
+                    </TouchableOpacity>
+                  </View>
                 )}
-              </TouchableOpacity>
+                keyExtractor={item => item.id}
+                className="mb-3"
+                ItemSeparatorComponent={() => <View className="h-2" />}
+              />
+            </View>
+            <View className="flex-1 mx-4 mb-4">
+              <View className="pt-4 flex-row mx-4 mb-4">
+                <TextInput
+                  value={username}
+                  onChange={v => setUsername(v.nativeEvent.text)}
+                  className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] flex-1 rounded-xl shadow-xl shadow-black/30"
+                  placeholder="Add user..."
+                  placeholderTextColor="#0f172aaa"
+                />
+                <TouchableOpacity
+                  onPress={submit}
+                  className="p-1 justify-center items-center bg-indigo-100 shadow-xl shadow-black/30 aspect-square rounded-xl"
+                >
+                  {submitLoading ? (
+                    <ActivityIndicator color="#0f172a" />
+                  ) : (
+                    <Icons.PlusIcon stroke="#0f172a" />
+                  )}
+                </TouchableOpacity>
+              </View>
+              {error != '' && (
+                <View className="mx-4 mb-4">
+                  <Text className="text-base text-center text-rose-900">
+                    {error}
+                  </Text>
+                </View>
+              )}
             </View>
           </View>
         </NativeViewGestureHandler>
