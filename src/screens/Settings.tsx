@@ -43,7 +43,7 @@ const Settings = () => {
         </View>
         {notifRadiusHelp && (
           <Text className="text-slate-500">
-            How close should you be before you are notified?
+            How close should you be before you are notified? (Default Value: 100m)
           </Text>
         )}
         <View className="flex-row justify-between">

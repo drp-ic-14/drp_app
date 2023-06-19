@@ -4,12 +4,13 @@ import { getRecoil, setRecoil } from 'recoil-nexus';
 import { distance, sleep } from '../utils/Utils';
 import { Location, Task } from '../utils/Interfaces';
 import { notify } from './Notifier';
-import { lastNotifiedAtom, locationAtom, userAtom } from '../store/Atoms';
+import { lastNotifiedAtom, locationAtom, notificationRadiusAtom, userAtom } from '../store/Atoms';
 import { getCurrentPosition } from './Geolocation';
 
 const searchForNearbyTasks = async () => {
   const loc = getRecoil(locationAtom);
   const user = getRecoil(userAtom);
+  const proxmity = getRecoil(notificationRadiusAtom);
 
   getCurrentPosition().then((loc: Location) => {
     console.log("set loc: ", loc);
@@ -35,7 +36,7 @@ const searchForNearbyTasks = async () => {
     console.log(`taskloc - ${task.location}`);
     console.log(`task - ${task.longitude}, ${task.latitude}`);
     console.log(`dist - `, dist);
-    if (dist < 100) {
+    if (dist < proxmity) {
       const taskLastNotified =
         (lastNotified.has(task.id) ? lastNotified.get(task.id) : 0) || 0;
       const timeSinceNotified = time - taskLastNotified;
