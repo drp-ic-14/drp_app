@@ -1,14 +1,28 @@
 import { Text, View } from 'react-native';
 import { useUser } from '../hooks/user';
 import Slider from '@react-native-community/slider';
-import { useState } from 'react';
-import * as Icons from 'react-native-heroicons/outline';
+import { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useRecoilState } from 'recoil';
+import { notificationRadiusAtom } from '../store/Atoms';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Settings = () => {
   const [user] = useUser();
-  const [proxmity, setProximity] = useState(100);
+  const [proximity, setProximity] = useRecoilState(notificationRadiusAtom);
   const [notifRadiusHelp, setNotifRadiusHelp] = useState(false);
+
+  useEffect(() => {
+    const saveData = setTimeout(async () => {
+      console.log(`saving prox ${proximity}m to async`);
+      await AsyncStorage.setItem('@prox', proximity.toString())
+    }, 2000);
+
+    return () => clearTimeout(saveData);
+  }, [proximity]);
+
+  const saveProxToAsync = async () => {
+  }
 
   return (
     <View className="flex-1 bg-white p-3 space-y-3">
@@ -39,9 +53,9 @@ const Settings = () => {
             minimumValue={10}
             maximumValue={1000}
             onValueChange={setProximity}
-            value={proxmity}
+            value={proximity}
           />
-          <Text className="text-slate-900">{proxmity}m</Text>
+          <Text className="text-slate-900">{proximity}m</Text>
         </View>
       </View>
     </View>
