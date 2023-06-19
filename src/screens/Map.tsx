@@ -1,4 +1,4 @@
-import React, { Modal, Text, View } from 'react-native';
+import React, { Text, View } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import { useLocation } from '../hooks/location';
 import { useUser } from '../hooks/user';
@@ -7,6 +7,7 @@ import { distance } from '../utils/Utils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react';
 import MapHelp from '../components/MapHelp';
+import Modal from 'react-native-modal';
 
 const Map = () => {
   const [currentLoc] = useLocation();
@@ -16,7 +17,7 @@ const Map = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View className="flex-row z-10 absolute top-2 left-2">
+      <View className="flex-row z-10 absolute bottom-2 left-2">
         <TouchableOpacity
           onPress={() => setShowHelp(!showHelp)}
           className="bg-white p-3 pt-1 pb-1 rounded shadow-2xl shadow-black/50"
@@ -24,7 +25,14 @@ const Map = () => {
           <Text className="text-2xl text-slate-900">Help?</Text>
         </TouchableOpacity>
       </View>
-      {showHelp && (<MapHelp/>)}
+      {/* {showHelp && (<MapHelp/>)} */}
+      <Modal
+        isVisible={showHelp}
+        coverScreen={false}
+        onBackdropPress={() => setShowHelp(false)}
+      >
+        <MapHelp />
+      </Modal>
       <MapView
         region={{
           latitude: currentLoc.latitude,

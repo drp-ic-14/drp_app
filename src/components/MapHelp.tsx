@@ -5,7 +5,7 @@ const MapHelp = () => {
     <View className="flex-0.8 bg-white absolute top-20 p-5 rounded-2xl">
       <View className="flex-row justify-between">
         {/* <Text className="text-slate-900 text-4xl">Help?</Text> */}
-        <Text className="text-slate-400">Press <Text className='font-extrabold'>'Help?'</Text> to close this.</Text>
+        <Text className="text-slate-400">Press <Text className='font-extrabold'>'Help?'</Text> or click off to close this.</Text>
       </View>
       <Text className="text-slate-900 text-lg">
         See all of your and your group(s) tasks on a map.
