@@ -2,7 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useUuid } from '../hooks/login';
 import { useUser } from '../hooks/user';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { AppState, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import {
+  AppState,
+  FlatList,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   startBackgroundService,
   stopBackgroundService,
@@ -86,23 +93,17 @@ const Home = ({ navigation }) => {
     <View className="flex-1 bg-white p-3 space-y-3">
       <Text className="text-4xl text-slate-900 tracking-wider">Tasks</Text>
       <View className="flex-1 justify-between">
-        <GroupItem
-          group={personalGroup}
-          groupSettingsModalPress={null}
-          navigation={navigation}
-        />
-        <Text className="text-2xl text-slate-900 tracking-wider">Groups:</Text>
-        <FlatList
-          data={groups}
-          renderItem={({ item }) => (
-            <GroupItem
-              group={item}
-              groupSettingsModalPress={groupSettingsModalPress}
-              navigation={navigation}
-            />
-          )}
-          keyExtractor={item => item.id}
-        />
+        <ScrollView>
+          <GroupItem
+            group={personalGroup}
+            groupSettingsModalPress={null}
+            navigation={navigation}
+          />
+          <Text className="text-2xl text-slate-900 tracking-wider">
+            Groups:
+          </Text>
+          {groups.map(g => <GroupItem group={g} groupSettingsModalPress={groupSettingsModalPress} navigation={navigation}/>)}
+        </ScrollView>
 
         <View className="flex-row space-x-2">
           <TouchableOpacity
@@ -121,7 +122,7 @@ const Home = ({ navigation }) => {
             onPress={newGroupModalPress}
             className="flex-1 bg-slate-200 rounded-xl shadow-2xl shadow-black/30 p-3 pr-5 flex-row items-center justify-center space-x-2"
           >
-          <Icons.PlusIcon stroke="#0f172a" size={20} />
+            <Icons.PlusIcon stroke="#0f172a" size={20} />
             <Text
               className="text-slate-900 text-xl"
               style={{ textAlignVertical: 'center', alignItems: 'baseline' }}
