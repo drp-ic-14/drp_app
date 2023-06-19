@@ -21,9 +21,6 @@ const Settings = () => {
     return () => clearTimeout(saveData);
   }, [proximity]);
 
-  const saveProxToAsync = async () => {
-  }
-
   return (
     <View className="flex-1 bg-white p-3 space-y-3">
       <Text className="text-4xl text-slate-900 tracking-wider">Settings</Text>
