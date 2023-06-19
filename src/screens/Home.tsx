@@ -91,6 +91,7 @@ const Home = ({ navigation }) => {
           groupSettingsModalPress={null}
           navigation={navigation}
         />
+        <Text className="text-2xl text-slate-900 tracking-wider">Groups:</Text>
         <FlatList
           data={groups}
           renderItem={({ item }) => (
@@ -103,10 +104,10 @@ const Home = ({ navigation }) => {
           keyExtractor={item => item.id}
         />
 
-        <View className="flex-row justify-between">
+        <View className="flex-row space-x-2">
           <TouchableOpacity
             onPress={addTaskModalPress}
-            className="bg-slate-200 rounded-xl shadow-2xl shadow-black/30 p-3 flex-row items-center space-x-2"
+            className="flex-1 bg-slate-200 rounded-xl shadow-2xl shadow-black/30 p-3 pr-5 flex-row items-center justify-center space-x-2"
           >
             <Icons.PlusIcon stroke="#0f172a" size={20} />
             <Text
@@ -118,15 +119,15 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={newGroupModalPress}
-            className="bg-slate-200 rounded-xl shadow-2xl shadow-black/30 p-3 flex-row items-center space-x-2"
+            className="flex-1 bg-slate-200 rounded-xl shadow-2xl shadow-black/30 p-3 pr-5 flex-row items-center justify-center space-x-2"
           >
+          <Icons.PlusIcon stroke="#0f172a" size={20} />
             <Text
               className="text-slate-900 text-xl"
-              style={{ textAlignVertical: 'center' }}
+              style={{ textAlignVertical: 'center', alignItems: 'baseline' }}
             >
               New Group
             </Text>
-            <Icons.PlusIcon stroke="#0f172a" size={20} />
           </TouchableOpacity>
         </View>
       </View>

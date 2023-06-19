@@ -19,9 +19,9 @@ const Map = () => {
       <View className="flex-row z-10 absolute top-2 left-2">
         <TouchableOpacity
           onPress={() => setShowHelp(!showHelp)}
-          className="bg-white p-3 pt-0.5 pb-0.5 rounded shadow-2xl shadow-black/50"
+          className="bg-white p-3 pt-1 pb-1 rounded shadow-2xl shadow-black/50"
         >
-          <Text className="text-lg text-slate-900">?</Text>
+          <Text className="text-2xl text-slate-900">Help?</Text>
         </TouchableOpacity>
       </View>
       {showHelp && (<MapHelp/>)}

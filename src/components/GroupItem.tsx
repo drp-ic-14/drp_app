@@ -22,7 +22,7 @@ const GroupItem = ({
   };
 
   return (
-    <View className="border-b border-slate-900/30 px-1 py-5">
+    <View className={`${groupSettingsModalPress && "border-b"} border-slate-900/30 px-1 py-5`}>
       <View className="flex-row justify-between">
         <TouchableOpacity
           onPress={toggleDropdown}
@@ -41,30 +41,40 @@ const GroupItem = ({
               style={{ textAlignVertical: 'center' }}
             />
           )}
-          {(group.name === "Personal") && (<Icons.UserIcon
-            stroke="#0F172A"
-            fill="#0F172A"
-            style={{ textAlignVertical: 'center' }}
-          />)}
+          {group.name === 'Personal' ? (
+            <Icons.UserIcon
+              stroke="#0F172A"
+              fill="#0F172A"
+              style={{ textAlignVertical: 'center' }}
+            />
+          ) : (
+            <Icons.UserGroupIcon
+              stroke="#0F172A"
+              fill="#0F172A"
+              style={{ textAlignVertical: 'center' }}
+            />
+          )}
           <Text
-            className="text-lg text-slate-900"
+            className="text-lg pl-1.5 text-slate-900"
             style={{ textAlignVertical: 'center' }}
           >
             {group.name}
           </Text>
         </TouchableOpacity>
-        {(groupSettingsModalPress) && (<TouchableOpacity
-          onPress={() => {
-            groupSettingsModalPress(group.id);
-          }}
-          className="flex-row space-x-1"
-        >
-          <Icons.EllipsisHorizontalIcon
-            stroke="#0F172A"
-            fill="#0F172A"
-            style={{ textAlignVertical: 'center' }}
-          />
-        </TouchableOpacity>)}
+        {groupSettingsModalPress && (
+          <TouchableOpacity
+            onPress={() => {
+              groupSettingsModalPress(group.id);
+            }}
+            className="flex-row space-x-1"
+          >
+            <Icons.UserPlusIcon
+              stroke="#0F172A"
+              fill="#0F172A"
+              style={{ textAlignVertical: 'center' }}
+            />
+          </TouchableOpacity>
+        )}
       </View>
       {open && (
         <FlatList
