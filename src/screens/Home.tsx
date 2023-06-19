@@ -90,7 +90,7 @@ const Home = ({ navigation }) => {
   }, [user]);
 
   return (
-    <View className="flex-1 bg-white p-3 space-y-3">
+    <View className="flex-1 bg-white p-3">
       <Text className="text-4xl text-slate-900 tracking-wider">Tasks</Text>
       <View className="flex-1 justify-between">
         <ScrollView>

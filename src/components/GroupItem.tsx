@@ -22,7 +22,11 @@ const GroupItem = ({
   };
 
   return (
-    <View className={`${groupSettingsModalPress && "border-b"} border-slate-900/30 px-1 py-5`}>
+    <View
+      className={`${
+        groupSettingsModalPress && 'border-b'
+      } border-slate-900/30 px-1 py-5`}
+    >
       <View className="flex-row justify-between">
         <TouchableOpacity
           onPress={toggleDropdown}
@@ -76,8 +80,7 @@ const GroupItem = ({
           </TouchableOpacity>
         )}
       </View>
-      {open && (
-        <FlatList
+      {/* {open && (group.tasks.length ? (<FlatList
           data={[...group.tasks].reverse()}
           renderItem={({ item }) => (
             <TaskItem task={item} navigation={navigation} />
@@ -86,7 +89,10 @@ const GroupItem = ({
           ItemSeparatorComponent={() => <View className="h-2" />}
           className={group.tasks.length > 0 ? 'mt-5' : ''}
         />
-      )}
+      ) : (<Text className="text-lg pt-3 justify-center align-middle">No tasks.</Text>))} */}
+      <View className='space-y-2'>
+        {open && (group.tasks.length ? group.tasks.map(task => <TaskItem task={task} navigation={navigation}/>) : <Text className="text-lg pt-3 justify-center align-middle">No tasks.</Text>)}
+      </View>
     </View>
   );
 };

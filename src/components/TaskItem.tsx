@@ -51,7 +51,7 @@ const TaskItem = ({
           description,
         })
       }
-      className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30"
+      className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30 mt-2"
     >
       <View className="space-y-2 flex-1">
         <Text className="text-slate-900 text-lg">{name}</Text>
