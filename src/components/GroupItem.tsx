@@ -6,7 +6,8 @@ import { Group } from '../utils/Interfaces';
 
 type GroupItemProps = {
   group: Group;
-  groupSettingsModalPress: any;
+  groupSettingsModalPress: any | null;
+  navigation: any;
 };
 
 const GroupItem = ({
@@ -14,7 +15,7 @@ const GroupItem = ({
   groupSettingsModalPress,
   navigation,
 }: GroupItemProps) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(!groupSettingsModalPress);
 
   const toggleDropdown = () => {
     setOpen(!open);
@@ -40,7 +41,11 @@ const GroupItem = ({
               style={{ textAlignVertical: 'center' }}
             />
           )}
-
+          {(group.name === "Personal") && (<Icons.UserIcon
+            stroke="#0F172A"
+            fill="#0F172A"
+            style={{ textAlignVertical: 'center' }}
+          />)}
           <Text
             className="text-lg text-slate-900"
             style={{ textAlignVertical: 'center' }}
@@ -48,7 +53,7 @@ const GroupItem = ({
             {group.name}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {(groupSettingsModalPress) && (<TouchableOpacity
           onPress={() => {
             groupSettingsModalPress(group.id);
           }}
@@ -59,7 +64,7 @@ const GroupItem = ({
             fill="#0F172A"
             style={{ textAlignVertical: 'center' }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity>)}
       </View>
       {open && (
         <FlatList

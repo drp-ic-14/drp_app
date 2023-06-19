@@ -36,7 +36,7 @@ const StyledInput = styled(TextInput);
 
 type AddTaskSheetProps = {
   updateList: () => void;
-  bottomSheetModalRef: BottomSheetModal;
+  bottomSheetModalRef: BottomSheetModalRef;
 };
 
 const UserIcon = ({ style }) => <IconsMini.UserIcon fill={style.tintColor} />;
