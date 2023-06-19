@@ -13,6 +13,7 @@ import { userAtom } from '../store/Atoms';
 import HomeStack from './HomeStack';
 import Home from './Home';
 import TaskDetails from './TaskDetails';
+import Settings from './Settings';
 
 const USER_SUBSCRIPTION = gql`
   subscription OnUserUpdate($userId: ID!) {
@@ -62,6 +63,8 @@ const Tabs = () => {
             );
           } else if (route.name === 'Map') {
             icon = <Icons.MapIcon stroke={focused ? '#818cf8' : '#333'} />;
+          } else if (route.name === 'Settings') {
+            icon = <Icons.Cog8ToothIcon stroke={focused ? '#818cf8' : '#333'} />;
           }
 
           return icon;
@@ -73,6 +76,7 @@ const Tabs = () => {
       <Tab.Screen name="Map" component={Map} />
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Groups" component={Groups} />
+      <Tab.Screen name="Settings" component={Settings}/>
     </Tab.Navigator>
   );
 };
