@@ -5,13 +5,20 @@ import { useUser } from '../hooks/user';
 import { Task } from '../utils/Interfaces';
 import { distance } from '../utils/Utils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MapHelp from '../components/MapHelp';
 import Modal from 'react-native-modal';
 
 const Map = () => {
   const [currentLoc] = useLocation();
-  const [{ tasks: data }] = useUser();
+  const [user] = useUser();
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    let tasks: Task[] = user.tasks;
+    user.groups.forEach(g => (tasks = tasks.concat(g.groupTask)));
+    setTasks(tasks);
+  }, [user]);
 
   const [showHelp, setShowHelp] = useState(false);
 
@@ -50,7 +57,7 @@ const Map = () => {
         pitchEnabled
         rotateEnabled
       >
-        {data.map((task: Task) => (
+        {tasks.map((task: Task) => (
           <Marker
             key={task.id}
             title={task.name}
