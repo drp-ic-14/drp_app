@@ -143,6 +143,7 @@ const TaskDetails = ({ route, navigation }) => {
         </TouchableOpacity>
 
         <TextInput
+          autoCorrect={false}
           value={name}
           onChangeText={setName}
           className="text-5xl text-[#111c2f] mt-4 p-0 font-bold mx-5"
@@ -154,6 +155,7 @@ const TaskDetails = ({ route, navigation }) => {
             Description
           </Text>
           <TextInput
+            autoCorrect={false}
             value={description}
             onChangeText={setDescription}
             className="text-base text-[#111c2f] p-0"

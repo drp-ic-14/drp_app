@@ -89,6 +89,7 @@ const AddGroupSheet = ({
           <View className="flex-1">
             <View className="flex-row mx-4 mb-4 ">
               <StyledInput
+                autoCorrect={false}
                 value={name}
                 onChange={v => setName(v.nativeEvent.text)}
                 className="p-3 pl-5 mr-4 text-lg flex-grow text-slate-900 bg-neutral-200 self-stretch rounded-xl shadow-xl shadow-black/40"

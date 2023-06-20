@@ -145,11 +145,11 @@ const GroupSettingsSheet = ({
                     ItemSeparatorComponent={() => <View className="h-2" />}
                   />
                 </View>
-
               </View>
               <View className="mx-4 mb-4">
                 <View className="flex-row">
                   <StyledInput
+                    autoCorrect={false}
                     value={username}
                     onChangeText={setUsername}
                     className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] flex-1 rounded-xl shadow-xl shadow-black/30"
