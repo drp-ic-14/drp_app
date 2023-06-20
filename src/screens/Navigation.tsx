@@ -21,6 +21,7 @@ const USER_SUBSCRIPTION = gql`
         groupTask {
           name
           longitude
+          vicinity
           location
           latitude
           id
@@ -35,6 +36,7 @@ const USER_SUBSCRIPTION = gql`
       tasks {
         name
         longitude
+        vicinity
         location
         latitude
         id
