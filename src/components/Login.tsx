@@ -29,6 +29,8 @@ const Login = ({ state, error, create }: LoginProps) => {
       <View className="flex-row mx-4 mb-4">
         <TextInput
           autoCorrect={false}
+          autoComplete="off"
+          autoCapitalize="none"
           value={input}
           onChange={v => setInput(v.nativeEvent.text)}
           className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] flex-1 rounded-xl shadow-xl shadow-black/30"

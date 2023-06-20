@@ -200,6 +200,8 @@ const AddTaskSheet = ({
             <View className="flex-row mx-4 mb-4">
               <StyledInput
                 autoCorrect={false}
+                autoComplete='off'
+                autoCapitalize='none'
                 value={name}
                 onChange={v => setName(v.nativeEvent.text)}
                 className="p-2 pl-5 mr-4 text-base flex-grow text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] self-stretch rounded-xl shadow-xl shadow-black/40"
