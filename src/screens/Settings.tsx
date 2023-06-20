@@ -51,6 +51,8 @@ const Settings = () => {
             maximumValue={1000}
             onValueChange={setProximity}
             value={proximity}
+            minimumTrackTintColor="#000000"
+            maximumTrackTintColor="#000000"
           />
           <Text className="text-slate-900">{proximity}m</Text>
         </View>
