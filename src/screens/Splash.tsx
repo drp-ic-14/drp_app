@@ -58,7 +58,7 @@ const Splash = ({ complete }: SplashProps) => {
   return (
     <View className="bg-white flex-1 justify-center items-center space-y-12">
       <Text className="text-6xl text-slate-800 font-bold text-center">
-        DRP 🥶
+        TasksOnTheGo
       </Text>
       {display}
     </View>
