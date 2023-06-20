@@ -47,6 +47,7 @@ const GroupSettingsSheet = ({
   useEffect(() => {
     // console.log(`*`, groupId);
     update();
+    // setUsername('');
   }, [groupId, user]);
 
   // Bottom sheet

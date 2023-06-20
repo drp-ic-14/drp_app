@@ -22,6 +22,7 @@ const TaskItem = ({
 
   const onComplete = async () => {
     await deleteTask(id);
+    await updateUser();
     updateUser();
   };
 
@@ -39,18 +40,7 @@ const TaskItem = ({
   );
 
   return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('Task', {
-          id,
-          name,
-          location,
-          vicinity,
-          longitude,
-          latitude,
-          description,
-        })
-      }
+    <View
       className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30 mt-2"
     >
       <View className="space-y-2 flex-1">
@@ -65,14 +55,40 @@ const TaskItem = ({
           </Text>
         </View>
       </View>
-      <TouchableOpacity
-        onPress={() => handleComplete()}
-        disabled={loading}
-        className="rounded-full bg-indigo-950/5 h-10 w-10 justify-center items-center"
-      >
-        {loading ? <ActivityIndicator /> : <Icons.CheckIcon stroke="#0f172a" />}
-      </TouchableOpacity>
-    </TouchableOpacity>
+      <View className='space-y-2'>
+        <TouchableOpacity
+          onPress={() => handleComplete()}
+          disabled={loading}
+          className="rounded-full bg-indigo-950/5 h-10 w-10 justify-center items-center"
+        >
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Icons.CheckIcon stroke="#0f172a" />
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('Task', {
+              id,
+              name,
+              location,
+              vicinity,
+              longitude,
+              latitude,
+              description,
+            })
+          }
+          className="rounded-full bg-indigo-950/5 h-10 w-10 justify-center items-center"
+        >
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Icons.PencilIcon stroke="#0f172a" />
+          )}
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
