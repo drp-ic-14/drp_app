@@ -91,7 +91,7 @@ const GroupItem = ({
         />
       ) : (<Text className="text-lg pt-3 justify-center align-middle">No tasks.</Text>))} */}
       <View className='space-y-2'>
-        {open && (group.tasks.length ? group.tasks.map(task => <TaskItem task={task} navigation={navigation}/>) : <Text className="text-lg pt-3 justify-center align-middle">No tasks.</Text>)}
+        {open && (group.tasks.length ? group.tasks.map(task => <TaskItem task={task} navigation={navigation}/>) : <Text className="text-lg text-slate-400 pt-3 justify-center align-middle">No tasks.</Text>)}
       </View>
     </View>
   );

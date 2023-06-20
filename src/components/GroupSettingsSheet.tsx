@@ -154,7 +154,7 @@ const GroupSettingsSheet = ({
                     onChangeText={setUsername}
                     className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] flex-1 rounded-xl shadow-xl shadow-black/30"
                     placeholder="Add member..."
-                    placeholderTextColor="#0f172aaa"
+                    placeholderTextColor="#0f172a"
                   />
                   <TouchableOpacity
                     onPress={() => {
