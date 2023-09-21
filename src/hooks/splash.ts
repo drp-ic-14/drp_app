@@ -7,6 +7,7 @@ import { useLocation } from './location';
 import { geolocationPermissions } from '../features/Geolocation';
 import { notificationPermissions } from '../features/Notifier';
 import { sleep } from '../utils/Utils';
+import { initNotificationRadius } from './notificationRadius';
 
 export const useSplash = (): [string, boolean, Error | undefined] => {
   const [status, setStatus] = useState('');
@@ -28,6 +29,9 @@ export const useSplash = (): [string, boolean, Error | undefined] => {
     setStatus('Getting location');
     await updateLoc();
     await sleep(300);
+
+    setStatus('Getting stored data');
+    await initNotificationRadius();
   };
 
   const { loading, error } = useAsync(setup);

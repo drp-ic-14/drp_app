@@ -18,7 +18,7 @@ import { styled } from 'nativewind';
 
 import { useAsyncFn } from 'react-use';
 import * as Icons from 'react-native-heroicons/outline';
-import { Group, User } from '../utils/Interfaces';
+import { Group } from '../utils/Interfaces';
 import { addUserToGroup, removeUserFromGroup } from '../api/BackEnd';
 import { useUser } from '../hooks/user';
 
@@ -47,6 +47,7 @@ const GroupSettingsSheet = ({
   useEffect(() => {
     // console.log(`*`, groupId);
     update();
+    // setUsername('');
   }, [groupId, user]);
 
   // Bottom sheet
@@ -112,46 +113,49 @@ const GroupSettingsSheet = ({
       >
         {group && (
           <NativeViewGestureHandler disallowInterruption>
-            <View className="flex-1">
-              <View className="flex-row mx-4 mb-4 ">
-                <Text className="text-2xl text-slate-900">{`Edit Group: ${group.name}`}</Text>
-              </View>
-              <View className="flex-1 mx-4 mb-4">
-                <Text className="text-xl text-slate-900">Group members:</Text>
-                <FlatList
-                  data={group.users}
-                  renderItem={({ item }) => (
-                    <View className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30">
-                      <View className="space-y-2 flex-1">
-                        <Text className="text-slate-900 text-lg">
-                          {truncateUser(item.id)}
-                        </Text>
+            <View className="flex-1 justify-between">
+              <View>
+                <View className="flex-row mx-4 mb-4 ">
+                  <Text className="text-2xl text-slate-900">{`${group.name}: Add members`}</Text>
+                </View>
+                <View className="mx-4 mb-4">
+                  <Text className="text-xl text-slate-900">Group members:</Text>
+                  <FlatList
+                    data={group.users}
+                    renderItem={({ item }) => (
+                      <View className="bg-indigo-100 p-4 pt-3 rounded-2xl flex-row justify-between shadow-2xl shadow-black/30">
+                        <View className="space-y-2 flex-1">
+                          <Text className="text-slate-900 text-lg">
+                            {truncateUser(item.id)}
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          onPress={() => remove(item.id, groupId)}
+                          className="p-1 justify-center items-center bg-white shadow-xl shadow-black/30 aspect-square rounded-xl"
+                        >
+                          {removeLoading ? (
+                            <ActivityIndicator color="#0f172a" />
+                          ) : (
+                            <Icons.TrashIcon stroke="#0f172a" />
+                          )}
+                        </TouchableOpacity>
                       </View>
-                      <TouchableOpacity
-                        onPress={() => remove(item.id, groupId)}
-                        className="p-1 justify-center items-center bg-white shadow-xl shadow-black/30 aspect-square rounded-xl"
-                      >
-                        {removeLoading ? (
-                          <ActivityIndicator color="#0f172a" />
-                        ) : (
-                          <Icons.TrashIcon stroke="#0f172a" />
-                        )}
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                  keyExtractor={item => item.id}
-                  className="mb-3"
-                  ItemSeparatorComponent={() => <View className="h-2" />}
-                />
+                    )}
+                    keyExtractor={item => item.id}
+                    className="mb-3"
+                    ItemSeparatorComponent={() => <View className="h-2" />}
+                  />
+                </View>
+
               </View>
-              <View className="flex-1 mx-4 mb-4">
-                <View className="pt-4 flex-row mx-4 mb-4">
+              <View className="mx-4 mb-4">
+                <View className="flex-row">
                   <StyledInput
                     value={username}
                     onChangeText={setUsername}
                     className="p-3 pl-5 mr-4 text-lg text-slate-900 bg-[#f7f9fc] border border-[#e4e9f2] flex-1 rounded-xl shadow-xl shadow-black/30"
-                    placeholder="Add user..."
-                    placeholderTextColor="#0f172aaa"
+                    placeholder="Add member..."
+                    placeholderTextColor="#0f172a"
                   />
                   <TouchableOpacity
                     onPress={() => {
